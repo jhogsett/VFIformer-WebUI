@@ -22,7 +22,7 @@ _My code builds on their repo and borrows some code, but makes no changes._
   - Windows 11
 2. Clone this repo in a separate directory and copy all directories/files on top of your *working* VFIformer installation
 - This code makes no changes to their original code (but borrows some) and causes no conflicts with it
-- It shouldn't introduce any additional requirements over what VFIformer needs
+- It shouldn't introduce any additional requirements over what VFIformer and Gradio-App needs
 3. If it's set up properly, the following command should write a new file `images/image1.png` using default settings
 
 `python interpolate.py`
