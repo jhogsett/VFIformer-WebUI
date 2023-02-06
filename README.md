@@ -115,3 +115,21 @@ App configuration is set via `config.yaml`
   - total time in ms for the animated GIF preview
   - default is 3000
   
+### Thanks!
+
+Thanks! to the VFIformer folks for their amazing tool 
+- https://github.com/dvlab-research/VFIformer
+
+Thanks! to the stable-diffusion-webui folks for their great UI, amazing tool, and for inspiring me to learn Gradio
+- https://github.com/AUTOMATIC1111/stable-diffusion-webui
+
+Thanks to Gradio for their easy-to-use Web UI building tool and great docs
+- https://gradio.app/
+- https://github.com/gradio-app/gradio
+
+### My Public Uses of VFIformer
+
+YouTube
+- Feb 01 2023 "Fun with AI: De-Ticking a Ticking Clock" https://youtu.be/JhibFQvP7X0
+- Jan 28 2023 "Fun with AI: Infinite Slow Motion" https://youtu.be/sKQKuYU-fcQ
+- Jan 24 2023 "Fun with AI: Me as a Baby, Restoring 60 year old 8mm film" https://youtu.be/sKQKuYU-fcQ
