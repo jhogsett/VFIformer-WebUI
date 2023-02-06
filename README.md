@@ -103,12 +103,12 @@ App configuration is set via `config.yaml`
   - True to open the app in a browser tab
 - server_port
   - local port to use for Web UI access
-  - default is `7862` rather than the usual Gradio default of `7860` to avoid conflicting with ther Gradio tools running locally
+  - default is `7862` rather than the usual Gradio default of `7860` to avoid conflicting with other Gradio apps
 - server_name
-  - server address to use for http server
-  - default is "0.0.0.0" which should make the app available on the local network
+  - server address to use for Gradio http server
+  - default is "0.0.0.0" which makes the app available on the local network as well
   - to prevent this, set to "127.0.0.1" or None
-- interpolate_settings[gif_duration]
+- interpolate_settings\[gif_duration\]
   - total time in ms for the animated GIF preview
   - default is 3000
   
