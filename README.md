@@ -74,8 +74,8 @@ The core components also allow command line use.
 Create an interpolated frame between two frames
 
 Example: `python interpolate.py`
-- loads images/image0.png and images/image2.png
-- interpolates and saved images/image1.png
+- loads `images/image0.png` and `images/image2.png`
+- interpolates and saves `images/image1.png`
 - use `python interpoloate.py --help` for arguments
 
 ## deep_interpolate.py
@@ -86,6 +86,8 @@ Example: `python deep_interpolate.py --depth 2`
 - loads images/image0.png and images/image2.png
 - interpolates three evenly-speced between frames
 - the original and new frames are put in `output/interpolated_frame0.png` ... `interpolated_frame4.png`
+- the `depth` argument specifies the number of *doublings* of the effective frame rate
+  - the number of newly created frames = 2 ** depth - 1
 
 # App Configuration
 
