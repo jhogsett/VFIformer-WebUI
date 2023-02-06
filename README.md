@@ -41,6 +41,7 @@ _My code builds on their repo and borrows some code, but makes no changes._
 2. Clone this repo to a directory in which you intend to use the app and/or develop on it
 3. Copy the following directories from your *working* VFIformer installation to this directory:
 - `dataloader`
+- `models`
 - `pretrained_models`
 - `utils`
 4. If it's set up properly, the following command should write a new file `images/image1.png`
