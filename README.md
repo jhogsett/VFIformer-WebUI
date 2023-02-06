@@ -3,6 +3,8 @@
 
 ![image](https://user-images.githubusercontent.com/825994/216856563-6027bddf-c617-420a-8652-5228bfacb3b5.png)
 
+![interpolated_frames0](https://user-images.githubusercontent.com/825994/217050627-e0fd6e17-1c53-49aa-88d6-72a9717b2c13.gif)
+
 I have been writing my own Python code for some time to use the [VFIformer](https://github.com/dvlab-research/VFIformer) video frame interpolation engine for various purposes (here's an [example video](https://www.youtube.com/watch?v=JhibFQvP7X0) from my [YouTube channel](https://www.youtube.com/@jerryhogsett)). I thought, why don't I start learning Gradio by building a WebUI for this tool that I love and use so much. Of course, and make it avaiable to the public. 
 
 _My code builds on their repo and borrows some code, but makes no changes._
