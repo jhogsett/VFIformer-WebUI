@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# image output 
+output/
+
+# VFIformer core bits
+dataloader/
+models/
+pretrained_models/
+utils/
