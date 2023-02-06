@@ -1,5 +1,6 @@
 import os
 import glob
+from zipfile import ZipFile
 
 def create_directory(dir):
     if not os.path.exists(dir):
@@ -26,3 +27,8 @@ def get_directories(path : str) -> list:
         if os.path.isdir(fullpath):
             directories.append(entry)
     return directories
+
+def create_zip(files : list, filepath : str):
+    with ZipFile(filepath, "w") as zipObj:
+        for file in files:
+            zipObj.write(file, arcname=os.path.basename(file))

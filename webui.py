@@ -1,4 +1,6 @@
 import os
+import time
+import signal
 import argparse
 import gradio as gr
 from interpolate_engine import InterpolateEngine
@@ -8,11 +10,15 @@ from simple_log import SimpleLog
 from simple_config import SimpleConfig
 from auto_increment import AutoIncrementFilename, AutoIncrementDirectory
 from image_utils import create_gif
-from file_utils import create_directories
+from file_utils import create_directories, create_zip
 from simple_utils import max_steps
 
+global restart, prevent_inbrowser
+restart = False
+prevent_inbrowser = False
+
 def main():
-    global log, config, engine
+    global log, config, engine, restart, prevent_inbrowser
     parser = argparse.ArgumentParser(description='VFIformer Web UI')
     parser.add_argument("--config_path", type=str, default="config.yaml", help="path to config YAML file")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
@@ -23,10 +29,42 @@ def main():
     create_directories(config.directories)
     engine = InterpolateEngine(config.model, config.gpu_ids)
 
-    app = create_ui()
-    app.launch(inbrowser = config.auto_launch_browser, 
-                server_name = config.server_name,
-                server_port = config.server_port)
+    print("Starting VFIformer-WebUI")
+    print("The models are lazy-loaded on the first interpolation (so it'll be slow)")
+    while True:
+        app = create_ui()
+        app.launch(inbrowser = config.auto_launch_browser and not prevent_inbrowser, 
+                    server_name = config.server_name,
+                    server_port = config.server_port,
+                    prevent_thread_lock=True)
+
+        # idea borrowed from stable-diffusion-webui webui.py
+        # after initial launch, disable inbrowser for subsequent restarts
+        prevent_inbrowser = True 
+
+        wait_on_server(app)
+        print("Restarting...")
+
+#### code borrowed from stable-diffusion-webui webui.py:
+def wait_on_server(app):
+    global restart
+    while True:
+        time.sleep(0.5)
+        if restart:
+            restart = False
+            time.sleep(0.5)
+            app.close()
+            time.sleep(0.5)
+            break        
+
+# make the program just exit at ctrl+c without waiting for anything
+def sigint_handler(sig, frame):
+    print(f'Interrupted with signal {sig} in {frame}')
+    os._exit(0)
+
+signal.signal(signal.SIGINT, sigint_handler)
+
+#### Gradio UI event handlers
 
 def deep_interpolate(img_before_file : str, img_after_file : str, num_splits : float):
     global log, config, engine, file_output
@@ -36,28 +74,41 @@ def deep_interpolate(img_before_file : str, img_after_file : str, num_splits : f
         interpolater = Interpolate(engine.model, log.log)
         deep_interpolater = DeepInterpolate(interpolater, log.log)
         base_output_path = config.directories["output_interpolate"]
-        output_path, _ = AutoIncrementDirectory(base_output_path).next_directory("run")
+        output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
         output_basename = "interpolated_frames"
-        extension = "png"
-        img_between_file, image_index = AutoIncrementFilename(output_path, extension).next_filename(output_basename, extension)
 
-        log.log("creating frame file " + img_between_file)
+        # extension = "png"
+        # preview_file, image_index = AutoIncrementFilename(output_path, extension).next_filename(output_basename, extension)
+
+        log.log(f"creating frame files at {output_path}")
         deep_interpolater.split_frames(img_before_file, img_after_file, num_splits, output_path, output_basename)
-
-        log.log("creating preview file " + img_between_file)
-        img_output_gif = os.path.join(output_path, output_basename + str(image_index) + ".gif")
         output_paths = deep_interpolater.output_paths
-        duration = config.interpolate_settings["gif_duration"] / len(output_paths)
-        create_gif(output_paths, img_output_gif, duration=duration)
 
-        download_visible = num_splits == 1
-        download_file = img_between_file if download_visible else None
-        return gr.Image.update(value=img_output_gif), gr.File.update(value=download_file, visible=download_visible)
+        # name the gif for the directory run number in case of comparing files from multiple directories
+        preview_gif = os.path.join(output_path, output_basename + str(run_index) + ".gif")
+        log.log(f"creating preview file {preview_gif}")
+        duration = config.interpolate_settings["gif_duration"] / len(output_paths)
+        create_gif(output_paths, preview_gif, duration=duration)
+
+        # name the zip for the directory run number in case of using zips from multiple directories
+        download_zip = os.path.join(output_path, output_basename + str(run_index) + ".zip")
+        log.log("creating zip of frame files")
+        create_zip(output_paths, download_zip)
+
+        downloads = [preview_gif, download_zip]
+
+        return gr.Image.update(value=preview_gif), gr.File.update(value=downloads, visible=True)
     else:
         return None, None
 
 def update_splits_info(num_splits : float):
     return str(max_steps(num_splits))
+
+def restart_app():
+    global restart
+    restart = True
+
+#### Create Gradio UI
 
 def create_ui():
     global config, file_output
@@ -76,7 +127,7 @@ def create_ui():
                         info_output = gr.Textbox(value="1", label="New Frames", max_lines=1, interactive=False)
                 with gr.Column(variant="panel"):
                     img_output = gr.Image(type="filepath", label="Animated Preview", interactive=False)
-                    file_output = gr.File(type="file", label="Download", visible=False)
+                    file_output = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             interpolate_button = gr.Button("Interpolate", variant="primary")
         with gr.Tab("Video Inflation"):
             with gr.Row(variant="compact"):
@@ -103,6 +154,8 @@ def create_ui():
                     """)
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
+                restart_button = gr.Button("Restart App", variant="primary")
+            with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     gr.Markdown("""
                     # Tools
@@ -113,6 +166,7 @@ def create_ui():
                     """)
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
         splits_input.change(update_splits_info, inputs=splits_input, outputs=info_output, show_progress=False)
+        restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},500)")
     return app
 
 if __name__ == '__main__':
