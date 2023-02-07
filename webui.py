@@ -7,12 +7,12 @@ from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from deep_interpolate import DeepInterpolate
 from interpolate_series import InterpolateSeries
-from simple_log import SimpleLog
-from simple_config import SimpleConfig
-from auto_increment import AutoIncrementFilename, AutoIncrementDirectory
-from image_utils import create_gif
-from file_utils import create_directories, create_zip, get_files, create_directory
-from simple_utils import max_steps
+from webui_utils.simple_log import SimpleLog
+from webui_utils.simple_config import SimpleConfig
+from webui_utils.auto_increment import AutoIncrementFilename, AutoIncrementDirectory
+from webui_utils.image_utils import create_gif
+from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory
+from webui_utils.simple_utils import max_steps
 from resequence_files import ResequenceFiles
 
 global restart, prevent_inbrowser

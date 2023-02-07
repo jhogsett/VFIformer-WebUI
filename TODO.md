@@ -5,6 +5,7 @@
 [ ] incorporate use of Real-ESRGAN tool for frame restoration/upscaling
 [ ] clean up multiple util files in root directory
 [ ] do I need the "fix gradio phoning home" fix like in automatic1111?
+[ ] add a link to my repo in the footer
 
 Tool ideas
 

@@ -1,5 +1,5 @@
 import os
-from file_utils import get_files, get_directories
+from .file_utils import get_files, get_directories
 
 class AutoIncrementFilename():
     def __init__(self, path : str, extension : str | None):
