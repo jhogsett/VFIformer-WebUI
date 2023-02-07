@@ -14,7 +14,7 @@ def main():
     parser.add_argument("--input_path", default="./images", type=str, help="Input path for PNGs to interpolate")
     parser.add_argument("--depth", default=2, type=int, help="how many doublings of the frames")
     parser.add_argument("--output_path", default="./output", type=str, help="Output path for interpolated PNGs")
-    parser.add_argument("--base_filename", default="interpolated_frame", type=str, help="Base filename for interpolated PNGs")
+    parser.add_argument("--base_filename", default="interpolated_frames", type=str, help="Base filename for interpolated PNGs")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
     args = parser.parse_args()
 
