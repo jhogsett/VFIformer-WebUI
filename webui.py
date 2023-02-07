@@ -13,6 +13,7 @@ from auto_increment import AutoIncrementFilename, AutoIncrementDirectory
 from image_utils import create_gif
 from file_utils import create_directories, create_zip, get_files, create_directory
 from simple_utils import max_steps
+from resequence_files import ResequenceFiles
 
 global restart, prevent_inbrowser
 restart = False
@@ -108,8 +109,6 @@ def deep_interpolate(img_before_file : str, img_after_file : str, num_splits : f
 
 def interpolate_series(input_path : str, output_path : str | None, num_splits : float):
     global log, config, engine, file_output
-    file_output.update(visible=False)
-
     if input_path:
         interpolater = Interpolate(engine.model, log.log)
         deep_interpolater = DeepInterpolate(interpolater, log.log)
@@ -122,6 +121,11 @@ def interpolate_series(input_path : str, output_path : str | None, num_splits : 
 
         log.log(f"beginning series of deep interpolations at {output_path}")
         series_interpolater.interpolate_series(file_list, output_path, num_splits, output_basename)
+
+def resequence_files(input_path : str, input_filetype : str, input_newname : str, input_start : str, input_step : str, input_zerofill : str, input_rename_check : bool):
+    global log
+    if input_path and input_filetype and input_newname and input_start and input_step and input_zerofill:
+        ResequenceFiles(input_path, input_filetype, input_newname, int(input_start), int(input_step), int(input_zerofill), input_rename_check, log.log).resequence()
 
 def create_report(info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
     report = f"""before file: {img_before_file}
@@ -196,20 +200,27 @@ def create_ui():
                       - the sequence won't by continuous/playable, so it doesn't make sense to produce a GIF""")
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
-                restart_button = gr.Button("Restart App", variant="primary")
+                restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
-                    gr.Markdown("""
-                    # Tools
-                    - split a GIF or MP4 into a series of PNG frames
-                    - rename a sequence of PNG files suitable for import into Premiere Pro
-                    - recombine a series of PNG frames into an MP4
-                    - """)
+                    input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
+                    with gr.Row(variant="compact"):
+                        input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
+                        input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
+                    with gr.Row(variant="compact"):
+                        input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
+                        input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer step for the sequentially numbered files", label="Integer step")
+                        input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
+                    with gr.Row(variant="compact"):
+                        input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files") 
+                    resequence_button = gr.Button("Resequence Files", variant="primary")
+    
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
         interpolate_button2.click(interpolate_series, inputs=[input_path_text, output_path_text, splits_input2])
         splits_input.change(update_splits_info, inputs=splits_input, outputs=info_output, show_progress=False)
         splits_input2.change(update_splits_info, inputs=splits_input2, outputs=info_output2, show_progress=False)
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},500)")
+        resequence_button.click(resequence_files, inputs=[input_path_text2, input_filetype_text, input_newname_text, input_start_text, input_step_text, input_zerofill_text, input_rename_check])
     return app
 
 if __name__ == '__main__':

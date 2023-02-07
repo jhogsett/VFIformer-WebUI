@@ -1,11 +1,16 @@
 ### to do list
 
+[ ] for resequencing add some output, maybe use sliders for numbers
 [ ] look into referencing VFIformer inside an intact subdirectory
-[ ] see if a mention is needed of VFIformer license since I borrowed code
 [ ] incorporate use of Real-ESRGAN tool for frame restoration/upscaling
 [ ] clean up multiple util files in root directory
 [ ] do I need the "fix gradio phoning home" fix like in automatic1111?
-[ ] text file in the "run" directory with details like exact original filenames
+
+Tool ideas
+
+split a GIF or MP4 into a series of PNG frames
+rename a sequence of PNG files suitable for import into Premiere Pro
+recombine a series of PNG frames into an MP4
 
 Experiments
 
@@ -21,3 +26,5 @@ Experiments
     - code will require a multiple of 1 / 2**splits
     - after a split, it will only recurse into the half that gets closer to target
     - at the end it won't be a continuous sequence, the last image will be the reached target
+
+    this could be useful if needing to force a specific frame rate (though would be very slow to render)

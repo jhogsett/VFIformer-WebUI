@@ -37,7 +37,7 @@ class ResequenceFiles:
                 index_step : int, 
                 zero_fill : int,
                 rename : bool , 
-                log_fn : Callable):
+                log_fn : Callable | None):
         self.path = path
         self.file_type = file_type
         self.new_base_filename = new_base_filename
