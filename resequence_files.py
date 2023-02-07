@@ -4,7 +4,7 @@ import glob
 import argparse
 from tqdm import tqdm
 from typing import Callable
-from simple_log import SimpleLog
+from webui_utils.simple_log import SimpleLog
 
 def main():
     parser = argparse.ArgumentParser(description='Resequence video frame PNG files')

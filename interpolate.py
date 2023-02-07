@@ -8,7 +8,7 @@ from utils.util import setup_logger, print_args
 from utils.pytorch_msssim import ssim_matlab
 from models.modules import define_G
 from typing import Callable
-from simple_log import SimpleLog
+from webui_utils.simple_log import SimpleLog
 from interpolate_engine import InterpolateEngine
 
 def main():

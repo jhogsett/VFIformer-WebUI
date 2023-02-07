@@ -4,7 +4,7 @@ import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
 from models.modules import define_G
-from simple_utils import FauxArgs
+from webui_utils.simple_utils import FauxArgs
 
 # Singleton class with the loaded VFIformer model
 # model: path to model such as "./pretrained_models/pretrained_VFIformer/net_220.pth"
