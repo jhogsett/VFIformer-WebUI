@@ -6,11 +6,12 @@ import gradio as gr
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from deep_interpolate import DeepInterpolate
+from interpolate_series import InterpolateSeries
 from simple_log import SimpleLog
 from simple_config import SimpleConfig
 from auto_increment import AutoIncrementFilename, AutoIncrementDirectory
 from image_utils import create_gif
-from file_utils import create_directories, create_zip
+from file_utils import create_directories, create_zip, get_files, create_directory
 from simple_utils import max_steps
 
 global restart, prevent_inbrowser
@@ -105,6 +106,23 @@ def deep_interpolate(img_before_file : str, img_after_file : str, num_splits : f
     else:
         return None, None
 
+def interpolate_series(input_path : str, output_path : str | None, num_splits : float):
+    global log, config, engine, file_output
+    file_output.update(visible=False)
+
+    if input_path:
+        interpolater = Interpolate(engine.model, log.log)
+        deep_interpolater = DeepInterpolate(interpolater, log.log)
+        series_interpolater = InterpolateSeries(deep_interpolater, log.log)
+        base_output_path = output_path or config.directories["output_slowmotion"]
+        create_directory(base_output_path)
+        output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
+        output_basename = "interpolated_frames"
+        file_list = get_files(input_path, extension="png")
+
+        log.log(f"beginning series of deep interpolations at {output_path}")
+        series_interpolater.interpolate_series(file_list, output_path, num_splits, output_basename)
+
 def create_report(info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
     report = f"""before file: {img_before_file}
 after file: {img_after_file}
@@ -146,15 +164,13 @@ def create_ui():
         with gr.Tab("Video Inflation"):
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
-                    gr.Markdown("""
-                    # Inflate a video, both in resolution and frame rate
-                    - split video into a series of PNG frames
-                    - use R-ESRGAN 4x+ to restore and/or upscale
-                    - use VFIformer to:
-                      - increase frame rate, or
-                      - create super slow motion, or
-                      - reconstruct timelapsed video
-                    - reassemble new PNG frames into MP4 file""")
+                    #with gr.Row(variant="compact"):
+                    input_path_text = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
+                    output_path_text = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
+                    with gr.Row(variant="compact"):
+                        splits_input2 = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
+                        info_output2 = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
+            interpolate_button2 = gr.Button("Interpolate Series (this will take time)", variant="primary")
         with gr.Tab("gif2mp4"):
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
@@ -190,7 +206,9 @@ def create_ui():
                     - recombine a series of PNG frames into an MP4
                     - """)
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
+        interpolate_button2.click(interpolate_series, inputs=[input_path_text, output_path_text, splits_input2])
         splits_input.change(update_splits_info, inputs=splits_input, outputs=info_output, show_progress=False)
+        splits_input2.change(update_splits_info, inputs=splits_input2, outputs=info_output2, show_progress=False)
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},500)")
     return app
 
