@@ -154,8 +154,7 @@ def create_ui():
                       - increase frame rate, or
                       - create super slow motion, or
                       - reconstruct timelapsed video
-                    - reassemble new PNG frames into MP4 file
-                    """)
+                    - reassemble new PNG frames into MP4 file""")
         with gr.Tab("gif2mp4"):
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
@@ -164,8 +163,21 @@ def create_ui():
                     - split GIF into a series of PNG frames
                     - use R-ESRGAN 4x+ to restore and/or upscale
                     - use VFIformer to adjust frame rate to real time
-                    - reassemble new PNG frames into MP4 file
-                    """)
+                    - reassemble new PNG frames into MP4 file""")
+        with gr.Tab("Frame Isolation"):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="panel"):
+                    gr.Markdown("""
+                    # Synthesize a frame targetted at a specific time not otherwise easily reached, such as 0.333 or 0.667
+                    - with a minimum of 10 splits/1023 new frames, it's possible to get close to 1/3 and 2/3:
+                      - 342 / 2**10 = 0.3330
+                      - 683 / 2**10 = 0.6669 
+                    - It's possible to get to 0.333 with fewer steps:
+                      - split 0.0-1.0, then reenter to split only the 0.0-0.5 part
+                      - then split 0.0-0.5, then 0.25-0.5, 0.25-0.375, 0.3125-0.375, 0.3125-0.34375, 0.328125-0.34375,
+                         0.328125-0.3359375, 0.33203125-0.3359375, 0.33203125-0.333984375 -> 0.3330078125
+                      - that's the same number of splits (10) but half the frame interpolation time
+                      - the sequence won't by continuous/playable, so it doesn't make sense to produce a GIF""")
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary")
@@ -176,8 +188,7 @@ def create_ui():
                     - split a GIF or MP4 into a series of PNG frames
                     - rename a sequence of PNG files suitable for import into Premiere Pro
                     - recombine a series of PNG frames into an MP4
-                    - ?
-                    """)
+                    - """)
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
         splits_input.change(update_splits_info, inputs=splits_input, outputs=info_output, show_progress=False)
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},500)")
