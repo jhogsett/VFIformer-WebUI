@@ -77,30 +77,44 @@ def deep_interpolate(img_before_file : str, img_after_file : str, num_splits : f
         output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
         output_basename = "interpolated_frames"
 
-        # extension = "png"
-        # preview_file, image_index = AutoIncrementFilename(output_path, extension).next_filename(output_basename, extension)
-
         log.log(f"creating frame files at {output_path}")
         deep_interpolater.split_frames(img_before_file, img_after_file, num_splits, output_path, output_basename)
         output_paths = deep_interpolater.output_paths
 
-        # name the gif for the directory run number in case of comparing files from multiple directories
-        preview_gif = os.path.join(output_path, output_basename + str(run_index) + ".gif")
-        log.log(f"creating preview file {preview_gif}")
-        duration = config.interpolate_settings["gif_duration"] / len(output_paths)
-        create_gif(output_paths, preview_gif, duration=duration)
+        downloads = []
+        preview_gif = None
+        if config.interpolate_settings["create_gif"]:
+            preview_gif = os.path.join(output_path, output_basename + str(run_index) + ".gif")
+            log.log(f"creating preview file {preview_gif}")
+            duration = config.interpolate_settings["gif_duration"] / len(output_paths)
+            create_gif(output_paths, preview_gif, duration=duration)
+            downloads.append(preview_gif)
 
-        # name the zip for the directory run number in case of using zips from multiple directories
-        download_zip = os.path.join(output_path, output_basename + str(run_index) + ".zip")
-        log.log("creating zip of frame files")
-        create_zip(output_paths, download_zip)
+        if config.interpolate_settings["create_zip"]:
+            download_zip = os.path.join(output_path, output_basename + str(run_index) + ".zip")
+            log.log("creating zip of frame files")
+            create_zip(output_paths, download_zip)
+            downloads.append(download_zip)
 
-        downloads = [preview_gif, download_zip]
+        if config.interpolate_settings["create_txt"]:
+            info_file = os.path.join(output_path, output_basename + str(run_index) + ".txt")
+            create_report(info_file, img_before_file, img_after_file, num_splits, output_path, output_paths)
+            downloads.append(info_file)
 
         return gr.Image.update(value=preview_gif), gr.File.update(value=downloads, visible=True)
     else:
         return None, None
 
+def create_report(info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
+    report = f"""before file: {img_before_file}
+after file: {img_after_file}
+number of splits: {num_splits}
+output path: {output_path}
+frames:
+""" + "\n".join(output_paths)
+    with open(info_file, 'w', encoding='utf-8') as f:
+        f.write(report)
+    
 def update_splits_info(num_splits : float):
     return str(max_steps(num_splits))
 
@@ -122,9 +136,9 @@ def create_ui():
                 with gr.Column(variant="panel"):
                     img1_input = gr.Image(type="filepath", label="Before Image", tool=None)
                     img2_input = gr.Image(type="filepath", label="After Image", tool=None)
-                    with gr.Row(variant="panel"):
+                    with gr.Row(variant="compact"):
                         splits_input = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
-                        info_output = gr.Textbox(value="1", label="New Frames", max_lines=1, interactive=False)
+                        info_output = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
                 with gr.Column(variant="panel"):
                     img_output = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                     file_output = gr.File(type="file", file_count="multiple", label="Download", visible=False)
@@ -140,8 +154,7 @@ def create_ui():
                       - increase frame rate, or
                       - create super slow motion, or
                       - reconstruct timelapsed video
-                    - reassemble new PNG frames into MP4 file
-                    """)
+                    - reassemble new PNG frames into MP4 file""")
         with gr.Tab("gif2mp4"):
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
@@ -150,8 +163,21 @@ def create_ui():
                     - split GIF into a series of PNG frames
                     - use R-ESRGAN 4x+ to restore and/or upscale
                     - use VFIformer to adjust frame rate to real time
-                    - reassemble new PNG frames into MP4 file
-                    """)
+                    - reassemble new PNG frames into MP4 file""")
+        with gr.Tab("Frame Isolation"):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="panel"):
+                    gr.Markdown("""
+                    # Synthesize a frame targetted at a specific time not otherwise easily reached, such as 0.333 or 0.667
+                    - with a minimum of 10 splits/1023 new frames, it's possible to get close to 1/3 and 2/3:
+                      - 342 / 2**10 = 0.3330
+                      - 683 / 2**10 = 0.6669 
+                    - It's possible to get to 0.333 with fewer steps:
+                      - split 0.0-1.0, then reenter to split only the 0.0-0.5 part
+                      - then split 0.0-0.5, then 0.25-0.5, 0.25-0.375, 0.3125-0.375, 0.3125-0.34375, 0.328125-0.34375,
+                         0.328125-0.3359375, 0.33203125-0.3359375, 0.33203125-0.333984375 -> 0.3330078125
+                      - that's the same number of splits (10) but half the frame interpolation time
+                      - the sequence won't by continuous/playable, so it doesn't make sense to produce a GIF""")
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary")
@@ -162,8 +188,7 @@ def create_ui():
                     - split a GIF or MP4 into a series of PNG frames
                     - rename a sequence of PNG files suitable for import into Premiere Pro
                     - recombine a series of PNG frames into an MP4
-                    - ?
-                    """)
+                    - """)
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
         splits_input.change(update_splits_info, inputs=splits_input, outputs=info_output, show_progress=False)
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},500)")

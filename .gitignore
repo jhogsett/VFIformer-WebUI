@@ -136,3 +136,6 @@ dataloader/
 models/
 pretrained_models/
 utils/
+
+# junk
+go.bat

@@ -9,6 +9,9 @@ server_port: 7862
 server_name: "0.0.0.0"
 interpolate_settings:
   gif_duration: 3000
+  create_gif: True
+  create_zip: True
+  create_txt: True
 user_interface:
   theme: "default"
   css_file: "webui.css"
