@@ -96,6 +96,7 @@ The application can be started in any of these ways:
 - Click Interpolate Series
 - This will take a long time!
 - A standard TQDM progress bar is shown in the console to track progress
+- The original and generated PNG frames are saved in a sequentially numbered `run` directory within `output\inflation`
 
 ## Tools - Resequence Files
 
