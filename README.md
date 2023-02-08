@@ -84,12 +84,18 @@ The application can be started in any of these ways:
 - The closest matching frame will shown in the preview window
 - The generated PNG is saved in a sequentially numbered `run` directory within `output\search`
 - It is also made available for download from the UI
-- *See examples below*
+- *See command line examples below*
 
 ## Video Inflation
 
 - Enter Input and Output directories
   - The Input directory should contain a sequence of video frame PNG files
+  - The files will be read and processed in alphanumeric order
+  - The *Resequence Files* tool can be used to sequentially number a set of PNG files
+- Choose the number of splits
+- Click Interpolate Series
+- This will take a long time!
+- A standard TQDM progress bar is shown in the console to track progress
 
 # Command Line Tools
 
