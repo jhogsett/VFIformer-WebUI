@@ -47,13 +47,13 @@ class TargetInterpolate():
             self.log_fn(message)
 
     def split_frames(self,
-                    before_filepath, 
-                    after_filepath, 
-                    num_splits, 
-                    min_target,
-                    max_target,
-                    output_path, 
-                    base_filename, 
+                    before_filepath : str, 
+                    after_filepath : str, 
+                    num_splits : int, 
+                    min_target : float,
+                    max_target : float,
+                    output_path : str, 
+                    base_filename : str, 
                     progress_label="Split"):
         self.init_frame_register()
         self.reset_split_manager(num_splits)
