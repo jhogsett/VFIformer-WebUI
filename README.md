@@ -223,8 +223,21 @@ App configuration is set via `config.yaml`
 - interpolate_settings\[gif_duration\]
   - total time in ms for the animated GIF preview
   - default is 3000
-  
-### Thanks!
+ 
+# Future Plans
+- incorporate Real-ESRGAN for frame restoration and upscaling
+  - https://github.com/xinntao/Real-ESRGAN
+- add a GIF-to-MP4 feature to recover the original video from an animated GIF
+  - uses Real-ESRGAN to denoise the GIF frames and upscale them
+  - uses VFIformer to fill in missing frames
+  - saved as a MP4 files or PNG sequence
+- add tools to easily switch between GIF PNG & MP4 formats
+- make the tool available in a Hugging Face space https://huggingface.co/
+  - I could use help with this
+- Suggestions are very welcome
+- Contributions are also very welcome
+ 
+# Thanks!
 
 Thanks! to the VFIformer folks for their amazing tool 
 - https://github.com/dvlab-research/VFIformer
@@ -236,13 +249,13 @@ Thanks to Gradio for their easy-to-use Web UI building tool and great docs
 - https://gradio.app/
 - https://github.com/gradio-app/gradio
 
-### Credits
+# Credits
 
 Royalty-Free Video used for the example 
 - "FunfaIr in Barcelona"
 - https://motionarray.com/stock-video/funfair-in-barcelona-1163645/
 
-### My Public Uses of VFIformer
+# My Public Uses of VFIformer
 
 YouTube
 - Feb 01 2023 "Fun with AI: De-Ticking a Ticking Clock" https://youtu.be/JhibFQvP7X0
