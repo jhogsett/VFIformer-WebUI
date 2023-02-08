@@ -15,7 +15,7 @@ def main():
     parser.add_argument("--gpu_ids", type=str, default="0", help="gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU")
     parser.add_argument("--img_before", default="./images/image0.png", type=str, help="Path to before frame image")
     parser.add_argument("--img_after", default="./images/image2.png", type=str, help="Path to after frame image")
-    parser.add_argument("--depth", default=1, type=int, help="how many doublings of the frames")
+    parser.add_argument("--depth", default=2, type=int, help="how many doublings of the frames")
     parser.add_argument("--output_path", default="./output", type=str, help="Output path for interpolated PNGs")
     parser.add_argument("--base_filename", default="interpolated_frame", type=str, help="Base filename for interpolated PNGs")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
