@@ -137,7 +137,7 @@ Example: Change the output from the deep interpolate example for import into Pre
 `python resequence_files --path ./output`
 
 - loads all PNG files found in ./output
-- duplicates each with new sequential filenames pngsequence0.png thru pngsequence0.png
+- duplicates each with new sequential filenames pngsequence0.png thru pngsequence8.png
 - use `python resequence_files.py --help` for arguments
   - use --rename to rename the files in place instead of making duplicates
 
