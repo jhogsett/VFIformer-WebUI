@@ -182,7 +182,7 @@ Example #2: Precisely find a frame exactly 2/3 of the way between two frames:
 `python interpolation_target.py --min_target 0.666666666 --max_target 0.666666668 --depth 30`
 
 - loads images/image0.png and images/image2.png
-- searches for a high precision match to a frame closest to exactly 1/3
+- searches for a high precision match to a frame closest to exactly 2/3
 - uses a super high split count of 30 for precision
 - creates output/interpolated_frame@0.6666666669771075.png
 - on my PC, I get a result in 17 seconds (1.68s/it)
