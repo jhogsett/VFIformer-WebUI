@@ -6,12 +6,17 @@
 [ ] clean up multiple util files in root directory
 [ ] do I need the "fix gradio phoning home" fix like in automatic1111?
 [ ] add a link to my repo in the footer
-
-Tool ideas
-
-split a GIF or MP4 into a series of PNG frames
-rename a sequence of PNG files suitable for import into Premiere Pro
-recombine a series of PNG frames into an MP4
+[ ] for video inflation, update a total interpolated frames count based on the frame count of the mp4
+[ ] can the core code provide a way to allow the Gradio UI to update while in progress? 
+    maybe a way to subscribe to the log
+    maybe a separate Callable called to provide updates on the major chunk of work, could be called to update a pbar
+[ ] could have an accordion that shows the log output (can a text area be updates outside of their event loop?)
+[ ] use simpler video-oriented terms on video inflation tab, like a selector with FPS values or multipliers
+[ ] some kind of in-progress indication on video inflation and prevention of clicking submit again
+[ ] better restart that actually reloads the model and recreates the UI 
+[ ] add an about tab or page, links to VFIformer, Gradio and my repo
+[ ] wiki content
+[ ] update readme for recent additions
 
 Experiments
 

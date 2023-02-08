@@ -9,7 +9,7 @@ from deep_interpolate import DeepInterpolate
 from interpolate_series import InterpolateSeries
 from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
-from webui_utils.auto_increment import AutoIncrementFilename, AutoIncrementDirectory
+from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory
 from webui_utils.simple_utils import max_steps
@@ -173,7 +173,8 @@ def create_ui():
                     output_path_text = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
                     with gr.Row(variant="compact"):
                         splits_input2 = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
-                        info_output2 = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
+                        info_output2 = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
+            gr.Markdown("*Progress can be tracked in the console*")
             interpolate_button2 = gr.Button("Interpolate Series (this will take time)", variant="primary")
         with gr.Tab("gif2mp4"):
             with gr.Row(variant="compact"):
@@ -201,20 +202,31 @@ def create_ui():
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="panel"):
-                    input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
-                    with gr.Row(variant="compact"):
-                        input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
-                        input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
-                    with gr.Row(variant="compact"):
-                        input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
-                        input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer step for the sequentially numbered files", label="Integer step")
-                        input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
-                    with gr.Row(variant="compact"):
-                        input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files") 
-                    resequence_button = gr.Button("Resequence Files", variant="primary")
-    
+            with gr.Tab("Resequence Files"):
+                with gr.Row(variant="compact"):
+                    with gr.Column(variant="panel"):
+                        input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
+                        with gr.Row(variant="compact"):
+                            input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
+                            input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
+                        with gr.Row(variant="compact"):
+                            input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
+                            input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer step for the sequentially numbered files", label="Integer step")
+                            input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
+                        with gr.Row(variant="compact"):
+                            input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files") 
+                        resequence_button = gr.Button("Resequence Files", variant="primary")
+            with gr.Tab("Upscaling"):
+                gr.Markdown("Use Real-ESRGAN 4x+ to restore and/or upscale images")
+            with gr.Tab("gif2png"):
+                gr.Markdown("Convert a GIF to a PNG sequence")
+            with gr.Tab("mp42png"):
+                gr.Markdown("Convert a MP4 to a PNG sequence")
+            with gr.Tab("png2gif"):
+                gr.Markdown("Convert a PNG sequence to a GIF, specify duration and looping")
+            with gr.Tab("png2mp4"):
+                gr.Markdown("Convert a PNG sequence to a MP4")
+
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
         interpolate_button2.click(interpolate_series, inputs=[input_path_text, output_path_text, splits_input2])
         splits_input.change(update_splits_info, inputs=splits_input, outputs=info_output, show_progress=False)
