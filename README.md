@@ -73,24 +73,73 @@ The application can be started in any of these ways:
 The core components also allow command line use.
 
 ## interpolate.py
+Creates an interpolated frame between two frames
 
-Create an interpolated frame between two frames
+Example: Recover a lost frame between two frames
+`python interpolate.py`
 
-Example: `python interpolate.py`
-- loads `images/image0.png` and `images/image2.png`
-- interpolates and saves `images/image1.png`
+- loads images/image0.png and images/image2.png
+- interpolates and saves images/image1.png
 - use `python interpoloate.py --help` for arguments
 
 ## deep_interpolate.py
+Creates a chosen number of interplolated frames between two frames
 
-Create a chosen number of interplolated frames between two frames
+Example: Create 4X slow motion between two frames
+`python deep_interpolate.py --depth 2`
 
-Example: `python deep_interpolate.py --depth 2`
 - loads images/image0.png and images/image2.png
 - interpolates three evenly-speced between frames
-- the original and new frames are put in `output/interpolated_frame0.png` ... `interpolated_frame4.png`
-- the `depth` argument specifies the number of *doublings* of the effective frame rate
+- the original and new frames are put in output/interpolated_frame0.png ... interpolated_frame4.png
+- the depth argument specifies the number of *doublings* of the effective frame rate
   - the number of newly created frames = 2 ** depth - 1
+- use `python deep_interpoloate.py --help` for arguments
+
+## interpolate_series.py
+Split a sequence of video frame PNGs to any depth to create super-slow-motion
+
+Example: Inflate a video sequence 4X
+`python interpolate_series.py`
+
+- loads images/image0.png thru images/image2.png
+- interpolates three evenly-spaced frames between each frame
+- the original three frames and six interpolated frames are put in output
+  - the files are named for their original frame number and interpolation sequence
+  - the file resequencing tool (below) can be used to create a set of sequentially numbered files for import into video editing software
+- use `python interpoloate_series.py --help` for arguments
+
+## interpolate_target.py
+Search for a frame at a precise time between two frames and return the closest match
+
+Example #1: Quickly find a frame about 1/3 of the way between two frames:
+`python interpolate_target.py`
+
+- loads images/image0.png and images/image2.png
+- searches for the frame closest to 1/3
+- uses a high split count of 10 for precision
+- creates output/interpolated_frame@0.3330078125.png
+- use `python interpoloation_target.py --help` for arguments
+
+Example #2: Precisely find a frame exactly 1/3 of the way between two frames:
+`python interpolation_target.py --min_target 0.666666666 --max_target 0.666666668 --depth 30`
+
+- loads images/image0.png and images/image2.png
+- searches for a high precision match to a frame closest to exactly 1/3
+- uses a super high split count of 30 for precision
+- creates output/interpolated_frame@0.6666666669771075.png
+- on my PC, I get a result in 17 seconds (1.68s/it)
+  - running a regular deep interpolate to gain this precision at 30 splits would take > 57 years!
+
+## resequence_files.py
+Rename a series of PNG files with sequential integers for easy import into video editing software
+
+Example: Change the output from the deep interpolate example for import into Premiere Pro
+`python resequence_files --path ./output`
+
+- loads all PNG files found in ./output
+- duplicates each with new sequential filenames pngsequence0.png thru pngsequence0.png
+- use `python resequence_files.py --help` for arguments
+  - use --rename to rename the files in place instead of making duplicates
 
 # App Configuration
 
@@ -126,6 +175,12 @@ Thanks! to the stable-diffusion-webui folks for their great UI, amazing tool, an
 Thanks to Gradio for their easy-to-use Web UI building tool and great docs
 - https://gradio.app/
 - https://github.com/gradio-app/gradio
+
+### Credits
+
+Royalty-Free Video used for the example 
+- "Funfiar in Barcelona"
+- https://motionarray.com/stock-video/funfair-in-barcelona-1163645/
 
 ### My Public Uses of VFIformer
 
