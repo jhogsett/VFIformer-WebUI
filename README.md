@@ -59,7 +59,7 @@ The application can be started in any of these ways:
 ## Frame Interpolation
 
 - Click the upper left panel or drag and drop a *before* frame
-- Do the same for the lower left panel, for an *after*frame
+- Do the same for the lower left panel, for an *after* frame
   - sample images can be found in the `images` directory
 - Choose the number of splits
   - The number of created "between" frames will be (2 ** splits - 1)
@@ -90,13 +90,13 @@ The application can be started in any of these ways:
 
 - Enter Input and Output directories
   - The Input directory should contain a sequence of video frame PNG files
+  - The Output directory can be left blank to save in a sequentially numbered `run` directory within `output\inflation`
   - The files will be read and processed in alphanumeric order
-  - The *Resequence Files* tool can be used to sequentially number a set of PNG files
+    - The *Resequence Files* tool can be used to sequentially number a set of PNG files
 - Choose the number of splits
 - Click Interpolate Series
 - This will take a long time!
 - A standard TQDM progress bar is shown in the console to track progress
-- The original and generated PNG frames are saved in a sequentially numbered `run` directory within `output\inflation`
 
 ## Tools - Resequence Files
 
