@@ -11,3 +11,18 @@ def max_steps(num_splits : int) -> int:
 # Useful if using 3rd-party code expecting an args object
 def FauxArgs(**kwargs):
     return namedtuple("FauxArgs", kwargs.keys())(**kwargs)
+
+# True if target range is entirely within the domain range, inclusive
+def float_range_in_range(target_min : float, target_max : float, domain_min : float, domain_max : float, use_midpoint=False):
+    if use_midpoint:
+        target = target_min + (target_max - target_min) / 2.0
+        if target >= domain_min and target <= domain_max:
+            return True
+        else:
+            return False
+    else:
+        if target_min >= domain_min and target_max <= domain_max:
+            return True
+        else:
+            return False
+
