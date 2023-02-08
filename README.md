@@ -101,7 +101,8 @@ The application can be started in any of these ways:
 
 - Enter a path to the files to be resequenced
 - Enter a file type
-  - this is used 
+  - this is used to search for files in the input path
+  - it's also used to generate the file type for the output filenames
 - Enter a base filename for the resequenced files
 - Enter a starting sequence number
   - 0 is a typical value
