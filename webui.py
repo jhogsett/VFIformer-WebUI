@@ -14,6 +14,7 @@ from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory
 from webui_utils.simple_utils import max_steps
 from resequence_files import ResequenceFiles
+from interpolation_target import TargetInterpolate
 
 global restart, prevent_inbrowser
 restart = False
@@ -75,7 +76,7 @@ def deep_interpolate(img_before_file : str, img_after_file : str, num_splits : f
     if img_before_file and img_after_file:
         interpolater = Interpolate(engine.model, log.log)
         deep_interpolater = DeepInterpolate(interpolater, log.log)
-        base_output_path = config.directories["output_interpolate"]
+        base_output_path = config.directories["output_interpolation"]
         output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
         output_basename = "interpolated_frames"
 
@@ -113,7 +114,7 @@ def interpolate_series(input_path : str, output_path : str | None, num_splits : 
         interpolater = Interpolate(engine.model, log.log)
         deep_interpolater = DeepInterpolate(interpolater, log.log)
         series_interpolater = InterpolateSeries(deep_interpolater, log.log)
-        base_output_path = output_path or config.directories["output_slowmotion"]
+        base_output_path = output_path or config.directories["output_inflation"]
         create_directory(base_output_path)
         output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
         output_basename = "interpolated_frames"
@@ -121,6 +122,23 @@ def interpolate_series(input_path : str, output_path : str | None, num_splits : 
 
         log.log(f"beginning series of deep interpolations at {output_path}")
         series_interpolater.interpolate_series(file_list, output_path, num_splits, output_basename)
+
+def interpolate_target(img_before_file : str, img_after_file : str, num_splits : float, min_target : float, max_target : float):
+    global log, config, engine, file_output2
+    file_output2.update(visible=False)
+
+    if img_before_file and img_after_file and min_target and max_target:
+        interpolater = Interpolate(engine.model, log.log)
+        target_interpolater = TargetInterpolate(interpolater, log.log)
+        base_output_path = config.directories["output_search"]
+        create_directory(base_output_path)
+        output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
+        output_basename = "frame"
+
+        log.log(f"beginning targeted interpolations at {output_path}")
+        target_interpolater.split_frames(img_before_file, img_after_file, num_splits, float(min_target), float(max_target), output_path, output_basename)
+        output_paths = target_interpolater.output_paths
+        return gr.Image.update(value=output_paths[0]), gr.File.update(value=output_paths, visible=True)
 
 def resequence_files(input_path : str, input_filetype : str, input_newname : str, input_start : str, input_step : str, input_zerofill : str, input_rename_check : bool):
     global log
@@ -147,13 +165,14 @@ def restart_app():
 #### Create Gradio UI
 
 def create_ui():
-    global config, file_output
+    global config, file_output, file_output2
     with gr.Blocks(analytics_enabled=False, 
                     title="VFIformer Web UI", 
                     theme=config.user_interface["theme"],
                     css=config.user_interface["css_file"]) as app:
         gr.Markdown("VFIformer Web UI")
         with gr.Tab("Frame Interpolation"):
+            gr.Markdown("Divide the time between two frames to any depth, see an animation of result and download the new frames")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     img1_input = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -165,7 +184,22 @@ def create_ui():
                     img_output = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                     file_output = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             interpolate_button = gr.Button("Interpolate", variant="primary")
+        with gr.Tab("Frame Search"):
+            gr.Markdown("Search for an arbitrarily precise timed frame and return the closest match")
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="panel"):
+                    img1_input2 = gr.Image(type="filepath", label="Before Image", tool=None)
+                    img2_input2 = gr.Image(type="filepath", label="After Image", tool=None)
+                    with gr.Row(variant="compact"):
+                        splits_input3 = gr.Slider(value=1, minimum=1, maximum=50, step=1, label="Search Depth")
+                        min_input_text = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
+                        max_input_text = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
+                with gr.Column(variant="panel"):
+                    img_output2 = gr.Image(type="filepath", label="Found Frame", interactive=False)
+                    file_output2 = gr.File(type="file", file_count="multiple", label="Download", visible=False)
+            interpolate_button3 = gr.Button("Interpolate", variant="primary")
         with gr.Tab("Video Inflation"):
+            gr.Markdown("Double the number of video frames to any depth for super slow motion")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     #with gr.Row(variant="compact"):
@@ -176,29 +210,6 @@ def create_ui():
                         info_output2 = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
             interpolate_button2 = gr.Button("Interpolate Series (this will take time)", variant="primary")
-        with gr.Tab("gif2mp4"):
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="panel"):
-                    gr.Markdown("""
-                    # Recover the original video from animated GIF file
-                    - split GIF into a series of PNG frames
-                    - use R-ESRGAN 4x+ to restore and/or upscale
-                    - use VFIformer to adjust frame rate to real time
-                    - reassemble new PNG frames into MP4 file""")
-        with gr.Tab("Frame Isolation"):
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="panel"):
-                    gr.Markdown("""
-                    # Synthesize a frame targetted at a specific time not otherwise easily reached, such as 0.333 or 0.667
-                    - with a minimum of 10 splits/1023 new frames, it's possible to get close to 1/3 and 2/3:
-                      - 342 / 2**10 = 0.3330
-                      - 683 / 2**10 = 0.6669 
-                    - It's possible to get to 0.333 with fewer steps:
-                      - split 0.0-1.0, then reenter to split only the 0.0-0.5 part
-                      - then split 0.0-0.5, then 0.25-0.5, 0.25-0.375, 0.3125-0.375, 0.3125-0.34375, 0.328125-0.34375,
-                         0.328125-0.3359375, 0.33203125-0.3359375, 0.33203125-0.333984375 -> 0.3330078125
-                      - that's the same number of splits (10) but half the frame interpolation time
-                      - the sequence won't by continuous/playable, so it doesn't make sense to produce a GIF""")
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
@@ -226,6 +237,15 @@ def create_ui():
                 gr.Markdown("Convert a PNG sequence to a GIF, specify duration and looping")
             with gr.Tab("png2mp4"):
                 gr.Markdown("Convert a PNG sequence to a MP4")
+        with gr.Tab("Gif2Mp4"):
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="panel"):
+                    gr.Markdown("""
+                    # Idea: Recover the original video from animated GIF file
+                    - split GIF into a series of PNG frames
+                    - use R-ESRGAN 4x+ to restore and/or upscale
+                    - use VFIformer to adjust frame rate to real time
+                    - reassemble new PNG frames into MP4 file""")
 
         interpolate_button.click(deep_interpolate, inputs=[img1_input, img2_input, splits_input], outputs=[img_output, file_output])
         interpolate_button2.click(interpolate_series, inputs=[input_path_text, output_path_text, splits_input2])
@@ -233,6 +253,7 @@ def create_ui():
         splits_input2.change(update_splits_info, inputs=splits_input2, outputs=info_output2, show_progress=False)
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},500)")
         resequence_button.click(resequence_files, inputs=[input_path_text2, input_filetype_text, input_newname_text, input_start_text, input_step_text, input_zerofill_text, input_rename_check])
+        interpolate_button3.click(interpolate_target, inputs=[img1_input2, img2_input2, splits_input3, min_input_text, max_input_text], outputs=[img_output2, file_output2])
     return app
 
 if __name__ == '__main__':
