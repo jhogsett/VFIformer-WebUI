@@ -61,7 +61,8 @@ The application can be started in any of these ways:
   - sample images can be found in the `images` directory
 - Choose the number of splits
   - The number of created "between" frames will be (2 ** splits - 1)
-  - A large split count will take a long time to complete (9 splits took > 16 minutes on my system)
+  - A large split count will take a long time to complete
+  - 10 splits took > 8 minutes on my system with the example images
 - Click Interpolate
   - When the split count is > 1, a progress bar is shown in the console window
 - When the process completes, an animated GIF shows the result of the interpolation
@@ -145,7 +146,7 @@ Example: Change the output from the deep interpolate example for import into Pre
 - loads all PNG files found in ./output
 - duplicates each with new sequential filenames pngsequence0.png thru pngsequence8.png
 - use `python resequence_files.py --help` for arguments
-  - use --rename to rename the files in place instead of making duplicates
+  - use `--rename` to rename the files in place instead of making duplicates
 
 # App Configuration
 
