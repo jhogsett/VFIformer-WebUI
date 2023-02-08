@@ -5,6 +5,8 @@
 
 ![example](https://user-images.githubusercontent.com/825994/217553208-8b482d9a-4567-4af4-918d-a5938f709215.gif)
 
+[Video Inflation example (YouTube)](https://youtu.be/rOiALIN805w)
+
 I have been writing my own Python code for some time to use the [VFIformer](https://github.com/dvlab-research/VFIformer) video frame interpolation engine for various purposes (here's an [example video](https://www.youtube.com/watch?v=JhibFQvP7X0) from my [YouTube channel](https://www.youtube.com/@jerryhogsett)). I thought, why don't I start learning Gradio by building a WebUI for this tool that I love and use so much. Of course, and make it available to the public. 
 
 _My code builds on their repo and borrows some code, but makes no changes._
@@ -111,7 +113,7 @@ The application can be started in any of these ways:
 - Enter an integer step
   - 1 is a typical value
   - a different value might be useful in special situations
-  - I used this in a video to overlay a set of watermarked *real* frames on top of an inflated set of video frames, where I needed each frame to be the next 32nd frame in the overall sequence
+  - I used this in a [video](https://www.youtube.com/watch?v=rOiALIN805w) to overlay a set of watermarked *real* frames on top of an inflated set of video frames, where I needed each frame to be the next 32nd frame in the overall sequence
 - Enter a number padding
   - -1 (automatic) is a typical value
   - this determines the zero-fill of the sequential number, and is used to ensure the frames are alphanumeric-sortable
