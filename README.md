@@ -56,8 +56,10 @@ The application can be started in any of these ways:
 
 # Using Web UI
 
-- Click the upper left panel or drag and drop a "before" frame
-- Do the same for the lower left panel, for an "after" frame
+## Frame Interpolation
+
+- Click the upper left panel or drag and drop a *before* frame
+- Do the same for the lower left panel, for an *after*frame
   - sample images can be found in the `images` directory
 - Choose the number of splits
   - The number of created "between" frames will be (2 ** splits - 1)
@@ -66,8 +68,28 @@ The application can be started in any of these ways:
 - Click Interpolate
   - When the split count is > 1, a progress bar is shown in the console window
 - When the process completes, an animated GIF shows the result of the interpolation
-- The original and generated PNG frames are saved in a sequentially numbered `run` directory within `output\interpolate`
-- The animated GIF preview is also saved
+- The original and generated PNG frames are saved in a sequentially numbered `run` directory within `output\interpolation`
+- The animated GIF preview file and a ZIP of the frames are also saved
+- The GIF, ZIP and a TXT file report are downloadable from the UI
+
+## Frame Search
+
+- Click the upper left panel or drag and drop a *before* frame
+- Do the same for the lower left panel, for an *after* frame
+  - sample images can be found in the `images` directory
+- Choose the search depth
+  -  tip: use a deep search depth for high precision
+- Enter a minumum and maximum search range
+- Click Interpolate
+- The closest matching frame will shown in the preview window
+- The generated PNG is saved in a sequentially numbered `run` directory within `output\search`
+- It is also made available for download from the UI
+- *See examples below*
+
+## Video Inflation
+
+- Enter Input and Output directories
+  - The Input directory should contain a sequence of video frame PNG files
 
 # Command Line Tools
 
