@@ -76,6 +76,7 @@ The core components also allow command line use.
 Creates an interpolated frame between two frames
 
 Example: Recover a lost frame between two frames
+
 `python interpolate.py`
 
 - loads images/image0.png and images/image2.png
@@ -86,6 +87,7 @@ Example: Recover a lost frame between two frames
 Creates a chosen number of interplolated frames between two frames
 
 Example: Create 4X slow motion between two frames
+
 `python deep_interpolate.py --depth 2`
 
 - loads images/image0.png and images/image2.png
@@ -99,6 +101,7 @@ Example: Create 4X slow motion between two frames
 Split a sequence of video frame PNGs to any depth to create super-slow-motion
 
 Example: Inflate a video sequence 4X
+
 `python interpolate_series.py`
 
 - loads images/image0.png thru images/image2.png
@@ -112,6 +115,7 @@ Example: Inflate a video sequence 4X
 Search for a frame at a precise time between two frames and return the closest match
 
 Example #1: Quickly find a frame about 1/3 of the way between two frames:
+
 `python interpolate_target.py`
 
 - loads images/image0.png and images/image2.png
@@ -121,6 +125,7 @@ Example #1: Quickly find a frame about 1/3 of the way between two frames:
 - use `python interpoloation_target.py --help` for arguments
 
 Example #2: Precisely find a frame exactly 2/3 of the way between two frames:
+
 `python interpolation_target.py --min_target 0.666666666 --max_target 0.666666668 --depth 30`
 
 - loads images/image0.png and images/image2.png
@@ -134,6 +139,7 @@ Example #2: Precisely find a frame exactly 2/3 of the way between two frames:
 Rename a series of PNG files with sequential integers for easy import into video editing software
 
 Example: Change the output from the deep interpolate example for import into Premiere Pro
+
 `python resequence_files --path ./output`
 
 - loads all PNG files found in ./output
