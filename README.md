@@ -186,7 +186,7 @@ Thanks to Gradio for their easy-to-use Web UI building tool and great docs
 ### Credits
 
 Royalty-Free Video used for the example 
-- "Funfiar in Barcelona"
+- "FunfaIr in Barcelona"
 - https://motionarray.com/stock-video/funfair-in-barcelona-1163645/
 
 ### My Public Uses of VFIformer
