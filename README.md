@@ -97,6 +97,29 @@ The application can be started in any of these ways:
 - This will take a long time!
 - A standard TQDM progress bar is shown in the console to track progress
 
+## Tools - Resequence Files
+
+- Enter a path to the files to be resequenced
+- Enter a file type
+  - this is used 
+- Enter a base filename for the resequenced files
+- Enter a starting sequence number
+  - 0 is a typical value
+  - a different value might be useful if inserting frames into another sequence
+- Enter an integer step
+  - 1 is a typical value
+  - a different value might be useful in special situations
+  - I used this in a video to overlay a set of watermarked *real* frames on top of an inflated set of video frames, where I needed each frame to be the next 32nd frame in the overall sequence
+- Enter a number padding
+  - -1 (automatic) is a typical value
+  - this determines the zero-fill of the sequential number, and is used to ensure the frames are alphanumeric-sortable
+  - *automatic* will determine this based on the number of files
+  - a different value might be useful if inserting frames into another sequence
+- Choose whether to rename (checked) or duplicate (unchecked) the files to resequence them
+  - it can be handy to have the original set of frames, marked with their original frame ID, for troubleshooting
+- Click Resequence Files  
+- A standard TQDM progress bar is shown in the console to track progress
+  
 # Command Line Tools
 
 The core components also allow command line use.
