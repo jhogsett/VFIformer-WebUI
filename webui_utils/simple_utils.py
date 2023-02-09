@@ -13,7 +13,8 @@ def FauxArgs(**kwargs):
     return namedtuple("FauxArgs", kwargs.keys())(**kwargs)
 
 # True if target range is entirely within the domain range, inclusive
-def float_range_in_range(target_min : float, target_max : float, domain_min : float, domain_max : float, use_midpoint=False):
+def float_range_in_range(target_min : float, target_max : float, domain_min : float,
+                        domain_max : float, use_midpoint=False):
     if use_midpoint:
         target = target_min + (target_max - target_min) / 2.0
         if target >= domain_min and target <= domain_max:
@@ -25,4 +26,3 @@ def float_range_in_range(target_min : float, target_max : float, domain_min : fl
             return True
         else:
             return False
-

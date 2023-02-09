@@ -1,5 +1,5 @@
-from torch.nn.parallel import DistributedDataParallel
 from collections import OrderedDict
+from torch.nn.parallel import DistributedDataParallel
 import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
@@ -25,9 +25,9 @@ class InterpolateEngine:
         str_ids = gpu_ids.split(',')
         gpu_ids = []
         for str_id in str_ids:
-            id = int(str_id)
-            if id >= 0:
-                gpu_ids.append(id)
+            _id = int(str_id)
+            if _id >= 0:
+                gpu_ids.append(_id)
         if len(gpu_ids) > 0:
             torch.cuda.set_device(gpu_ids[0])
         cudnn.benchmark = True

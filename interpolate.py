@@ -1,13 +1,9 @@
 import argparse
 import math
+from typing import Callable
 import cv2
 import torch
 import torchvision
-from skimage.color import rgb2yuv, yuv2rgb
-from utils.util import setup_logger, print_args
-from utils.pytorch_msssim import ssim_matlab
-from models.modules import define_G
-from typing import Callable
 from webui_utils.simple_log import SimpleLog
 from interpolate_engine import InterpolateEngine
 
@@ -27,7 +23,7 @@ def main():
     interpolater.create_between_frame(args.img_before, args.img_after, args.img_new)
 
 class Interpolate:
-    def __init__(self, 
+    def __init__(self,
                 model,
                 log_fn : Callable | None):
         self.model = model
@@ -70,5 +66,3 @@ class Interpolate:
 
 if __name__ == '__main__':
     main()
-
-

@@ -2,8 +2,8 @@ import os
 import shutil
 import glob
 import argparse
-from tqdm import tqdm
 from typing import Callable
+from tqdm import tqdm
 from webui_utils.simple_log import SimpleLog
 
 def main():
@@ -19,24 +19,24 @@ def main():
     args = parser.parse_args()
 
     log = SimpleLog(args.verbose)
-    ResequenceFiles(args.path, 
-                    args.file_type, 
-                    args.new_name, 
-                    args.start, 
-                    args.step, 
-                    args.zero_fill, 
-                    args.rename, 
+    ResequenceFiles(args.path,
+                    args.file_type,
+                    args.new_name,
+                    args.start,
+                    args.step,
+                    args.zero_fill,
+                    args.rename,
                     log.log).resequence()
 
 class ResequenceFiles:
-    def __init__(self, 
+    def __init__(self,
                 path : str,
-                file_type : str, 
-                new_base_filename : str, 
-                start_index : int, 
-                index_step : int, 
+                file_type : str,
+                new_base_filename : str,
+                start_index : int,
+                index_step : int,
                 zero_fill : int,
-                rename : bool , 
+                rename : bool ,
                 log_fn : Callable | None):
         self.path = path
         self.file_type = file_type

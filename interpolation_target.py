@@ -1,14 +1,14 @@
 import os
-import cv2
 import argparse
+from typing import Callable
+import re
+import cv2
 from tqdm import tqdm
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from webui_utils.simple_log import SimpleLog
-from webui_utils.simple_utils import max_steps, float_range_in_range
+from webui_utils.simple_utils import float_range_in_range
 from webui_utils.file_utils import create_directory
-from typing import Callable
-import re
 
 def main():
     parser = argparse.ArgumentParser(description="Video Frame Interpolation to a specify time")
@@ -32,7 +32,7 @@ def main():
     target_interpolater.split_frames(args.img_before, args.img_after, args.depth, args.min_target, args.max_target, args.output_path, args.base_filename)
 
 class TargetInterpolate():
-    def __init__(self, 
+    def __init__(self,
                 interpolater : Interpolate,
                 log_fn : Callable | None):
         self.interpolater = interpolater
@@ -47,13 +47,13 @@ class TargetInterpolate():
             self.log_fn(message)
 
     def split_frames(self,
-                    before_filepath : str, 
-                    after_filepath : str, 
-                    num_splits : int, 
+                    before_filepath : str,
+                    after_filepath : str,
+                    num_splits : int,
                     min_target : float,
                     max_target : float,
-                    output_path : str, 
-                    base_filename : str, 
+                    output_path : str,
+                    base_filename : str,
                     progress_label="Split"):
         self.init_frame_register()
         self.reset_split_manager(num_splits)
@@ -63,12 +63,12 @@ class TargetInterpolate():
         self.set_up_outer_frames(before_filepath, after_filepath, output_filepath_prefix)
 
         self.recursive_split_frames(0.0, 1.0, output_filepath_prefix, min_target, max_target)
-        self.isolate_target_frame(output_path, base_filename)
+        self.isolate_target_frame()
         self.close_progress()
 
     def recursive_split_frames(self,
-                                first_index : float, 
-                                last_index : float, 
+                                first_index : float,
+                                last_index : float,
                                 filepath_prefix : str,
                                 min_target : float,
                                 max_target : float):
@@ -95,9 +95,9 @@ class TargetInterpolate():
                     self.log(f"skipping, unable to locate target {min_target},{max_target} within split ranges {first_index},{mid_index} and {mid_index},{last_index}")
             self.exit_split()
 
-    def set_up_outer_frames(self, 
-                            before_file, 
-                            after_file, 
+    def set_up_outer_frames(self,
+                            before_file,
+                            after_file,
                             output_filepath_prefix):
         img0 = cv2.imread(before_file)
         img1 = cv2.imread(after_file)
@@ -115,7 +115,7 @@ class TargetInterpolate():
         self.register_frame(after_file)
         self.log("copied " + after_file)
 
-    def isolate_target_frame(self, output_path, base_name):
+    def isolate_target_frame(self):
         frame_files = self.registered_frames()
 
         # the kept frame will be the last frame registered
@@ -154,8 +154,8 @@ class TargetInterpolate():
     def sorted_registered_frames(self):
         return sorted(self.frame_register)
 
-    def init_progress(self, max, description):
-        self.progress = tqdm(range(max), desc=description)
+    def init_progress(self, _max, description):
+        self.progress = tqdm(range(_max), desc=description)
 
     def step_progress(self):
         if self.progress:

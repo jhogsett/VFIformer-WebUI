@@ -36,14 +36,14 @@ def main():
     print("The models are lazy-loaded on the first interpolation (so it'll be slow)")
     while True:
         app = create_ui()
-        app.launch(inbrowser = config.auto_launch_browser and not prevent_inbrowser, 
+        app.launch(inbrowser = config.auto_launch_browser and not prevent_inbrowser,
                     server_name = config.server_name,
                     server_port = config.server_port,
                     prevent_thread_lock=True)
 
         # idea borrowed from stable-diffusion-webui webui.py
         # after initial launch, disable inbrowser for subsequent restarts
-        prevent_inbrowser = True 
+        prevent_inbrowser = True
 
         wait_on_server(app)
         print("Restarting...")
@@ -58,7 +58,7 @@ def wait_on_server(app):
             time.sleep(0.5)
             app.close()
             time.sleep(0.5)
-            break        
+            break
 
 # make the program just exit at ctrl+c without waiting for anything
 def sigint_handler(sig, frame):
@@ -154,7 +154,7 @@ frames:
 """ + "\n".join(output_paths)
     with open(info_file, 'w', encoding='utf-8') as f:
         f.write(report)
-    
+
 def update_splits_info(num_splits : float):
     return str(max_steps(num_splits))
 
@@ -166,8 +166,8 @@ def restart_app():
 
 def create_ui():
     global config, file_output, file_output2
-    with gr.Blocks(analytics_enabled=False, 
-                    title="VFIformer Web UI", 
+    with gr.Blocks(analytics_enabled=False,
+                    title="VFIformer Web UI",
                     theme=config.user_interface["theme"],
                     css=config.user_interface["css_file"]) as app:
         gr.Markdown("VFIformer Web UI")
@@ -225,7 +225,7 @@ def create_ui():
                             input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer step for the sequentially numbered files", label="Integer step")
                             input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
                         with gr.Row(variant="compact"):
-                            input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files") 
+                            input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
                         resequence_button = gr.Button("Resequence Files", variant="primary")
             with gr.Tab("Upscaling"):
                 gr.Markdown("Use Real-ESRGAN 4x+ to restore and/or upscale images")

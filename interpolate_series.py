@@ -1,11 +1,11 @@
 import argparse
+from typing import Callable
 from tqdm import tqdm
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from deep_interpolate import DeepInterpolate
 from webui_utils.simple_log import SimpleLog
 from webui_utils.file_utils import create_directory, get_files
-from typing import Callable
 
 def main():
     parser = argparse.ArgumentParser(description="Video Frame Interpolation (deep)")
@@ -27,9 +27,9 @@ def main():
 
     file_list = get_files(args.input_path, extension="png")
     series_interpolater.interpolate_series(file_list, args.output_path, args.depth, args.base_filename)
-    
+
 class InterpolateSeries():
-    def __init__(self, 
+    def __init__(self,
                 deep_interpolater : DeepInterpolate,
                 log_fn : Callable | None):
         self.deep_interpolater = deep_interpolater
@@ -41,14 +41,14 @@ class InterpolateSeries():
 
         pbar_desc = "Frames" if num_splits < 2 else "Total"
         # stop short of beginning at the last frame since there's no frame after i
-        for n in tqdm(range(count-1), desc=pbar_desc, position=0):
-            # for other than the first around, the duplicated real "before" frame is deleted for 
+        for frame in tqdm(range(count-1), desc=pbar_desc, position=0):
+            # for other than the first around, the duplicated real "before" frame is deleted for
             # continuity, since it's identical to the "after" from the previous round
-            continued = n > 0
-            before_file = file_list[n]
-            after_file = file_list[n+1]
-            filename = base_filename + "[" + str(n).zfill(num_width) + "]"
-            inner_bar_desc = f"Frame #{n}" 
+            continued = frame > 0
+            before_file = file_list[frame]
+            after_file = file_list[frame+1]
+            filename = base_filename + "[" + str(frame).zfill(num_width) + "]"
+            inner_bar_desc = f"Frame #{frame}"
             self.deep_interpolater.split_frames(before_file, after_file, num_splits, output_path, filename, progress_label=inner_bar_desc, continued=continued)
 
 if __name__ == '__main__':

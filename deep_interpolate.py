@@ -1,13 +1,13 @@
 import os
-import cv2
 import argparse
+from typing import Callable
+import cv2
 from tqdm import tqdm
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_utils import max_steps
 from webui_utils.file_utils import create_directory
-from typing import Callable
 
 def main():
     parser = argparse.ArgumentParser(description="Video Frame Interpolation (deep)")
@@ -29,7 +29,7 @@ def main():
     deep_interpolater.split_frames(args.img_before, args.img_after, args.depth, args.output_path, args.base_filename)
 
 class DeepInterpolate():
-    def __init__(self, 
+    def __init__(self,
                 interpolater : Interpolate,
                 log_fn : Callable | None):
         self.interpolater = interpolater
@@ -44,12 +44,12 @@ class DeepInterpolate():
             self.log_fn(message)
 
     def split_frames(self,
-                    before_filepath, 
-                    after_filepath, 
-                    num_splits, 
-                    output_path, 
-                    base_filename, 
-                    progress_label="Frame", 
+                    before_filepath,
+                    after_filepath,
+                    num_splits,
+                    output_path,
+                    base_filename,
+                    progress_label="Frame",
                     continued=False):
         self.init_frame_register()
         self.reset_split_manager(num_splits)
@@ -63,8 +63,8 @@ class DeepInterpolate():
         self.close_progress()
 
     def recursive_split_frames(self,
-                                first_index : float, 
-                                last_index : float, 
+                                first_index : float,
+                                last_index : float,
                                 filepath_prefix : str):
         if self.enter_split():
             mid_index = first_index + (last_index - first_index) / 2.0
@@ -81,9 +81,9 @@ class DeepInterpolate():
             self.recursive_split_frames(mid_index, last_index, filepath_prefix)
             self.exit_split()
 
-    def set_up_outer_frames(self, 
-                            before_file, 
-                            after_file, 
+    def set_up_outer_frames(self,
+                            before_file,
+                            after_file,
                             output_filepath_prefix):
         img0 = cv2.imread(before_file)
         img1 = cv2.imread(after_file)
@@ -142,11 +142,11 @@ class DeepInterpolate():
     def sorted_registered_frames(self):
         return sorted(self.frame_register)
 
-    def init_progress(self, num_splits, max, description):
+    def init_progress(self, num_splits, _max, description):
         if num_splits < 2:
             self.progress = None
         else:
-            self.progress = tqdm(range(max), desc=description)
+            self.progress = tqdm(range(_max), desc=description)
 
     def step_progress(self):
         if self.progress:
