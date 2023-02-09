@@ -2,6 +2,7 @@
 
 Needed
 - some kind of in-progress indication on video inflation and prevention of clicking submit again
+- need to be able to halt a video inflation, then resume it, picking it where it left off, either automatically, or via settings
 - do I need the "fix gradio phoning home" fix like in stable-diffusion-webui?
 - wiki content (unclutter the readme file)
 
