@@ -30,6 +30,9 @@ Experiments
 Dreaming
 - a tool that would take a set of raw PNG frames from a video one by one, estimate the aesthetic quality/amount of noise/visual cross-frame double-exposure compared to the equivalent frame re-synthesized using VFIformer, to automatically replace bad frames with good ones as part of an automated film restoration process
   - this is the process I used manually when creating [this video](https://youtu.be/PiLv5u1PYiE) on my [YouTube channel](https://www.youtube.com/channel/UCVuRnprazgpAgUQDTe-j0NA)
+- Built-in audio restoration like Adobe Podcast Speech Enhancement https://podcast.adobe.com/enhance
+- Audio Inflation to go along with Video Inflation
+- Automated FPS conversion video+audio
 
 Bugs
-- interpolate_series.py doesn't use the passed log function
+- (trivial) interpolate_series.py doesn't use the passed log function
