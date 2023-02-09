@@ -37,6 +37,9 @@ Dreaming
 - Built-in audio restoration like Adobe's Podcast Speech Enhancement https://podcast.adobe.com/enhance
 - Audio Inflation to go along with Video Inflation
 - Automated FPS conversion video+audio
+- Effects like
+  - recombine inflated frames, but combine/double-expose with frames with N frames back or forward
+- Tool to split and recombine video frames to/from RGB and HSL frames
 
 Bugs
 - (trivial) interpolate_series.py doesn't use the passed log function
