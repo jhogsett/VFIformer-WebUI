@@ -14,6 +14,7 @@ Nice to have
 - full auto-installation including VFIformer and Real-ESRGAN repos
 - add a link to my repo in the footer
 - could have an accordion that shows the verbose output
+- links to useful external tools like Adobe Podcast Speed Enhancement https://podcast.adobe.com/enhance
 
 Feature Development
 - incorporate use of Real-ESRGAN tool for frame restoration/upscaling
