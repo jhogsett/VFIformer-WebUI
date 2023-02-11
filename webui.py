@@ -140,6 +140,22 @@ def video_inflation(input_path : str, output_path : str | None, num_splits : flo
         log.log(f"beginning series of deep interpolations at {output_path}")
         series_interpolater.interpolate_series(file_list, output_path, num_splits, output_basename)
 
+def resynthesize_video(input_path : str, output_path : str | None):
+    global log, config, engine, file_output
+    if input_path:
+        # interpolater = Interpolate(engine.model, log.log)
+        # deep_interpolater = DeepInterpolate(interpolater, log.log)
+        # series_interpolater = InterpolateSeries(deep_interpolater, log.log)
+        # base_output_path = output_path or config.directories["output_inflation"]
+        # create_directory(base_output_path)
+        # output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
+        # output_basename = "interpolated_frames"
+        # file_list = get_files(input_path, extension="png")
+
+        # log.log(f"beginning series of deep interpolations at {output_path}")
+        # series_interpolater.interpolate_series(file_list, output_path, num_splits, output_basename)
+        log.log(f"awaiting implementation")
+
 def resequence_files(input_path : str, input_filetype : str, input_newname : str, input_start : str, input_step : str, input_zerofill : str, input_rename_check : bool):
     global log
     if input_path and input_filetype and input_newname and input_start and input_step and input_zerofill:
@@ -209,6 +225,37 @@ def create_ui():
                         info_output_vi = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
             interpolate_button_vi = gr.Button("Interpolate Series (this will take time)", variant="primary")
+        with gr.Tab("Resynthesize Video"):
+            gr.HTML("Interpolate all-new frames from a video for use in restoration", elem_id="tabheading")
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="panel"):
+                    input_path_text_rv = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
+                    output_path_text_rv = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
+            gr.Markdown("*Progress can be tracked in the console*")
+            resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
+        with gr.Tab("Frame Restoration"):
+            gr.HTML("Restore two or more adjacent damaged frames using Frame Search and download the restored frames", elem_id="tabheading")
+            with gr.Row(variant="compact"):
+                with gr.Column(variant="panel"):
+                    img1_input_fr = gr.Image(type="filepath", label="Frame before first damaged one", tool=None)
+                    img2_input_fr = gr.Image(type="filepath", label="Frame after last damaged one", tool=None)
+                    with gr.Row(variant="compact"):
+                        frames_input_fr = gr.Slider(value=2, minimum=1, maximum=10, step=1, label="Frames to repair")
+                        precision_input_fr = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Precision")
+                        info_output_fr = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
+                with gr.Column(variant="panel"):
+                    img_output_fi = gr.Image(type="filepath", label="Animated Preview", interactive=False)
+                    file_output_fi = gr.File(type="file", file_count="multiple", label="Download", visible=False)
+            interpolate_button_fi = gr.Button("Interpolate", variant="primary")
+
+
+
+            # with gr.Row(variant="compact"):
+            #     with gr.Column(variant="panel"):
+            #         input_path_text_rv = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
+            #         output_path_text_rv = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
+            # gr.Markdown("*Progress can be tracked in the console*")
+            # resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
@@ -254,6 +301,8 @@ def create_ui():
 
         interpolate_button_vi.click(video_inflation, inputs=[input_path_text_vi, output_path_text_vi, splits_input_vi])
         splits_input_vi.change(update_splits_info, inputs=splits_input_vi, outputs=info_output_vi, show_progress=False)
+
+        resynthesize_button_rv.click(resynthesize_video, inputs=[input_path_text_rv, output_path_text_rv])
 
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},1000)")
 
