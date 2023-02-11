@@ -34,23 +34,20 @@ def predict_search_frame(num_splits : int, fractional_time : float) -> float:
     resolution = 2 ** num_splits
     return round(resolution * fractional_time) / resolution
 
-# For Frame Restoration, given a count of damaged frames
+# For Frame Restoration, given a count of restored frames
+# compute the frame search times for the new frames that will be created
+def restored_frame_searches(restored_frame_count : int) -> list:
+    return [(n + 1.0) / (restored_frame_count + 1.0) for n in range(restored_frame_count)]
+
+# For Frame Restoration, given a count of restored frames
 # compute a human friendly display of the fractional
 # times for the new frames that will be created
-def damaged_frame_fractions(damaged_frame_count : int) -> str:
-    return ", ".join([f"{n + 1}/{damaged_frame_count + 1}" for n in range(damaged_frame_count)])
+def restored_frame_fractions(restored_frame_count : int) -> str:
+    return ", ".join([f"{n + 1}/{restored_frame_count + 1}" for n in range(restored_frame_count)])
 
-# For Frame Restoration, given a count of damaged frames
-# compute the frame search times for the new frames that will be created
-def damaged_frame_searches(damaged_frame_count : int) -> list:
-    return [(n + 1.0) / (damaged_frame_count + 1.0) for n in range(damaged_frame_count)]
-
-# For Frame Restoration, given a count of damaged frames
+# For Frame Restoration, given a count of restored frames
 # and a precision (split count) compute the frames that
 # are likely to be found given that precision
-def damaged_frame_predictions(damaged_frame_count : int, num_splits : int) -> list:
-    searches = damaged_frame_searches(damaged_frame_count)
-    return [predict_search_frame(num_splits, search) for search in searches]
-
-
-
+def restored_frame_predictions(restored_frame_count : int, num_splits : int) -> list:
+    searches = restored_frame_searches(restored_frame_count)
+    return ", ".join([str(predict_search_frame(num_splits, search)) for search in searches])

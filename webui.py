@@ -12,7 +12,7 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory
-from webui_utils.simple_utils import max_steps
+from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
 
@@ -88,20 +88,20 @@ def frame_interpolation(img_before_file : str, img_after_file : str, num_splits 
 
         downloads = []
         preview_gif = None
-        if config.interpolate_settings["create_gif"]:
+        if config.interpolation_settings["create_gif"]:
             preview_gif = os.path.join(output_path, output_basename + str(run_index) + ".gif")
             log.log(f"creating preview file {preview_gif}")
-            duration = config.interpolate_settings["gif_duration"] / len(output_paths)
+            duration = config.interpolation_settings["gif_duration"] / len(output_paths)
             create_gif(output_paths, preview_gif, duration=duration)
             downloads.append(preview_gif)
 
-        if config.interpolate_settings["create_zip"]:
+        if config.interpolation_settings["create_zip"]:
             download_zip = os.path.join(output_path, output_basename + str(run_index) + ".zip")
             log.log("creating zip of frame files")
             create_zip(output_paths, download_zip)
             downloads.append(download_zip)
 
-        if config.interpolate_settings["create_txt"]:
+        if config.interpolation_settings["create_txt"]:
             info_file = os.path.join(output_path, output_basename + str(run_index) + ".txt")
             create_report(info_file, img_before_file, img_after_file, num_splits, output_path, output_paths)
             downloads.append(info_file)
@@ -161,6 +161,23 @@ def resequence_files(input_path : str, input_filetype : str, input_newname : str
     if input_path and input_filetype and input_newname and input_start and input_step and input_zerofill:
         ResequenceFiles(input_path, input_filetype, input_newname, int(input_start), int(input_step), int(input_zerofill), input_rename_check, log.log).resequence()
 
+def frame_restoration(img_before_file : str, img_after_file : str, num_frames : float, num_splits : float):
+    return #gr.Image.update(value=preview_gif), gr.File.update(value=downloads, visible=True)
+
+def restart_app():
+    global restart
+    restart = True
+
+def update_splits_info(num_splits : float):
+    return str(max_steps(num_splits))
+
+def update_info_fr(num_frames : int, num_splits : int):
+    fractions = restored_frame_fractions(num_frames)
+    predictions = restored_frame_predictions(num_frames, num_splits)
+    return fractions, predictions
+
+#### UI Helpers
+
 def create_report(info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
     report = f"""before file: {img_before_file}
 after file: {img_after_file}
@@ -171,13 +188,6 @@ frames:
     with open(info_file, 'w', encoding='utf-8') as f:
         f.write(report)
 
-def update_splits_info(num_splits : float):
-    return str(max_steps(num_splits))
-
-def restart_app():
-    global restart
-    restart = True
-
 #### Create Gradio UI
 
 def create_ui():
@@ -187,6 +197,7 @@ def create_ui():
                     theme=config.user_interface["theme"],
                     css=config.user_interface["css_file"]) as app:
         gr.HTML("VFIformer Web UI", elem_id="appheading")
+
         with gr.Tab("Frame Interpolation"):
             gr.HTML("Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
             with gr.Row(variant="compact"):
@@ -194,12 +205,13 @@ def create_ui():
                     img1_input_fi = gr.Image(type="filepath", label="Before Image", tool=None)
                     img2_input_fi = gr.Image(type="filepath", label="After Image", tool=None)
                     with gr.Row(variant="compact"):
-                        splits_input_fi = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
+                        splits_input_fi = gr.Slider(value=1, minimum=1, maximum=config.interpolation_settings["max_splits"], step=1, label="Splits")
                         info_output_fi = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
                 with gr.Column(variant="panel"):
                     img_output_fi = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                     file_output_fi = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             interpolate_button_fi = gr.Button("Interpolate", variant="primary")
+
         with gr.Tab("Frame Search"):
             gr.HTML("Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
             with gr.Row(variant="compact"):
@@ -207,13 +219,14 @@ def create_ui():
                     img1_input_fs = gr.Image(type="filepath", label="Before Image", tool=None)
                     img2_input_fs = gr.Image(type="filepath", label="After Image", tool=None)
                     with gr.Row(variant="compact"):
-                        splits_input_fs = gr.Slider(value=1, minimum=1, maximum=50, step=1, label="Search Depth")
+                        splits_input_fs = gr.Slider(value=1, minimum=1, maximum=config.search_settings["max_splits"], step=1, label="Search Depth")
                         min_input_text_fs = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
                         max_input_text_fs = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
                 with gr.Column(variant="panel"):
                     img_output_fs = gr.Image(type="filepath", label="Found Frame", interactive=False)
                     file_output_fs = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             search_button_fs = gr.Button("Search", variant="primary")
+
         with gr.Tab("Video Inflation"):
             gr.HTML("Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
             with gr.Row(variant="compact"):
@@ -225,37 +238,35 @@ def create_ui():
                         info_output_vi = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
             interpolate_button_vi = gr.Button("Interpolate Series (this will take time)", variant="primary")
+
         with gr.Tab("Resynthesize Video"):
-            gr.HTML("Interpolate all-new frames from a video for use in restoration", elem_id="tabheading")
+            gr.HTML("Interpolate all-new frames from a video for use in restoration restored frames", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     input_path_text_rv = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
                     output_path_text_rv = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
             gr.Markdown("*Progress can be tracked in the console*")
             resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
+
         with gr.Tab("Frame Restoration"):
-            gr.HTML("Restore two or more adjacent damaged frames using Frame Search and download the restored frames", elem_id="tabheading")
+            gr.HTML("Restore two or more adjacent restored frames using Frame Search and download the restored frames", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
-                    img1_input_fr = gr.Image(type="filepath", label="Frame before first damaged one", tool=None)
-                    img2_input_fr = gr.Image(type="filepath", label="Frame after last damaged one", tool=None)
                     with gr.Row(variant="compact"):
-                        frames_input_fr = gr.Slider(value=2, minimum=1, maximum=10, step=1, label="Frames to repair")
-                        precision_input_fr = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Precision")
-                        info_output_fr = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
+                        img1_input_fr = gr.Image(type="filepath", label="Frame before first restored one", tool=None, shape=(192, 108))
+                        img2_input_fr = gr.Image(type="filepath", label="Frame after last restored one", tool=None, shape=(192, 108))
+                    with gr.Row(variant="compact"):
+                        frames_input_fr = gr.Slider(value=config.restoration_settings["default_frames"], minimum=1, maximum=config.restoration_settings["max_frames"], step=1, label="Frames to restore")
+                        precision_input_fr = gr.Slider(value=config.restoration_settings["default_precision"], minimum=1, maximum=config.restoration_settings["max_precision"], step=1, label="Search Precision")
                 with gr.Column(variant="panel"):
-                    img_output_fi = gr.Image(type="filepath", label="Animated Preview", interactive=False)
-                    file_output_fi = gr.File(type="file", file_count="multiple", label="Download", visible=False)
-            interpolate_button_fi = gr.Button("Interpolate", variant="primary")
+                    img_output_fr = gr.Image(type="filepath", label="Animated Preview", interactive=False)
+                    file_output_fr = gr.File(type="file", file_count="multiple", label="Download", visible=False)
+            times_default = restored_frame_fractions(config.restoration_settings["default_frames"])
+            predictions_default = restored_frame_predictions(config.restoration_settings["default_frames"], config.restoration_settings["default_precision"])
+            times_output_fr = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
+            predictions_output_fr = gr.Textbox(value=predictions_default, label="Predicted matches", max_lines=1, interactive=False)
+            restore_button_fr = gr.Button("Restore Frames", variant="primary")
 
-
-
-            # with gr.Row(variant="compact"):
-            #     with gr.Column(variant="panel"):
-            #         input_path_text_rv = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
-            #         output_path_text_rv = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
-            # gr.Markdown("*Progress can be tracked in the console*")
-            # resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
@@ -307,6 +318,11 @@ def create_ui():
         restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},1000)")
 
         resequence_button.click(resequence_files, inputs=[input_path_text2, input_filetype_text, input_newname_text, input_start_text, input_step_text, input_zerofill_text, input_rename_check])
+
+        restore_button_fr.click(frame_restoration, inputs=[img1_input_fr, img2_input_fr, frames_input_fr, precision_input_fr], outputs=[img_output_fr, file_output_fr])
+        frames_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
+        precision_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
+
     return app
 
 if __name__ == '__main__':
