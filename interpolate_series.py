@@ -27,12 +27,17 @@ def main():
 
     file_list = get_files(args.input_path, extension="png")
     series_interpolater.interpolate_series(file_list, args.output_path, args.depth, args.base_filename)
-    
+
 class InterpolateSeries():
-    def __init__(self, 
+    def __init__(self,
                 deep_interpolater : DeepInterpolate,
                 log_fn : Callable | None):
         self.deep_interpolater = deep_interpolater
+        self.log_fn = log_fn
+
+    def log(self, message):
+        if self.log_fn:
+            self.log_fn(message)
 
     def interpolate_series(self, file_list : list, output_path : str, num_splits : int, base_filename : str):
         file_list = sorted(file_list)
@@ -42,13 +47,14 @@ class InterpolateSeries():
         pbar_desc = "Frames" if num_splits < 2 else "Total"
         # stop short of beginning at the last frame since there's no frame after i
         for n in tqdm(range(count-1), desc=pbar_desc, position=0):
-            # for other than the first around, the duplicated real "before" frame is deleted for 
+            # for other than the first around, the duplicated real "before" frame is deleted for
             # continuity, since it's identical to the "after" from the previous round
             continued = n > 0
             before_file = file_list[n]
             after_file = file_list[n+1]
             filename = base_filename + "[" + str(n).zfill(num_width) + "]"
-            inner_bar_desc = f"Frame #{n}" 
+            inner_bar_desc = f"Frame #{n}"
+            self.log("creating inflated frames files starting with " + filename)
             self.deep_interpolater.split_frames(before_file, after_file, num_splits, output_path, filename, progress_label=inner_bar_desc, continued=continued)
 
 if __name__ == '__main__':
