@@ -3,6 +3,8 @@ directories:
   output_interpolation: "./output/interpolation"
   output_inflation: "./output/inflation"
   output_search: "./output/search"
+  output_resynthesis: "./output/resynthesis"
+  output_restoration: "./output/restoration"
 model: "./pretrained_models/pretrained_VFIformer/net_220.pth"
 gpu_ids: "0"
 auto_launch_browser: True
