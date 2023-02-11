@@ -30,20 +30,22 @@ def main():
     log = SimpleLog(args.verbose)
     config = SimpleConfig(args.config_path).config_obj()
     create_directories(config.directories)
-    engine = InterpolateEngine(config.model, config.gpu_ids)
 
-    print("Starting VFIformer-WebUI")
-    print("The models are lazy-loaded on the first interpolation (so it'll be slow)")
     while True:
+        engine = InterpolateEngine(config.model, config.gpu_ids)
+
+        print("Starting VFIformer-WebUI")
+        print("The models are lazy-loaded on the first interpolation (so it'll be slow)")
+
         app = create_ui()
-        app.launch(inbrowser = config.auto_launch_browser and not prevent_inbrowser, 
+        app.launch(inbrowser = config.auto_launch_browser and not prevent_inbrowser,
                     server_name = config.server_name,
                     server_port = config.server_port,
                     prevent_thread_lock=True)
 
         # idea borrowed from stable-diffusion-webui webui.py
         # after initial launch, disable inbrowser for subsequent restarts
-        prevent_inbrowser = True 
+        prevent_inbrowser = True
 
         wait_on_server(app)
         print("Restarting...")
@@ -58,7 +60,7 @@ def wait_on_server(app):
             time.sleep(0.5)
             app.close()
             time.sleep(0.5)
-            break        
+            break
 
 # make the program just exit at ctrl+c without waiting for anything
 def sigint_handler(sig, frame):
@@ -154,7 +156,7 @@ frames:
 """ + "\n".join(output_paths)
     with open(info_file, 'w', encoding='utf-8') as f:
         f.write(report)
-    
+
 def update_splits_info(num_splits : float):
     return str(max_steps(num_splits))
 
@@ -166,13 +168,13 @@ def restart_app():
 
 def create_ui():
     global config, file_output, file_output2
-    with gr.Blocks(analytics_enabled=False, 
-                    title="VFIformer Web UI", 
+    with gr.Blocks(analytics_enabled=False,
+                    title="VFIformer Web UI",
                     theme=config.user_interface["theme"],
                     css=config.user_interface["css_file"]) as app:
-        gr.Markdown("VFIformer Web UI")
+        gr.HTML("VFIformer Web UI", elem_id="appheading")
         with gr.Tab("Frame Interpolation"):
-            gr.Markdown("Divide the time between two frames to any depth, see an animation of result and download the new frames")
+            gr.HTML("Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     img1_input = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -185,7 +187,7 @@ def create_ui():
                     file_output = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             interpolate_button = gr.Button("Interpolate", variant="primary")
         with gr.Tab("Frame Search"):
-            gr.Markdown("Search for an arbitrarily precise timed frame and return the closest match")
+            gr.HTML("Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     img1_input2 = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -197,9 +199,9 @@ def create_ui():
                 with gr.Column(variant="panel"):
                     img_output2 = gr.Image(type="filepath", label="Found Frame", interactive=False)
                     file_output2 = gr.File(type="file", file_count="multiple", label="Download", visible=False)
-            interpolate_button3 = gr.Button("Interpolate", variant="primary")
+            interpolate_button3 = gr.Button("Search", variant="primary")
         with gr.Tab("Video Inflation"):
-            gr.Markdown("Double the number of video frames to any depth for super slow motion")
+            gr.HTML("Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     #with gr.Row(variant="compact"):
@@ -214,6 +216,7 @@ def create_ui():
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
             with gr.Tab("Resequence Files"):
+                gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
                 with gr.Row(variant="compact"):
                     with gr.Column(variant="panel"):
                         input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
@@ -225,7 +228,7 @@ def create_ui():
                             input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer step for the sequentially numbered files", label="Integer step")
                             input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
                         with gr.Row(variant="compact"):
-                            input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files") 
+                            input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
                         resequence_button = gr.Button("Resequence Files", variant="primary")
             with gr.Tab("Upscaling"):
                 gr.Markdown("Use Real-ESRGAN 4x+ to restore and/or upscale images")
@@ -241,7 +244,7 @@ def create_ui():
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     gr.Markdown("""
-                    # Idea: Recover the original video from animated GIF file
+                    Idea: Recover the original video from animated GIF file
                     - split GIF into a series of PNG frames
                     - use R-ESRGAN 4x+ to restore and/or upscale
                     - use VFIformer to adjust frame rate to real time
