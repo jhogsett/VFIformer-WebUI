@@ -7,14 +7,14 @@
 
 [Video Inflation example (YouTube)](https://youtu.be/rOiALIN805w)
 
-I have been writing my own Python code for some time to use the [VFIformer](https://github.com/dvlab-research/VFIformer) video frame interpolation engine for various purposes (here's an [example video](https://www.youtube.com/watch?v=JhibFQvP7X0) from my [YouTube channel](https://www.youtube.com/@jerryhogsett)). I thought, why don't I start learning Gradio by building a WebUI for this tool that I love and use so much. Of course, and make it available to the public. 
+I have been writing my own Python code for some time to use the [VFIformer](https://github.com/dvlab-research/VFIformer) video frame interpolation engine for various purposes (here's an [example video](https://www.youtube.com/watch?v=JhibFQvP7X0) from my [YouTube channel](https://www.youtube.com/@jerryhogsett)). I thought, why don't I start learning Gradio by building a WebUI for this tool that I love and use so much. Of course, and make it available to the public.
 
 _My code builds on their repo and borrows some code, but makes no changes._
 
 # Set Up For Use
 
 1. Get VFIformer working on your local system
-- See their repo at [https://github.com/dvlab-research/VFIformer](https://github.com/dvlab-research/VFIformer) 
+- See their repo at [https://github.com/dvlab-research/VFIformer](https://github.com/dvlab-research/VFIformer)
 - I run locally with:
   - Anaconda 23.1.0
   - Python 3.10.9
@@ -32,7 +32,7 @@ _My code builds on their repo and borrows some code, but makes no changes._
 # Alternate Set Up / Development
 
 1. Get VFIformer working on your local system
-- See their repo at [https://github.com/dvlab-research/VFIformer](https://github.com/dvlab-research/VFIformer) 
+- See their repo at [https://github.com/dvlab-research/VFIformer](https://github.com/dvlab-research/VFIformer)
 - I run locally with:
   - Anaconda 23.1.0
   - Python 3.10.9
@@ -82,7 +82,7 @@ The application can be started in any of these ways:
 - Choose the search depth
   -  tip: use a deep search depth for high precision
 - Enter a minumum and maximum search range
-- Click Interpolate
+- Click Search
 - The closest matching frame will shown in the preview window
 - The generated PNG is saved in a sequentially numbered `run` directory within `output\search`
 - It is also made available for download from the UI
@@ -121,9 +121,9 @@ The application can be started in any of these ways:
   - a different value might be useful if inserting frames into another sequence
 - Choose whether to rename (checked) or duplicate (unchecked) the files to resequence them
   - it can be handy to have the original set of frames, marked with their original frame ID, for troubleshooting
-- Click Resequence Files  
+- Click Resequence Files
 - A standard TQDM progress bar is shown in the console to track progress
-  
+
 # Command Line Tools
 
 The core components also allow command line use.
@@ -225,7 +225,7 @@ App configuration is set via `config.yaml`
 - interpolate_settings\[gif_duration\]
   - total time in ms for the animated GIF preview
   - default is 3000
- 
+
 # Future Plans
 - incorporate Real-ESRGAN for frame restoration and upscaling
   - https://github.com/xinntao/Real-ESRGAN
@@ -238,10 +238,10 @@ App configuration is set via `config.yaml`
   - I could use help with this
 - Suggestions are very welcome
 - Contributions are also very welcome
- 
+
 # Thanks!
 
-Thanks! to the VFIformer folks for their amazing tool 
+Thanks! to the VFIformer folks for their amazing tool
 - https://github.com/dvlab-research/VFIformer
 
 Thanks! to the stable-diffusion-webui folks for their great UI, amazing tool, and for inspiring me to learn Gradio
@@ -253,7 +253,7 @@ Thanks to Gradio for their easy-to-use Web UI building tool and great docs
 
 # Credits
 
-Royalty-Free Video used for the example 
+Royalty-Free Video used for the example
 - "FunfaIr in Barcelona"
 - https://motionarray.com/stock-video/funfair-in-barcelona-1163645/
 
