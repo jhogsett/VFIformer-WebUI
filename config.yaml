@@ -27,6 +27,8 @@ restoration_settings:
   create_gif: True
   create_zip: True
   create_txt: True
+blender_settings:
+  skip_frames: 100
 user_interface:
   theme: "default"
   css_file: "webui.css"

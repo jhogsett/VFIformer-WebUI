@@ -201,6 +201,105 @@ def frame_restoration(img_before_file : str, img_after_file : str, num_frames : 
 
         return gr.Image.update(value=preview_gif), gr.File.update(value=downloads, visible=True)
 
+class VideoBlenderPath:
+    def __init__(self, path : str):
+        self.path = path
+        self.files = sorted(os.listdir(self.path))
+        self.last_frame = len(self.files) - 1
+        self.load_file_info()
+
+    def load_file_info(self):
+        files = sorted(os.listdir(self.path))
+        self.files = [os.path.join(self.path, file) for file in files]
+        self.file_count = len(self.files)
+
+    def get_frame(self, frame : int):
+        if frame < 0 or frame > self.last_frame:
+            return None
+        else:
+            return self.files[frame]
+
+class VideoBlenderState:
+    # which_path index into the path info list
+    PROJECT_PATH = 0
+    FRAMES1_PATH = 1
+    FRAMES2_PATH = 2
+
+    def __init__(self, project_path : str, frames_path1 : str, frames_path2 : str):
+        self.project_path = project_path
+        self.frames_path1 = frames_path1
+        self.frames_path2 = frames_path2
+        self.current_frame = 0
+        self.path_info = [
+            VideoBlenderPath(project_path),
+            VideoBlenderPath(frames_path1),
+            VideoBlenderPath(frames_path2)
+            ]
+
+    def get_frame_file(self, which_path : int, frame : int):
+        return self.path_info[which_path].get_frame(frame)
+
+    def get_frame_files(self, frame : int):
+        results = []
+        results.append(self.get_frame_file(self.FRAMES1_PATH, frame))
+        results.append(self.get_frame_file(self.PROJECT_PATH, frame - 1))
+        results.append(self.get_frame_file(self.PROJECT_PATH, frame))
+        results.append(self.get_frame_file(self.PROJECT_PATH, frame + 1))
+        results.append(self.get_frame_file(self.FRAMES2_PATH, frame))
+        return results
+
+    def goto_frame(self, frame : int):
+        self.current_frame = frame
+        return self.get_frame_files(frame)
+
+global video_blender_state
+video_blender_state = None
+
+def video_blender_load(project_path, frames_path1, frames_path2):
+    global video_blender_state
+    video_blender_state = VideoBlenderState(project_path, frames_path1, frames_path2)
+
+def video_blender_prev_frame(frame : str):
+    global video_blender_state
+    frame = int(frame)
+    frame -= 1
+    return frame, *video_blender_state.goto_frame(frame)
+
+def video_blender_next_frame(frame : str):
+    global video_blender_state
+    frame = int(frame)
+    frame += 1
+    return frame, *video_blender_state.goto_frame(frame)
+
+def video_blender_goto_frame(frame : str):
+    global video_blender_state
+    frame = int(frame)
+    frame = 0 if frame < 0 else frame
+    return frame, *video_blender_state.goto_frame(frame)
+
+def video_blender_skip_next(frame : str):
+    global video_blender_state, config
+    frame = int(frame) + int(config.blender_settings["skip_frames"])
+    return frame, *video_blender_state.goto_frame(frame)
+
+def video_blender_skip_prev(frame : str):
+    global video_blender_state, config
+    frame = int(frame) - int(config.blender_settings["skip_frames"])
+    frame = 0 if frame < 0 else frame
+    return frame, *video_blender_state.goto_frame(frame)
+
+def video_blender_use_path1(frame : str):
+    global video_blender_state
+    frame = int(frame)
+    frame += 1
+    return frame, *video_blender_state.goto_frame(frame)
+
+def video_blender_use_path2(frame : str):
+    global video_blender_state
+    frame = int(frame)
+    frame += 1
+    return frame, *video_blender_state.goto_frame(frame)
+
 def restart_app():
     global restart
     restart = True
@@ -309,44 +408,47 @@ def create_ui():
             gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
             with gr.Tab("Paths"):
                 with gr.Row():
-                    gr.Textbox(label="Video Restoration Chosen Frames Path", placeholder="Path to frame PNG files for video being restored")
+                    input_project_path_vb = gr.Textbox(label="Video Restoration Chosen Frames Path", placeholder="Path to frame PNG files for video being restored")
                 with gr.Row():
-                    gr.Textbox(label="Original Frames / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
+                    input_path1_vb = gr.Textbox(label="Original Frames / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
                 with gr.Row():
-                    gr.Textbox(label="Repair Frames / Video #2 Franes Path", placeholder="Path to original or video #2 PNG files")
-                gr.Button("Click to load project", variant="primary")
+                    input_path2_vb = gr.Textbox(label="Repair Frames / Video #2 Franes Path", placeholder="Path to original or video #2 PNG files")
+                load_button_vb = gr.Button("Click to load project", variant="primary")
                 gr.HTML("Then switch to the Frame Chooser tab")
             with gr.Tab("Frame Chooser"):
                 with gr.Row():
                     with gr.Column():
                         gr.Textbox(visible=False)
                     with gr.Column():
-                        gr.Image(label="Original / Path 1 Frame", interactive=False, type="pil")
+                        output_img_path1_vb = gr.Image(label="Original / Path 1 Frame", interactive=False, type="filepath")
                     with gr.Column():
                         gr.Textbox(visible=False)
                 with gr.Row():
                     with gr.Column():
-                        gr.Image(label="Previous Frame", interactive=False, type="pil")
+                        output_prev_frame_vb = gr.Image(label="Previous Frame", interactive=False, type="filepath", elem_id="sideimage")
                     with gr.Column():
-                        gr.Image(label="Current Frame", interactive=False, type="pil")
+                        output_curr_frame_vb = gr.Image(label="Current Frame", interactive=False, type="filepath")
                     with gr.Column():
-                        gr.Image(label="Next Frame", interactive=False, type="pil")
+                        output_next_frame_vb = gr.Image(label="Next Frame", interactive=False, type="filepath", elem_id="sideimage")
                 with gr.Row():
                     with gr.Column():
                         with gr.Row():
-                            gr.Button("< Prev Frame")
-                            gr.Button("Next Frame >")
+                            prev_frame_button_vb = gr.Button("< Prev Frame")
+                            next_frame_button_vb = gr.Button("Next Frame >")
                         with gr.Row():
-                            gr.Button("Go").style(full_width=False)
-                            gr.Textbox(label="Frame")
+                            go_button_vb = gr.Button("Go").style(full_width=False)
+                            input_text_frame_vb = gr.Textbox(value="0", label="Frame")
+                        with gr.Row():
+                            prev_xframes_button_vb = gr.Button("<< Skip")
+                            next_xframes_button_vb = gr.Button("Skip >>")
                     with gr.Column():
-                        gr.Image(label="Repair / Path 2 Frame", interactive=False, type="pil")
+                        output_img_path2_vb = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
                     with gr.Column():
-                        gr.Button("Use Path 1 Frame | Next >", variant="primary")
-                        gr.Button("Use Path 2 Frame | Next >", variant="primary")
-                        gr.Button("< Back", variant="primary")
+                        use_path_1_button_vb = gr.Button("Use Path 1 Frame | Next >", variant="primary")
+                        use_path_2_button_vb = gr.Button("Use Path 2 Frame | Next >", variant="primary")
+                        use_back_button_vb = gr.Button("< Back", variant="primary")
             with gr.Tab("Video Preview"):
-                gr.Textbox(visible=False)
+                gr.Markdown("planned")
 
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
@@ -403,6 +505,19 @@ def create_ui():
         restore_button_fr.click(frame_restoration, inputs=[img1_input_fr, img2_input_fr, frames_input_fr, precision_input_fr], outputs=[img_output_fr, file_output_fr])
         frames_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
         precision_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
+
+        load_button_vb.click(video_blender_load, inputs=[input_project_path_vb, input_path1_vb, input_path2_vb])
+
+        prev_frame_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        next_frame_button_vb.click(video_blender_next_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        go_button_vb.click(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        input_text_frame_vb.submit(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        use_path_1_button_vb.click(video_blender_use_path1, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        use_path_2_button_vb.click(video_blender_use_path2, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        use_back_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+        next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
+
 
     return app
 
