@@ -15,6 +15,7 @@ from webui_utils.file_utils import create_directories, create_zip, get_files, cr
 from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
+from restore_frames import RestoreFrames
 
 log = None
 config = None
@@ -162,7 +163,42 @@ def resequence_files(input_path : str, input_filetype : str, input_newname : str
         ResequenceFiles(input_path, input_filetype, input_newname, int(input_start), int(input_step), int(input_zerofill), input_rename_check, log.log).resequence()
 
 def frame_restoration(img_before_file : str, img_after_file : str, num_frames : float, num_splits : float):
-    return #gr.Image.update(value=preview_gif), gr.File.update(value=downloads, visible=True)
+    global log, config, engine, file_output
+    if img_before_file and img_after_file:
+        interpolater = Interpolate(engine.model, log.log)
+        target_interpolater = TargetInterpolate(interpolater, log.log)
+        frame_restorer = RestoreFrames(target_interpolater, log.log)
+        base_output_path = config.directories["output_restoration"]
+        create_directory(base_output_path)
+        output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
+        output_basename = "restored_frame"
+
+        log.log(f"beginning frame restorations at {output_path}")
+        frame_restorer.restore_frames(img_before_file, img_after_file, num_frames, num_splits, output_path, output_basename)
+        output_paths = frame_restorer.output_paths
+
+        downloads = []
+        preview_gif = None
+        if config.restoration_settings["create_gif"]:
+            preview_gif = os.path.join(output_path, output_basename + str(run_index) + ".gif")
+            log.log(f"creating preview file {preview_gif}")
+            duration = config.restoration_settings["gif_duration"] / len(output_paths)
+            gif_paths = [img_before_file, *output_paths, img_after_file]
+            create_gif(gif_paths, preview_gif, duration=duration)
+            downloads.append(preview_gif)
+
+        if config.restoration_settings["create_zip"]:
+            download_zip = os.path.join(output_path, output_basename + str(run_index) + ".zip")
+            log.log("creating zip of frame files")
+            create_zip(output_paths, download_zip)
+            downloads.append(download_zip)
+
+        if config.restoration_settings["create_txt"]:
+            info_file = os.path.join(output_path, output_basename + str(run_index) + ".txt")
+            create_report(info_file, img_before_file, img_after_file, num_splits, output_path, output_paths)
+            downloads.append(info_file)
+
+        return gr.Image.update(value=preview_gif), gr.File.update(value=downloads, visible=True)
 
 def restart_app():
     global restart
@@ -249,21 +285,22 @@ def create_ui():
             resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
 
         with gr.Tab("Frame Restoration"):
-            gr.HTML("Restore two or more adjacent restored frames using Frame Search and download the restored frames", elem_id="tabheading")
+            gr.HTML("Restore two or more adjacent restored frames using Frame Search and download the download the frames", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     with gr.Row(variant="compact"):
-                        img1_input_fr = gr.Image(type="filepath", label="Frame before first restored one", tool=None, shape=(192, 108))
-                        img2_input_fr = gr.Image(type="filepath", label="Frame after last restored one", tool=None, shape=(192, 108))
+                        img1_input_fr = gr.Image(type="filepath", label="Frame before replacement frames", tool=None)
+                        img2_input_fr = gr.Image(type="filepath", label="Frame after replacement frames", tool=None)
                     with gr.Row(variant="compact"):
                         frames_input_fr = gr.Slider(value=config.restoration_settings["default_frames"], minimum=1, maximum=config.restoration_settings["max_frames"], step=1, label="Frames to restore")
                         precision_input_fr = gr.Slider(value=config.restoration_settings["default_precision"], minimum=1, maximum=config.restoration_settings["max_precision"], step=1, label="Search Precision")
+                    with gr.Row(variant="compact"):
+                        times_default = restored_frame_fractions(config.restoration_settings["default_frames"])
+                        times_output_fr = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
                 with gr.Column(variant="panel"):
                     img_output_fr = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                     file_output_fr = gr.File(type="file", file_count="multiple", label="Download", visible=False)
-            times_default = restored_frame_fractions(config.restoration_settings["default_frames"])
             predictions_default = restored_frame_predictions(config.restoration_settings["default_frames"], config.restoration_settings["default_precision"])
-            times_output_fr = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
             predictions_output_fr = gr.Textbox(value=predictions_default, label="Predicted matches", max_lines=1, interactive=False)
             restore_button_fr = gr.Button("Restore Frames", variant="primary")
 

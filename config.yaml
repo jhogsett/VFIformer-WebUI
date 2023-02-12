@@ -23,6 +23,10 @@ restoration_settings:
   max_frames: 10
   default_precision: 10
   max_precision: 60
+  gif_duration: 1000
+  create_gif: True
+  create_zip: True
+  create_txt: True
 user_interface:
   theme: "default"
   css_file: "webui.css"

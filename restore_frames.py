@@ -36,6 +36,7 @@ class RestoreFrames():
                 log_fn : Callable | None):
         self.target_interpolater = target_interpolater
         self.log_fn = log_fn
+        self.output_paths = []
 
     def log(self, message):
         if self.log_fn:
@@ -53,6 +54,7 @@ class RestoreFrames():
                                                 output_path=output_path,
                                                 base_filename=base_filename,
                                                 progress_label="Search")
+        self.output_paths.extend(self.target_interpolater.output_paths)
 
 if __name__ == '__main__':
     main()

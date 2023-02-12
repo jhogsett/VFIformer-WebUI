@@ -45,9 +45,19 @@ def restored_frame_searches(restored_frame_count : int) -> list:
 def restored_frame_fractions(restored_frame_count : int) -> str:
     return ", ".join([f"{n + 1}/{restored_frame_count + 1}" for n in range(restored_frame_count)])
 
+WARNING_SYM = "⚠️"
+
 # For Frame Restoration, given a count of restored frames
 # and a precision (split count) compute the frames that
 # are likely to be found given that precision
 def restored_frame_predictions(restored_frame_count : int, num_splits : int) -> list:
     searches = restored_frame_searches(restored_frame_count)
-    return ", ".join([str(predict_search_frame(num_splits, search)) for search in searches])
+    predictions = [str(predict_search_frame(num_splits, search)) for search in searches]
+
+    # prepare to detect duplicates, including the outer frames
+    all_frames = predictions + ["0.0"] + ["1.0"]
+
+    warning = ""
+    if len(set(all_frames)) != len(all_frames):
+        warning = f" {WARNING_SYM} Repeated frames - increase precision"
+    return ", ".join(predictions) + warning
