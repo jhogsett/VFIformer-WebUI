@@ -222,7 +222,7 @@ App configuration is set via `config.yaml`
   - server address to use for Gradio http server
   - default is "0.0.0.0" which makes the app available on the local network as well
   - to prevent this, set to "127.0.0.1" or None
-- interpolate_settings\[gif_duration\]
+- interpolation_settings\[gif_duration\]
   - total time in ms for the animated GIF preview
   - default is 3000
 

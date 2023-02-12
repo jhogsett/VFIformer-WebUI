@@ -26,3 +26,38 @@ def float_range_in_range(target_min : float, target_max : float, domain_min : fl
         else:
             return False
 
+
+# For Frame Search, given a frame time 0.0 - 1.0
+# and a search depth (split count) compute the fractional
+# time that will actually be found
+def predict_search_frame(num_splits : int, fractional_time : float) -> float:
+    resolution = 2 ** num_splits
+    return round(resolution * fractional_time) / resolution
+
+# For Frame Restoration, given a count of restored frames
+# compute the frame search times for the new frames that will be created
+def restored_frame_searches(restored_frame_count : int) -> list:
+    return [(n + 1.0) / (restored_frame_count + 1.0) for n in range(restored_frame_count)]
+
+# For Frame Restoration, given a count of restored frames
+# compute a human friendly display of the fractional
+# times for the new frames that will be created
+def restored_frame_fractions(restored_frame_count : int) -> str:
+    return ", ".join([f"{n + 1}/{restored_frame_count + 1}" for n in range(restored_frame_count)])
+
+WARNING_SYM = "⚠️"
+
+# For Frame Restoration, given a count of restored frames
+# and a precision (split count) compute the frames that
+# are likely to be found given that precision
+def restored_frame_predictions(restored_frame_count : int, num_splits : int) -> list:
+    searches = restored_frame_searches(restored_frame_count)
+    predictions = [str(predict_search_frame(num_splits, search)) for search in searches]
+
+    # prepare to detect duplicates, including the outer frames
+    all_frames = predictions + ["0.0"] + ["1.0"]
+
+    warning = ""
+    if len(set(all_frames)) != len(all_frames):
+        warning = f" {WARNING_SYM} Repeated frames - increase precision"
+    return ", ".join(predictions) + warning

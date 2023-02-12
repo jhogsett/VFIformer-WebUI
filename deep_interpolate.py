@@ -29,7 +29,7 @@ def main():
     deep_interpolater.split_frames(args.img_before, args.img_after, args.depth, args.output_path, args.base_filename)
 
 class DeepInterpolate():
-    def __init__(self, 
+    def __init__(self,
                 interpolater : Interpolate,
                 log_fn : Callable | None):
         self.interpolater = interpolater
@@ -44,13 +44,14 @@ class DeepInterpolate():
             self.log_fn(message)
 
     def split_frames(self,
-                    before_filepath, 
-                    after_filepath, 
-                    num_splits, 
-                    output_path, 
-                    base_filename, 
-                    progress_label="Frame", 
-                    continued=False):
+                    before_filepath,
+                    after_filepath,
+                    num_splits,
+                    output_path,
+                    base_filename,
+                    progress_label="Frame",
+                    continued=False,
+                    resynthesis=False):
         self.init_frame_register()
         self.reset_split_manager(num_splits)
         num_steps = max_steps(num_splits)
@@ -59,12 +60,12 @@ class DeepInterpolate():
         self.set_up_outer_frames(before_filepath, after_filepath, output_filepath_prefix)
 
         self.recursive_split_frames(0.0, 1.0, output_filepath_prefix)
-        self.integerize_filenames(output_path, base_filename, continued)
+        self.integerize_filenames(output_path, base_filename, continued, resynthesis)
         self.close_progress()
 
     def recursive_split_frames(self,
-                                first_index : float, 
-                                last_index : float, 
+                                first_index : float,
+                                last_index : float,
                                 filepath_prefix : str):
         if self.enter_split():
             mid_index = first_index + (last_index - first_index) / 2.0
@@ -81,9 +82,9 @@ class DeepInterpolate():
             self.recursive_split_frames(mid_index, last_index, filepath_prefix)
             self.exit_split()
 
-    def set_up_outer_frames(self, 
-                            before_file, 
-                            after_file, 
+    def set_up_outer_frames(self,
+                            before_file,
+                            after_file,
                             output_filepath_prefix):
         img0 = cv2.imread(before_file)
         img1 = cv2.imread(after_file)
@@ -101,19 +102,24 @@ class DeepInterpolate():
         self.register_frame(after_file)
         self.log("copied " + after_file)
 
-    def integerize_filenames(self, output_path, base_name, continued):
+    def integerize_filenames(self, output_path, base_name, continued, resynthesis):
         file_prefix = os.path.join(output_path, base_name)
         frame_files = self.sorted_registered_frames()
-        num_width = len(str(len(frame_files)))
+        num_files = len(frame_files)
+        num_width = len(str(num_files))
         index = 0
         self.output_paths = []
 
         for file in frame_files:
-            if continued and index == 0:
+            if resynthesis and (index == 0 or index == num_files - 1):
+                # if a resynthesis process, keep only the interpolated frames
+                os.remove(file)
+                self.log("resynthesis - removed uneeded " + file)
+            elif continued and index == 0:
                 # if a continuation from a previous set of frames, delete the first frame
                 # to maintain continuity since it's duplicate of the previous round last frame
                 os.remove(file)
-                self.log("removed uneeded " + file)
+                self.log("continuation - removed uneeded " + file)
             else:
                 new_filename = file_prefix + str(index).zfill(num_width) + ".png"
                 os.replace(file, new_filename)
