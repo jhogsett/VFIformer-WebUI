@@ -286,7 +286,7 @@ def create_ui():
             resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
 
         with gr.Tab("Frame Restoration"):
-            gr.HTML("Restore two or more adjacent restored frames using Frame Search and download the download the frames", elem_id="tabheading")
+            gr.HTML("Restore multiple adjacent bad frames using precision interpolation", elem_id="tabheading")
             with gr.Row(variant="compact"):
                 with gr.Column(variant="panel"):
                     with gr.Row(variant="compact"):
@@ -304,6 +304,49 @@ def create_ui():
             predictions_default = restored_frame_predictions(config.restoration_settings["default_frames"], config.restoration_settings["default_precision"])
             predictions_output_fr = gr.Textbox(value=predictions_default, label="Predicted matches", max_lines=1, interactive=False)
             restore_button_fr = gr.Button("Restore Frames", variant="primary")
+
+        with gr.Tab("Video Blender"):
+            gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
+            with gr.Tab("Paths"):
+                with gr.Row():
+                    gr.Textbox(label="Video Restoration Chosen Frames Path", placeholder="Path to frame PNG files for video being restored")
+                with gr.Row():
+                    gr.Textbox(label="Original Frames / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
+                with gr.Row():
+                    gr.Textbox(label="Repair Frames / Video #2 Franes Path", placeholder="Path to original or video #2 PNG files")
+                gr.Button("Click to load project", variant="primary")
+                gr.HTML("Then switch to the Frame Chooser tab")
+            with gr.Tab("Frame Chooser"):
+                with gr.Row():
+                    with gr.Column():
+                        gr.Textbox(visible=False)
+                    with gr.Column():
+                        gr.Image(label="Original / Path 1 Frame", interactive=False, type="pil")
+                    with gr.Column():
+                        gr.Textbox(visible=False)
+                with gr.Row():
+                    with gr.Column():
+                        gr.Image(label="Previous Frame", interactive=False, type="pil")
+                    with gr.Column():
+                        gr.Image(label="Current Frame", interactive=False, type="pil")
+                    with gr.Column():
+                        gr.Image(label="Next Frame", interactive=False, type="pil")
+                with gr.Row():
+                    with gr.Column():
+                        with gr.Row():
+                            gr.Button("< Prev Frame")
+                            gr.Button("Next Frame >")
+                        with gr.Row():
+                            gr.Button("Go").style(full_width=False)
+                            gr.Textbox(label="Frame")
+                    with gr.Column():
+                        gr.Image(label="Repair / Path 2 Frame", interactive=False, type="pil")
+                    with gr.Column():
+                        gr.Button("Use Path 1 Frame | Next >", variant="primary")
+                        gr.Button("Use Path 2 Frame | Next >", variant="primary")
+                        gr.Button("< Back", variant="primary")
+            with gr.Tab("Video Preview"):
+                gr.Textbox(visible=False)
 
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
