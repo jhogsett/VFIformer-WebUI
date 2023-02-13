@@ -2,6 +2,7 @@ import os
 import time
 import signal
 import argparse
+import csv
 import gradio as gr
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
@@ -22,9 +23,10 @@ config = None
 engine= None
 restart = False
 prevent_inbrowser = False
+video_blender_projects = None
 
 def main():
-    global log, config, engine, prevent_inbrowser
+    global log, config, engine, prevent_inbrowser, video_blender_projects
     parser = argparse.ArgumentParser(description='VFIformer Web UI')
     parser.add_argument("--config_path", type=str, default="config.yaml", help="path to config YAML file")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
@@ -40,6 +42,7 @@ def main():
         print("Starting VFIformer-WebUI")
         print("The models are lazy-loaded on the first interpolation (so it'll be slow)")
 
+        video_blender_projects = VideoBlenderProjects(config.blender_settings["projects_file"])
         app = create_ui()
         app.launch(inbrowser = config.auto_launch_browser and not prevent_inbrowser,
                     server_name = config.server_name,
@@ -219,6 +222,45 @@ class VideoBlenderPath:
         else:
             return self.files[frame]
 
+class VideoBlenderProjects:
+    FIELDS = ["project_name", "project_path", "frames1_path", "frames2_path"]
+
+    def __init__(self, csvfile_path):
+        self.csvfile_path = csvfile_path
+        self.projects = {}
+        self.read_projects()
+
+    def read_projects(self):
+        if os.path.isfile(self.csvfile_path):
+            reader = csv.DictReader(open(self.csvfile_path))
+            entries = list(reader)
+            for entry in entries:
+                project_name = entry["project_name"]
+                self.projects[project_name] = entry
+
+    def write_projects(self):
+        project_names = self.get_project_names()
+        row_array = [self.projects[project_name] for project_name in project_names]
+        with open(self.csvfile_path, 'w') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames = self.FIELDS)
+            writer.writeheader()
+            writer.writerows(row_array)
+
+    def get_project_names(self):
+        return list(self.projects.keys())
+
+    def load_project(self, project_name : str):
+        return self.projects[project_name]
+
+    def save_project(self, project_name : str, project_path : str, frames1_path : str, frames2_path : str):
+        self.projects[project_name] = {
+            "project_name" : project_name,
+            "project_path" : project_path,
+            "frames1_path" : frames1_path,
+            "frames2_path" : frames2_path
+        }
+        self.write_projects()
+
 class VideoBlenderState:
     # which_path index into the path info list
     PROJECT_PATH = 0
@@ -258,6 +300,19 @@ video_blender_state = None
 def video_blender_load(project_path, frames_path1, frames_path2):
     global video_blender_state
     video_blender_state = VideoBlenderState(project_path, frames_path1, frames_path2)
+    return 0, *video_blender_state.goto_frame(0)
+
+def video_blender_save_project(project_name : str, project_path : str, frames1_path : str, frames2_path : str):
+    global video_blender_projects
+    video_blender_projects.save_project(project_name, project_path, frames1_path, frames2_path)
+
+def video_blender_choose_project(project_name):
+    global video_blender_projects
+    if project_name:
+        dictobj = video_blender_projects.load_project(project_name)
+        if dictobj:
+            return dictobj["project_name"], dictobj["project_path"], dictobj["frames1_path"], dictobj["frames2_path"]
+    return #"", "", "", ""
 
 def video_blender_prev_frame(frame : str):
     global video_blender_state
@@ -327,7 +382,7 @@ frames:
 #### Create Gradio UI
 
 def create_ui():
-    global config, file_output, file_output2
+    global config, file_output, file_output2, video_blender_projects
     with gr.Blocks(analytics_enabled=False,
                     title="VFIformer Web UI",
                     theme=config.user_interface["theme"],
@@ -406,15 +461,20 @@ def create_ui():
 
         with gr.Tab("Video Blender"):
             gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
-            with gr.Tab("Paths"):
+            with gr.Tab("Project Settings"):
                 with gr.Row():
-                    input_project_path_vb = gr.Textbox(label="Video Restoration Chosen Frames Path", placeholder="Path to frame PNG files for video being restored")
+                    input_project_name_vb = gr.Textbox(label="Project Name")
+                    projects_dropdown_vb = gr.Dropdown(label="Saved Projects", choices=video_blender_projects.get_project_names())
+                    load_project_button_vb = gr.Button("Load").style(full_width=False)
+                    save_project_button_vb = gr.Button("Save").style(full_width=False)
                 with gr.Row():
-                    input_path1_vb = gr.Textbox(label="Original Frames / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
+                    input_project_path_vb = gr.Textbox(label="Project Frames Path", placeholder="Path to frame PNG files for video being restored")
                 with gr.Row():
-                    input_path2_vb = gr.Textbox(label="Repair Frames / Video #2 Franes Path", placeholder="Path to original or video #2 PNG files")
-                load_button_vb = gr.Button("Click to load project", variant="primary")
-                gr.HTML("Then switch to the Frame Chooser tab")
+                    input_path1_vb = gr.Textbox(label="Original / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
+                with gr.Row():
+                    input_path2_vb = gr.Textbox(label="Alternate / Video #2 Frames Path", placeholder="Path to alternate or video #2 PNG files")
+                load_button_vb = gr.Button("Click to open, then go to Frame Chooser", variant="primary")
+                # gr.HTML("Then switch to the Frame Chooser tab")
             with gr.Tab("Frame Chooser"):
                 with gr.Row():
                     with gr.Column():
@@ -498,7 +558,7 @@ def create_ui():
 
         resynthesize_button_rv.click(resynthesize_video, inputs=[input_path_text_rv, output_path_text_rv])
 
-        restart_button.click(restart_app, _js="setTimeout(function(){location.reload()},1000)")
+        restart_button.click(restart_app) #, _js="setTimeout(function(){location.reload()},2000)")
 
         resequence_button.click(resequence_files, inputs=[input_path_text2, input_filetype_text, input_newname_text, input_start_text, input_step_text, input_zerofill_text, input_rename_check])
 
@@ -506,18 +566,19 @@ def create_ui():
         frames_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
         precision_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
 
-        load_button_vb.click(video_blender_load, inputs=[input_project_path_vb, input_path1_vb, input_path2_vb])
+        load_project_button_vb.click(video_blender_choose_project, inputs=[projects_dropdown_vb], outputs=[input_project_name_vb, input_project_path_vb, input_path1_vb, input_path2_vb], show_progress=False)
+        save_project_button_vb.click(video_blender_save_project, inputs=[input_project_name_vb, input_project_path_vb, input_path1_vb, input_path2_vb], show_progress=False)
+        load_button_vb.click(video_blender_load, inputs=[input_project_path_vb, input_path1_vb, input_path2_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
 
-        prev_frame_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        next_frame_button_vb.click(video_blender_next_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        go_button_vb.click(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        input_text_frame_vb.submit(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        use_path_1_button_vb.click(video_blender_use_path1, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        use_path_2_button_vb.click(video_blender_use_path2, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        use_back_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-        next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb])
-
+        prev_frame_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        next_frame_button_vb.click(video_blender_next_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        go_button_vb.click(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        input_text_frame_vb.submit(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        use_path_1_button_vb.click(video_blender_use_path1, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        use_path_2_button_vb.click(video_blender_use_path2, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        use_back_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
+        next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
 
     return app
 
