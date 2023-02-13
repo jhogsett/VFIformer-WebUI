@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 import signal
 import argparse
@@ -344,14 +345,22 @@ def video_blender_skip_prev(frame : str):
     return frame, *video_blender_state.goto_frame(frame)
 
 def video_blender_use_path1(frame : str):
-    global video_blender_state
+    global log, video_blender_state
     frame = int(frame)
+    to_filepath = video_blender_state.get_frame_file(VideoBlenderState.PROJECT_PATH, frame)
+    from_filepath = video_blender_state.get_frame_file(VideoBlenderState.FRAMES1_PATH, frame)
+    log.log(f"copying {from_filepath} to {to_filepath}")
+    shutil.copy(from_filepath, to_filepath)
     frame += 1
     return frame, *video_blender_state.goto_frame(frame)
 
 def video_blender_use_path2(frame : str):
-    global video_blender_state
+    global log, video_blender_state
     frame = int(frame)
+    to_filepath = video_blender_state.get_frame_file(VideoBlenderState.PROJECT_PATH, frame)
+    from_filepath = video_blender_state.get_frame_file(VideoBlenderState.FRAMES2_PATH, frame)
+    log.log(f"copying {from_filepath} to {to_filepath}")
+    shutil.copy(from_filepath, to_filepath)
     frame += 1
     return frame, *video_blender_state.goto_frame(frame)
 
