@@ -7,3 +7,8 @@
     font-size: 125%;
     margin-bottom: 0;
 }
+
+#sideimage {
+    opacity: 0.5;
+    filter: grayscale(100%);
+}
