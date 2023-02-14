@@ -436,7 +436,7 @@ def create_ui():
             interpolate_button_fi = gr.Button("Interpolate", variant="primary")
             with gr.Accordion("Tips", open=False):
                 gr.Markdown("""
-                - Use this tool reveal intricate details of motion occurring between two video frames
+                - Use this tool to reveal intricate details of the motion occurring between two video frames
                 - Use it to quickly recreate a damaged frame
                   - Set split count to _1_ and provide the _adjacent frames_
                   - The _Frame Restoration_ tool can be used to recreate an arbitrary number of adjacent frames
@@ -461,9 +461,9 @@ def create_ui():
                 - Use this tool to synthesize a frame at an arbitrarily precise time using _Targeted Interpolation_
                   - This is similar to a binary search:
                     - The time interval between two frames is _halved_ recursively in the direction of the search target
-                    - New _between frames_ are rendered each time
-                    - A match is returned when a frame is found inside the search window, or the search depth is reached
-                  - Search Depth should be set very high if a precisely timed frame is needed
+                    - New _between frames_ are interpolated at each step
+                    - A match is returned when a frame is found inside the search window, or if the search depth is reached
+                  - Search Depth should be set high if a precisely timed frame is needed
                     - A low search depth may match a frame outside the search window""")
 
         with gr.Tab("Video Inflation"):
@@ -480,20 +480,20 @@ def create_ui():
             with gr.Accordion("Tips", open=False):
                 gr.Markdown("""
                 - This tool uses _Frame Interpolation_ on a sequence of video frame PNG files to double the frame count any number of times
-                - This can have many useful purposes:
+                - This can have useful purposes:
                   - Turn a regular video into a _super-slow-motion_ video
                   - Expand the frames in a _time lapse_ video to _recover the original real-time video_
-                  - Create _smooth motion_ from motion that is only _discrete_, such as the second hand of a ticking clock
+                  - Create _smooth motion_ from otherwise _discrete motion_, like the second hand of a ticking clock
 
                 # Important
                 - This process will be slow, perhaps many hours long!
-                - Progress will be shown in the console using standard TQDM progress bars
-                - The browser window does NOT need to be kept open the whole time
-                - There is currently no easy way to resume a halted process.
-                  - A possible way around this
+                - Progress will be shown in the console using a standard tqdm progress bar
+                - The browser can be safely closed without interupting the process
+                - There currently isn't an easy way to resume a halted inflation
+                  - A possible workaround:
                     - Set aside the already-rendered frames from the input path
-                    - Re-run the process
-                    - Afterwards, use the _Resequence Files_ tool to remix the two sets of rendered frames""")
+                    - Re-run the inflation
+                    - Use the _Resequence Files_ tool to remix the two sets of rendered frames""")
 
         with gr.Tab("Resynthesize Video"):
             gr.HTML("Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
@@ -511,7 +511,7 @@ def create_ui():
                       - create a new frame #1 by interpolating a _between frame_ using original frames #0 and #2
                       - then create a new frame #2 using original frames #1 and #3
                       - then repeat this process for all frames in the original video
-                    - When done, there will be a complete set of replacement frames that can be used for movie restoration
+                    - When done, there will be a complete set of synthesized replacement frames, matching frames in the original video, that can be used for movie restoration
                       - The _first_ and _last_ original frames cannot be resynthesized
                 - How to use the replacement frames
                   - The _Video Blender_ tool can be used to manually step through a video, easily replacing frames from a restoration set
@@ -597,12 +597,13 @@ def create_ui():
                         - The _Original / Video #1 Frames Path_ should have the _original PNG files_ from the video being restored
                         - The _Project Frames Path_ should start with a _copy of the original PNG files_ as a baseline set of frames
                         - The _Alternate / Video #2 Frames Path_ directory should have a set of _replacement PNG files_ used for restoration
+                          - Replacement frames can be created using the _Resynthesize Video_ feature
 
                         # Important
                         - All paths must have the same number of files with _corresponding sequence numbers and dimensions_
-                          - The _Resequence Files_ tool can be used to rename sets of PNG files
+                          - The _Resequence Files_ tool can be used to rename a set of PNG files
                         - For _Video Preview_ to work properly:
-                          - The files in each directory must be have the _same base filename and numbering sequence_
+                          - The files in each directory must have the _same base filename and numbering sequence_
                           - `ffmpeg.exe` must be available on the _system path_ to convert PNG frames for the preview video
 
                         # Project Management
@@ -661,7 +662,7 @@ def create_ui():
                         - The orange buttons copy files!
                           - They copy the corresponding frame PNG file from their respective directories to the project path
                           - The existing frame PNG file in the project path is overwritten
-                          - The gray buttons can all be used without changes being made
+                          - The gray buttons can be used without altering the project
 
                         Use the _Next Frame_ and _Prev Frame_ buttons to step through the video one frame at a time
                           - Tip: Press _Tab_ until the _Next Frame_ button is in focus, then use the SPACEBAR to step through the video
@@ -690,8 +691,8 @@ def create_ui():
                           - The filenames must all confirm to the same requirements:
                             - Have the same starting base filename
                             - Followed by a frame index integer, all zero-filled to the same width
-                            - Example: `FRAME000.png` through `FRAME187.png`
-                          - There must be no other files in the same directory""")
+                            - Example: `FRAME001.png` through `FRAME420.png`
+                          - There must be no other PNG files in the same directory""")
 
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
@@ -714,17 +715,17 @@ def create_ui():
                         resequence_button = gr.Button("Resequence Files", variant="primary")
                 with gr.Accordion("Tips", open=False):
                     gr.Markdown("""
-                    - Only PNG files for the video frame files should be present in the directory
-                    - _File Type_ will be used for a wildcard search of files
-                    - _Base Filename_ will be used to name the resequenced files with an added frame number
-                    - _Starting Sequence Number_ should normally be _0_
-                        - Another value might be useful if inserting one PNG sequence into another
-                    - _Integer Step_ should normally be _1_
+                    - The only PNG files present in the _Input Path_ should be the video frame files
+                    - _File Type_ is used for a wildcard search of files
+                    - _Base Filename_ is used to name the resequenced files with an added frame number
+                    - _Starting Sequence Number_ normally should be _0_
+                        - A different value might be useful if inserting a PNG sequence into another
+                    - _Integer Step_ normally should be _1_
                         - This sets the increment between the added frame numbers
-                    - _Number Padding_ should be kept to _-1_ for automatic detection
-                        - Set to another value if you need a specific width of digits for the frame number
-                    - Keep _Rename instead of duplicate files_ unchecked if the original files might be needed
-                      - It can be helpful to keep the original files to trace back to the source frame""")
+                    - _Number Padding_ should be _-1_ for automatic detection
+                        - It can be set to another value if a specific width of digits is needed for the frame number
+                    - Leave _Rename instead of duplicate files_ unchecked if the original files might be needed
+                      - This can be helpful for tracing back to the source frame""")
 
             with gr.Tab("File Conversion"):
                 gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
@@ -740,10 +741,10 @@ def create_ui():
                     output_info_text_mp = gr.Textbox(label="Details", interactive=False)
                     with gr.Accordion("Tips", open=False):
                         gr.Markdown("""
-                        - Base the filename pattern on the frame count for alphanumeric sorting
-                        - Example: Video with _24578_ frames, for a root filename of "TENNIS", the pattern should be "TENNIS%05d.png"
+                        - The filename pattern should be based on the count of frames  for alphanumeric sorting
+                        - Example: For a video with _24,578_ frames and a PNG base filename of "TENNIS", the pattern should be "TENNIS%05d.png"
                         - Match the frame rate to the rate of the source video to avoid repeated or skipped frames
-                        - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a video of a set of frame files""")
+                        - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
                 with gr.Tab("PNG Sequence to MP4"):
                     gr.Markdown("Convert a PNG sequence to a MP4")
@@ -757,13 +758,13 @@ def create_ui():
                     output_info_text_pm = gr.Textbox(label="Details", interactive=False)
                     with gr.Accordion("Tips", open=False):
                         gr.Markdown("""
-                        - Base the filename pattern on the number of PNG files to ensure they are read in the correct order
-                        - Example: PNG sequence with _24578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
-                        - The special pattern "auto" can be used to detect the pattern automatically. This works if:
+                        - The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
+                        - Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
+                        - The special pattern "auto" can be used to detect the pattern automatically. This works when:
                             - The only PNG files present are the frame images
-                            - All files have the same naming pattern, starting with a base filename, and a zero-filled frame number
+                            - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
                             - The first found PNG file follows the same naming pattern as all the other files
-                        - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a video of a set of frame files""")
+                        - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
                 with gr.Tab("GIF to PNG Sequence*"):
                     gr.Markdown("*Planned: Convert a GIF to a PNG sequence")
