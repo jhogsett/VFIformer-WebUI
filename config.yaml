@@ -30,6 +30,13 @@ restoration_settings:
 blender_settings:
   projects_file: "./video_blender_projects.csv"
   skip_frames: 100
+mp4_to_png_settings:
+  frame_rate: 30
+png_to_mp4_settings:
+  minimum_crf: 17 # near-lossless
+  maximum_crf: 28 # great quality, smaller file
+  default_crf: 23 # great quality (default)
+  frame_rate: 30
 user_interface:
   theme: "default"
   css_file: "webui.css"

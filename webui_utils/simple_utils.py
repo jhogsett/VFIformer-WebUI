@@ -1,4 +1,5 @@
 from collections import namedtuple
+from fractions import Fraction
 
 # Computing the count of work steps needed based on the number of splits:
 # Before splitting, there's one existing region between the before and after frames.
@@ -43,7 +44,13 @@ def restored_frame_searches(restored_frame_count : int) -> list:
 # compute a human friendly display of the fractional
 # times for the new frames that will be created
 def restored_frame_fractions(restored_frame_count : int) -> str:
-    return ", ".join([f"{n + 1}/{restored_frame_count + 1}" for n in range(restored_frame_count)])
+    result = []
+    for n in range(restored_frame_count):
+        div = n + 1
+        den = restored_frame_count + 1
+        result.append(str(Fraction(div/den).limit_denominator()))
+    return ", ".join(result)
+
 
 WARNING_SYM = "⚠️"
 
