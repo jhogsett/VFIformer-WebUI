@@ -652,17 +652,17 @@ def create_ui():
                         with gr.Column():
                             output_img_path2_vb = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
                         with gr.Column():
-                            use_path_1_button_vb = gr.Button("Use Path 1 Frame | Next >", variant="primary")
-                            use_path_2_button_vb = gr.Button("Use Path 2 Frame | Next >", variant="primary")
+                            use_path_1_button_vb = gr.Button("Use Path 1 Frame | Next >", variant="primary", elem_id="redbutton")
+                            use_path_2_button_vb = gr.Button("Use Path 2 Frame | Next >", variant="primary", elem_id="redbutton")
                             use_back_button_vb = gr.Button("< Back")
                             preview_video_vb = gr.Button("Preview Video")
                     with gr.Accordion("Tips", open=False):
                         gr.Markdown("""
                         # Important
-                        - The orange buttons copy files!
+                        - The red buttons copy files!
                           - They copy the corresponding frame PNG file from their respective directories to the project path
                           - The existing frame PNG file in the project path is overwritten
-                          - The gray buttons can be used without altering the project
+                          - The other buttons can be used without altering the project
 
                         Use the _Next Frame_ and _Prev Frame_ buttons to step through the video one frame at a time
                           - Tip: Press _Tab_ until the _Next Frame_ button is in focus, then use the SPACEBAR to step through the video
