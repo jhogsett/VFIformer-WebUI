@@ -11,11 +11,11 @@ from deep_interpolate import DeepInterpolate
 from interpolate_series import InterpolateSeries
 from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
-from webui_utils.auto_increment import AutoIncrementDirectory
+from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory
 from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
-from webui_utils.video_utils import MP4toPNG, PNGtoMP4
+from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
@@ -365,8 +365,14 @@ def video_blender_use_path2(frame : str):
     frame += 1
     return frame, *video_blender_state.goto_frame(frame)
 
-def video_blender_preview_video():
-    return gr.update(selected=2)
+def video_blender_preview_video(input_path : str):
+    return gr.update(selected=2), input_path
+
+def video_blender_render_preview(input_path : str, frame_rate : int):
+    global config
+    output_filepath, run_index = AutoIncrementFilename(config.directories["working"], "mp4").next_filename("video_preview", "mp4")
+    ffmpeg_cmd = PNGtoMP4(input_path, "auto", int(frame_rate), output_filepath, crf=QUALITY_SMALLER_SIZE)
+    return output_filepath
 
 def resequence_files(input_path : str, input_filetype : str, input_newname : str, input_start : str, input_step : str, input_zerofill : str, input_rename_check : bool):
     global log
@@ -538,11 +544,17 @@ def create_ui():
                             use_back_button_vb = gr.Button("< Back", variant="primary")
                             preview_video_vb = gr.Button("Preview Video")
                 with gr.Tab("Video Preview", id=2):
-                    gr.Markdown("A way to preview the video is envisioned")
+                    with gr.Row():
+                        video_preview_vb = gr.Video(label="Preview", interactive=False, include_audio=False)
+                    preview_path_vb = gr.Textbox(max_lines=1, label="Path to PNG Sequence", placeholder="Path on this server to the PNG files to be converted")
+                    with gr.Row():
+                        render_video_vb = gr.Button("Render Video", variant="primary")
+                        input_frame_rate_vb = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
 
         with gr.Tab("Tools"):
             with gr.Row(variant="compact"):
                 restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
+
             with gr.Tab("Resequence Files"):
                 gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
                 with gr.Row(variant="compact"):
@@ -558,15 +570,16 @@ def create_ui():
                         with gr.Row(variant="compact"):
                             input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
                         resequence_button = gr.Button("Resequence Files", variant="primary")
+
             with gr.Tab("File Conversion"):
-                gr.HTML("Tools for common video file conversion tasks", elem_id="tabheading")
+                gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
 
                 with gr.Tab("MP4 to PNG Sequence"):
                     gr.Markdown("Convert MP4 to a PNG sequence")
                     input_path_text_mp = gr.Text(max_lines=1, label="MP4 File", placeholder="Path on this server to the MP4 file to be converted")
                     output_path_text_mp = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
                     with gr.Row():
-                        output_pattern_text_mp = gr.Text(max_lines=1, label="Output Filename Pattern", placeholder="A pattern such as image%03d.png (produces files in the range image000.png-image999.png)")
+                        output_pattern_text_mp = gr.Text(max_lines=1, label="Output Filename Pattern", placeholder="Pattern like image%03d.png (files image000.png-image999.png) auto=based on found files")
                         input_frame_rate_mp = gr.Slider(minimum=1, maximum=60, value=config.mp4_to_png_settings["frame_rate"], step=1, label="Frame Rate")
                     convert_button_mp = gr.Button("Convert", variant="primary")
                     output_info_text_mp = gr.Textbox(label="Details", interactive=False)
@@ -635,7 +648,9 @@ def create_ui():
         use_back_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        preview_video_vb.click(video_blender_preview_video, outputs=tabs_video_blender)
+        preview_video_vb.click(video_blender_preview_video, inputs=input_project_path_vb, outputs=[tabs_video_blender, preview_path_vb])
+        render_video_vb.click(video_blender_render_preview, inputs=[preview_path_vb, input_frame_rate_vb], outputs=[video_preview_vb])
+
 
     return app
 
