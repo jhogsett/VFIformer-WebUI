@@ -278,9 +278,6 @@ def create_ui(config, video_blender_projects):
                         - There must be no other PNG files in the same directory""")
 
     with gr.Tab("Tools"):
-        with gr.Row(variant="compact"):
-            restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
-
         with gr.Tab("Resequence Files"):
             gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
             with gr.Row(variant="compact"):
@@ -367,6 +364,9 @@ def create_ui(config, video_blender_projects):
                     - use R-ESRGAN 4x+ to restore and/or upscale
                     - use VFIformer to adjust frame rate to real time
                     - reassemble new PNG frames into MP4 file""")
+        with gr.Row(variant="compact"):
+            restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
+
     elements = {}
     elements["img1_input_fi"] = img1_input_fi
     elements["img2_input_fi"] = img2_input_fi
