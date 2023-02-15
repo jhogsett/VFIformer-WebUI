@@ -1,4 +1,5 @@
 import os
+import shutil
 import argparse
 from typing import Callable
 import re
@@ -21,6 +22,7 @@ def main():
     parser.add_argument("--max_target", default=0.334, type=float, help="Upper bound of target time")
     parser.add_argument("--output_path", default="./output", type=str, help="Output path for interpolated PNGs")
     parser.add_argument("--base_filename", default="interpolated_frame", type=str, help="Base filename for interpolated PNGs")
+    parser.add_argument("--keep_samples", dest="keep_samples", default=False, action="store_true", help="True to keep the interative sample PNGs")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
     args = parser.parse_args()
 
@@ -29,7 +31,7 @@ def main():
     engine = InterpolateEngine(args.model, args.gpu_ids)
     interpolater = Interpolate(engine.model, log.log)
     target_interpolater = TargetInterpolate(interpolater, log.log)
-    target_interpolater.split_frames(args.img_before, args.img_after, args.depth, args.min_target, args.max_target, args.output_path, args.base_filename)
+    target_interpolater.split_frames(args.img_before, args.img_after, args.depth, args.min_target, args.max_target, args.output_path, args.base_filename, args.keep_samples)
 
 class TargetInterpolate():
     def __init__(self,
@@ -54,6 +56,7 @@ class TargetInterpolate():
                     max_target : float,
                     output_path : str,
                     base_filename : str,
+                    keep_samples=False,
                     progress_label="Split"):
         self.init_frame_register()
         self.reset_split_manager(num_splits)
@@ -63,7 +66,8 @@ class TargetInterpolate():
         self.set_up_outer_frames(before_filepath, after_filepath, output_filepath_prefix)
 
         self.recursive_split_frames(0.0, 1.0, output_filepath_prefix, min_target, max_target)
-        self.isolate_target_frame()
+
+        self.isolate_target_frame(keep_samples)
         self.close_progress()
 
     def recursive_split_frames(self,
@@ -115,27 +119,36 @@ class TargetInterpolate():
         self.register_frame(after_file)
         self.log("copied " + after_file)
 
-    def isolate_target_frame(self):
+    def isolate_target_frame(self, keep_samples : bool):
         frame_files = self.registered_frames()
 
-        # the kept frame will be the last frame registered
-        kept_file = frame_files.pop(-1)
+        # the found frame will be the last frame registered
+        if keep_samples:
+            found_file = frame_files[-1]
+        else:
+            found_file = frame_files.pop(-1)
 
-        # duplicates of the kept file may have been created, ensure they're not present
-        frame_files = [file for file in frame_files if file != kept_file]
+        filepath, fvalue, ext = self.split_indexed_filepath(found_file)
+        new_found_file = f"{filepath}@{fvalue:1.60g}{ext}"
 
-        # remove other duplicates
-        frame_files = list(set(frame_files))
+        if keep_samples:
+            self.log("copying " + found_file + " to " + new_found_file)
+            shutil.copy(found_file, new_found_file)
+        else:
+            self.log("renaming " + found_file + " to " + new_found_file)
+            os.replace(found_file, new_found_file)
+        self.output_paths.append(new_found_file)
 
-        filepath, fvalue, ext = self.split_indexed_filepath(kept_file)
-        new_kept_file = f"{filepath}@{fvalue}{ext}"
-        os.replace(kept_file, new_kept_file)
-        self.output_paths.append(new_kept_file)
-        self.log("renamed " + kept_file + " to " + new_kept_file)
-
-        for file in frame_files:
-            os.remove(file)
-            self.log("removed uneeded " + file)
+        if keep_samples:
+            for file in frame_files:
+                self.output_paths.append(file)
+        else:
+            # duplicates may have been registered
+            frame_files = [file for file in frame_files if file != found_file]
+            frame_files = list(set(frame_files))
+            for file in frame_files:
+                self.log("removing uneeded " + file)
+                os.remove(file)
 
     def reset_split_manager(self, num_splits : int):
         self.split_count = num_splits
@@ -175,7 +188,7 @@ class TargetInterpolate():
 
     # filepath prefix representing the split position while splitting
     def indexed_filepath(self, filepath_prefix, index):
-        return filepath_prefix + f"{index:1.55f}.png"
+        return filepath_prefix + f"{index:1.60g}.png"
 
     def split_indexed_filepath(self, filepath : str):
         regex = r"(.+)([1|0]\..+)(\..+$)"

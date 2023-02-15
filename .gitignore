@@ -128,7 +128,7 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# image output 
+# image output
 output/
 
 # VFIformer core bits
@@ -139,3 +139,5 @@ utils/
 
 # junk
 go.bat
+temp/
+notes.txt
