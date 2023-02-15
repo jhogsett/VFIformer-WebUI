@@ -1,11 +1,15 @@
 #appheading {
-    font-size: 150%;
-    margin-bottom: 0;
+    font-size: 135%;
+    margin-bottom: -10;
 }
 
 #tabheading {
-    font-size: 125%;
-    margin-bottom: 0;
+    font-size: 115%;
+    margin-bottom: -10;
+}
+
+:root {
+    --frame-chooser-action: #008542;
 }
 
 #sideimage {
@@ -14,9 +18,10 @@
 }
 
 #mainimage {
-    filter: drop-shadow(0px 0px 15px orangered);
+    filter: drop-shadow(0px 0px 17px var(--frame-chooser-action));
 }
 
-#redbutton {
-    background: orangered;
+#actionbutton {
+    background : #008542;
+    border: #008542;
 }

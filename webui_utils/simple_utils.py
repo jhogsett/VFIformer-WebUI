@@ -1,5 +1,6 @@
 from collections import namedtuple
 from fractions import Fraction
+from .icons import WARNING_SYM
 
 # Computing the count of work steps needed based on the number of splits:
 # Before splitting, there's one existing region between the before and after frames.
@@ -50,9 +51,6 @@ def restored_frame_fractions(restored_frame_count : int) -> str:
         den = restored_frame_count + 1
         result.append(str(Fraction(div/den).limit_denominator()))
     return ", ".join(result)
-
-
-WARNING_SYM = "⚠️"
 
 # For Frame Restoration, given a count of restored frames
 # and a precision (split count) compute the frames that

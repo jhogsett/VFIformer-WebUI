@@ -1,0 +1,6 @@
+
+WARNING_SYM = "⚠️"
+GEAR_ICON = "⚙️"
+INFO_ICON = "ℹ️"
+TOOLS_ICON = "🔧"
+UNDER_CONST = "🚧"
