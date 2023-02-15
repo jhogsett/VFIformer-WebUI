@@ -91,7 +91,7 @@ def create_ui(config, video_blender_projects):
         with gr.Accordion(INFO_ICON + " Tips", open=False):
             gr.Markdown("""
 - _Resynthesize Video_ creates a set of replacement frames for a video by interpolating new ones between all existing frames
-    - The replacement frames can be be used with _Video Blender_ to replace a video's damaged frames with clean replacements
+    - The replacement frames can be be used with _Video Blender_ to replace a video's damaged frames with clean substitutes
 - How it works
     - For each new frame, the two adjacent original frames are used to interpolate a new _replacement frame_ using VFIformer
     - Example:
@@ -138,23 +138,23 @@ def create_ui(config, video_blender_projects):
 - _Targeted interpolation_ is used to resynthesize a set of replacement frames at precise times
 
 # Important
-- Provide only CLEAN frames adjacent to the series of damaged frames
+- Provide only CLEAN frames adjacent to the damaged ones
     - The frames should not cross scenes
     - Motion that is too fast may not produce good results
-- Set _Frames to Restore_ to the exact number of bad frames that need replacing to get accurate results
+- Set _Frames to Restore_ to the exact number of needed replacement frames for accurate results
 - _Frame Search Times_ shows the fractional search times for the restored frames
-    - Example with four frames:
-    - If there are 2 bad frames b and c, and 2 good frames A and D:
+    - Example with 4 frames:
+    - If there are 2 good frames _A_ and _D_ and 2 bad frames _b_ and _c_:
         - A---b---c---D
         - Replacement frame B is 1/3 of the way between frames A and D
         - Replacement frame C is 2/3 of the way between frames A and D
-        - _Targeted Interpolation_ can recreate frames at these precise times
+        - _Targeted Interpolation_ creates synthesized frames at these precise times
 - Set _Search Precision_ to the _search depth_ needed for accuracy
     - Low _Search Precision_ is faster but can lead to repeated or poorly-timed frames
     - High _Search Precision_ takes longer but can produce near-perfect results
-- _Predicted Matches_ estimates the frame times that will be found based on _Frames to Restore_ and _Search Precision_
-    - The actual found frames may differ from the predictions
-    - A warning is displayed if _Search Precision_ should be increased because of possible repeated frames""")
+- _Predicted Matches_ estimates the frame times based on _Frames to Restore_ and _Search Precision_
+    - Actual found frames may differ from predictions
+    - A warning is displayed if _Search Precision_ should be increased due to repeated frames""")
 
     with gr.Tab("Video Blender"):
         gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
@@ -243,12 +243,12 @@ General Use
                     gr.Markdown("""
 # Important
 The green buttons copy files!
-- Clicking one copies a frame PNG file from the corresponding directory to the project path
-- This can be undone by simply going back and copying from the other path
-- The remaining buttons in the UI do not alter the project
+- Clicking copies a frame PNG file from the corresponding directory to the project path
+- Undo simply by going back and choosing the other path
+- The remaining buttons do not alter the project
 
-Use the Next Frame and Prev Frame buttons to step through video one frame at a time
-- Tip: After clicking a button, SPACEBAR can be used to repeatedly click it
+Use the Next Frame > and < Prev Frame buttons to step through video one frame at a time
+- Tip: After clicking a button, SPACEBAR can be used to click repeatedly
 
 Clicking _Preview Video_ will take you to the _Preview Video_ tab
 - The current set of project PNG frame files can be quickly rendered into a preview video and watched""")
