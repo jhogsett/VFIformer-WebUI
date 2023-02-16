@@ -36,3 +36,18 @@ def create_zip(files : list, filepath : str):
 def locate_frame_file(png_files_path : str, frame_number : int):
     files = sorted(get_files(png_files_path, "png"))
     return files[frame_number]
+
+# def split_indexed_frame_path(frame_path : str):
+#     """Split a file path like path/image0123.png into path, base filename,
+#        frame index and file extenstion"""
+    # def split_indexed_filepath(self, filepath : str):
+    #     regex = r"(.+)([1|0]\..+)(\..+$)"
+    #     result = re.search(regex, filepath)
+    #     if result:
+    #         file_part = result.group(1)
+    #         float_part = result.group(2)
+    #         ext_part = result.group(3)
+    #         return file_part, float(float_part), ext_part
+    #     else:
+    #         self.log("unable to split indexed filepath {filepath}")
+    #         return None, 0.0, None
