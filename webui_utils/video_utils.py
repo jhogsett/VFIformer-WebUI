@@ -1,6 +1,7 @@
 import os
 import glob
 from ffmpy import FFmpeg, FFprobe
+from .image_utils import gif_frame_count
 
 # ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -print_format default=nokey=1:noprint_wrappers=1 Big_Buck_Bunny_1080_10s_20MB.mp4
 def MP4_frame_count(input_path : str) -> int:
@@ -38,3 +39,18 @@ def MP4toPNG(input_path : str, filename_pattern : str, frame_rate : int, output_
     cmd = ff.cmd
     ff.run()
     return cmd
+
+# ffmpeg -y -i images\example.gif -start_number 0 gifframes_%09d.png
+def GIFtoPNG(input_path : str, output_path : str, start_number : int = 0):
+    _, filename = os.path.split(input_path)
+    base_filename, _ = os.path.splitext(filename)
+    frame_count = gif_frame_count(input_path)
+    num_width = len(str(frame_count))
+    filename_pattern = f"{base_filename}%0{num_width}d.png"
+    ff = FFmpeg(inputs= {input_path : None},
+                outputs={os.path.join(output_path, filename_pattern) : f"-start_number {start_number}"},
+                global_options="-y")
+    cmd = ff.cmd
+    ff.run()
+    return cmd
+
