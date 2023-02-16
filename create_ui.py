@@ -3,21 +3,24 @@ from webui_utils.simple_utils import restored_frame_fractions, restored_frame_pr
 from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, UNDER_CONST, FILE_ICON, NUMBERS_ICON, ROCKET_ICON, PROPERTIES
 
 def create_ui(config, video_blender_projects):
-    gr.HTML("VFIformer Web UI", elem_id="appheading")
+    # all UI elements are captured and returned
+    # for use ing binding UI elements/events to functional code
+    e = {}
 
+    gr.HTML("VFIformer Web UI", elem_id="appheading")
     with gr.Tab("Frame Interpolation"):
         gr.HTML("Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
-                img1_input_fi = gr.Image(type="filepath", label="Before Image", tool=None)
-                img2_input_fi = gr.Image(type="filepath", label="After Image", tool=None)
+                e["img1_input_fi"] = gr.Image(type="filepath", label="Before Image", tool=None)
+                e["img2_input_fi"] = gr.Image(type="filepath", label="After Image", tool=None)
                 with gr.Row():
-                    splits_input_fi = gr.Slider(value=1, minimum=1, maximum=config.interpolation_settings["max_splits"], step=1, label="Splits")
-                    info_output_fi = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
+                    e["splits_input_fi"] = gr.Slider(value=1, minimum=1, maximum=config.interpolation_settings["max_splits"], step=1, label="Splits")
+                    e["info_output_fi"] = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
             with gr.Column():
-                img_output_fi = gr.Image(type="filepath", label="Animated Preview", interactive=False)
-                file_output_fi = gr.File(type="file", file_count="multiple", label="Download", visible=False)
-        interpolate_button_fi = gr.Button("Interpolate", variant="primary")
+                e["img_output_fi"] = gr.Image(type="filepath", label="Animated Preview", interactive=False)
+                e["file_output_fi"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
+        e["interpolate_button_fi"] = gr.Button("Interpolate", variant="primary")
         with gr.Accordion(INFO_ICON + " Tips", open=False):
             gr.Markdown("""
 - Use _Frame Interpolation_ to
@@ -30,16 +33,16 @@ def create_ui(config, video_blender_projects):
         gr.HTML("Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
-                img1_input_fs = gr.Image(type="filepath", label="Before Image", tool=None)
-                img2_input_fs = gr.Image(type="filepath", label="After Image", tool=None)
+                e["img1_input_fs"] = gr.Image(type="filepath", label="Before Image", tool=None)
+                e["img2_input_fs"] = gr.Image(type="filepath", label="After Image", tool=None)
                 with gr.Row():
-                    splits_input_fs = gr.Slider(value=1, minimum=1, maximum=config.search_settings["max_splits"], step=1, label="Search Depth")
-                    min_input_text_fs = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
-                    max_input_text_fs = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
+                    e["splits_input_fs"] = gr.Slider(value=1, minimum=1, maximum=config.search_settings["max_splits"], step=1, label="Search Depth")
+                    e["min_input_text_fs"] = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
+                    e["max_input_text_fs"] = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
             with gr.Column():
-                img_output_fs = gr.Image(type="filepath", label="Found Frame", interactive=False)
-                file_output_fs = gr.File(type="file", file_count="multiple", label="Download", visible=False)
-        search_button_fs = gr.Button("Search", variant="primary")
+                e["img_output_fs"] = gr.Image(type="filepath", label="Found Frame", interactive=False)
+                e["file_output_fs"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
+        e["search_button_fs"] = gr.Button("Search", variant="primary")
         with gr.Accordion(INFO_ICON + " Tips", open=False):
             gr.Markdown("""
 - Use _Frame Search_ to synthesize a new frame at a precise time using _Targeted Interpolation_
@@ -54,13 +57,13 @@ def create_ui(config, video_blender_projects):
         gr.HTML("Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
-                input_path_text_vi = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
-                output_path_text_vi = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
+                e["input_path_text_vi"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
+                e["output_path_text_vi"] = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
                 with gr.Row():
-                    splits_input_vi = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
-                    info_output_vi = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
+                    e["splits_input_vi"] = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
+                    e["info_output_vi"] = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
         gr.Markdown("*Progress can be tracked in the console*")
-        interpolate_button_vi = gr.Button("Interpolate Series (this will take time)", variant="primary")
+        e["interpolate_button_vi"] = gr.Button("Interpolate Series (this will take time)", variant="primary")
         with gr.Accordion(INFO_ICON + " Tips", open=False):
             gr.Markdown("""
 - _Video Inflation_ uses _Frame Interpolation_ to double a video's frame count any number of times
@@ -84,10 +87,10 @@ def create_ui(config, video_blender_projects):
         gr.HTML("Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
-                input_path_text_rv = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
-                output_path_text_rv = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
+                e["input_path_text_rv"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
+                e["output_path_text_rv"] = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
         gr.Markdown("*Progress can be tracked in the console*")
-        resynthesize_button_rv = gr.Button("Resynthesize Video (this will take time)", variant="primary")
+        e["resynthesize_button_rv"] = gr.Button("Resynthesize Video (this will take time)", variant="primary")
         with gr.Accordion(INFO_ICON + " Tips", open=False):
             gr.Markdown("""
 - _Resynthesize Video_ creates a set of replacement frames for a video by interpolating new ones between all existing frames
@@ -117,20 +120,20 @@ def create_ui(config, video_blender_projects):
         with gr.Row():
             with gr.Column():
                 with gr.Row():
-                    img1_input_fr = gr.Image(type="filepath", label="Frame Before Replacement Frames", tool=None)
-                    img2_input_fr = gr.Image(type="filepath", label="Frame After Replacement Frames", tool=None)
+                    e["img1_input_fr"] = gr.Image(type="filepath", label="Frame Before Replacement Frames", tool=None)
+                    e["img2_input_fr"] = gr.Image(type="filepath", label="Frame After Replacement Frames", tool=None)
                 with gr.Row():
-                    frames_input_fr = gr.Slider(value=config.restoration_settings["default_frames"], minimum=1, maximum=config.restoration_settings["max_frames"], step=1, label="Frames to Restore")
-                    precision_input_fr = gr.Slider(value=config.restoration_settings["default_precision"], minimum=1, maximum=config.restoration_settings["max_precision"], step=1, label="Search Precision")
+                    e["frames_input_fr"] = gr.Slider(value=config.restoration_settings["default_frames"], minimum=1, maximum=config.restoration_settings["max_frames"], step=1, label="Frames to Restore")
+                    e["precision_input_fr"] = gr.Slider(value=config.restoration_settings["default_precision"], minimum=1, maximum=config.restoration_settings["max_precision"], step=1, label="Search Precision")
                 with gr.Row():
                     times_default = restored_frame_fractions(config.restoration_settings["default_frames"])
-                    times_output_fr = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
+                    e["times_output_fr"] = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
             with gr.Column():
-                img_output_fr = gr.Image(type="filepath", label="Animated Preview", interactive=False)
-                file_output_fr = gr.File(type="file", file_count="multiple", label="Download", visible=False)
+                e["img_output_fr"] = gr.Image(type="filepath", label="Animated Preview", interactive=False)
+                e["file_output_fr"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
         predictions_default = restored_frame_predictions(config.restoration_settings["default_frames"], config.restoration_settings["default_precision"])
-        predictions_output_fr = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=1, interactive=False)
-        restore_button_fr = gr.Button("Restore Frames", variant="primary")
+        e["predictions_output_fr"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=1, interactive=False)
+        e["restore_button_fr"] = gr.Button("Restore Frames", variant="primary")
         with gr.Accordion(INFO_ICON + " Tips", open=False):
             gr.Markdown("""
 - _Frame Restoration_ uses _Frame Search_ to create restored frames for a set of adjacent damaged ones
@@ -158,21 +161,22 @@ def create_ui(config, video_blender_projects):
 
     with gr.Tab("Video Blender"):
         gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
-        tabs_video_blender = gr.Tabs()
-        with tabs_video_blender:
+        # e["tabs_video_blender"] = gr.Tabs()
+        # with e["tabs_video_blender"]:
+        with gr.Tabs() as e["tabs_video_blender"]:
             with gr.Tab("Project Settings", id=0):
                 with gr.Row():
-                    input_project_name_vb = gr.Textbox(label="Project Name")
-                    projects_dropdown_vb = gr.Dropdown(label=PROPERTIES + " Saved Projects", choices=video_blender_projects.get_project_names())
-                    load_project_button_vb = gr.Button(PROPERTIES + " Load").style(full_width=False)
-                    save_project_button_vb = gr.Button(PROPERTIES + " Save").style(full_width=False)
+                    e["input_project_name_vb"] = gr.Textbox(label="Project Name")
+                    e["projects_dropdown_vb"] = gr.Dropdown(label=PROPERTIES + " Saved Projects", choices=video_blender_projects.get_project_names())
+                    e["load_project_button_vb"] = gr.Button(PROPERTIES + " Load").style(full_width=False)
+                    e["save_project_button_vb"] = gr.Button(PROPERTIES + " Save").style(full_width=False)
                 with gr.Row():
-                    input_project_path_vb = gr.Textbox(label="Project Frames Path", placeholder="Path to frame PNG files for video being restored")
+                    e["input_project_path_vb"] = gr.Textbox(label="Project Frames Path", placeholder="Path to frame PNG files for video being restored")
                 with gr.Row():
-                    input_path1_vb = gr.Textbox(label="Original / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
+                    e["input_path1_vb"] = gr.Textbox(label="Original / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
                 with gr.Row():
-                    input_path2_vb = gr.Textbox(label="Alternate / Video #2 Frames Path", placeholder="Path to alternate or video #2 PNG files")
-                load_button_vb = gr.Button("Open Video Blender Project " + ROCKET_ICON, variant="primary")
+                    e["input_path2_vb"] = gr.Textbox(label="Alternate / Video #2 Frames Path", placeholder="Path to alternate or video #2 PNG files")
+                e["load_button_vb"] = gr.Button("Open Video Blender Project " + ROCKET_ICON, variant="primary")
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - Set up the project with three directories, all with PNG files (only) with the _same file count, dimensions and starting sequence number_
@@ -210,34 +214,34 @@ General Use
                     with gr.Column():
                         gr.Textbox(visible=False)
                     with gr.Column():
-                        output_img_path1_vb = gr.Image(label="Original / Path 1 Frame", interactive=False, type="filepath")
+                        e["output_img_path1_vb"] = gr.Image(label="Original / Path 1 Frame", interactive=False, type="filepath")
                     with gr.Column():
                         gr.Textbox(visible=False)
                 with gr.Row():
                     with gr.Column():
-                        output_prev_frame_vb = gr.Image(label="Previous Frame", interactive=False, type="filepath", elem_id="sideimage")
+                        e["output_prev_frame_vb"] = gr.Image(label="Previous Frame", interactive=False, type="filepath", elem_id="sideimage")
                     with gr.Column():
-                        output_curr_frame_vb = gr.Image(label="Current Frame", interactive=False, type="filepath", elem_id="mainimage")
+                        e["output_curr_frame_vb"] = gr.Image(label="Current Frame", interactive=False, type="filepath", elem_id="mainimage")
                     with gr.Column():
-                        output_next_frame_vb = gr.Image(label="Next Frame", interactive=False, type="filepath", elem_id="sideimage")
+                        e["output_next_frame_vb"] = gr.Image(label="Next Frame", interactive=False, type="filepath", elem_id="sideimage")
                 with gr.Row():
                     with gr.Column():
                         with gr.Row():
-                            go_button_vb = gr.Button("Go").style(full_width=False)
-                            input_text_frame_vb = gr.Number(value=0, precision=0, label="Frame")
+                            e["go_button_vb"] = gr.Button("Go").style(full_width=False)
+                            e["input_text_frame_vb"] = gr.Number(value=0, precision=0, label="Frame")
                         with gr.Row():
-                            prev_xframes_button_vb = gr.Button(f"<< {config.blender_settings['skip_frames']}")
-                            next_xframes_button_vb = gr.Button(f"{config.blender_settings['skip_frames']} >>")
-                        preview_video_vb = gr.Button("Preview Video")
+                            e["prev_xframes_button_vb"] = gr.Button(f"<< {config.blender_settings['skip_frames']}")
+                            e["next_xframes_button_vb"] = gr.Button(f"{config.blender_settings['skip_frames']} >>")
+                        e["preview_video_vb"] = gr.Button("Preview Video")
                     with gr.Column():
-                        output_img_path2_vb = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
+                        e["output_img_path2_vb"] = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
                     with gr.Column():
-                        use_path_1_button_vb = gr.Button("Use Path 1 Frame | Next >", variant="primary", elem_id="actionbutton")
-                        use_path_2_button_vb = gr.Button("Use Path 2 Frame | Next >", variant="primary", elem_id="actionbutton")
+                        e["use_path_1_button_vb"] = gr.Button("Use Path 1 Frame | Next >", variant="primary", elem_id="actionbutton")
+                        e["use_path_2_button_vb"] = gr.Button("Use Path 2 Frame | Next >", variant="primary", elem_id="actionbutton")
                         with gr.Row():
-                            prev_frame_button_vb = gr.Button("< Prev Frame", variant="primary")
-                            next_frame_button_vb = gr.Button("Next Frame >", variant="primary")
-                        fix_frames_button_vb = gr.Button("Fix Frames")
+                            e["prev_frame_button_vb"] = gr.Button("< Prev Frame", variant="primary")
+                            e["next_frame_button_vb"] = gr.Button("Next Frame >", variant="primary")
+                        e["fix_frames_button_vb"] = gr.Button("Fix Frames")
 
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
@@ -263,16 +267,16 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                 with gr.Row():
                     with gr.Column():
                         with gr.Row():
-                            project_path_ff = gr.Text(label="Video Blender Project Path", placeholder="Path to video frame PNG files")
+                            e["project_path_ff"] = gr.Text(label="Video Blender Project Path", placeholder="Path to video frame PNG files")
                         with gr.Row():
-                            input_clean_before_ff = gr.Number(label="Last clean frame BEFORE damaged ones", value=0, precision=0)
-                            input_clean_after_ff = gr.Number(label="First clean frame AFTER damaged ones", value=0, precision=0)
+                            e["input_clean_before_ff"] = gr.Number(label="Last clean frame BEFORE damaged ones", value=0, precision=0)
+                            e["input_clean_after_ff"] = gr.Number(label="First clean frame AFTER damaged ones", value=0, precision=0)
                         with gr.Row():
-                            preview_button_ff = gr.Button(value="Preview Fixed Frames", variant="primary")
+                            e["preview_button_ff"] = gr.Button(value="Preview Fixed Frames", variant="primary")
                     with gr.Column():
-                        preview_image_ff = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
-                        fixed_path_ff = gr.Text(label="Path to Restored Frames", interactive=False)
-                        use_fixed_button_ff = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
+                        e["preview_image_ff"] = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
+                        e["fixed_path_ff"] = gr.Text(label="Path to Restored Frames", interactive=False)
+                        e["use_fixed_button_ff"] = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - When arrving at this tab via the _Frame Chooser_ Fix Frames button, the following fields are pre-filled from the project:
@@ -287,11 +291,11 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 
             with gr.Tab("Video Preview", id=3):
                 with gr.Row():
-                    video_preview_vb = gr.Video(label="Preview", interactive=False, include_audio=False) #.style(width=config.blender_settings["preview_width"]) #height=config.blender_settings["preview_height"],
-                preview_path_vb = gr.Textbox(max_lines=1, label="Path to PNG Sequence", placeholder="Path on this server to the PNG files to be converted")
+                    e["video_preview_vb"] = gr.Video(label="Preview", interactive=False, include_audio=False) #.style(width=config.blender_settings["preview_width"]) #height=config.blender_settings["preview_height"],
+                e["preview_path_vb"] = gr.Textbox(max_lines=1, label="Path to PNG Sequence", placeholder="Path on this server to the PNG files to be converted")
                 with gr.Row():
-                    render_video_vb = gr.Button("Render Video", variant="primary")
-                    input_frame_rate_vb = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
+                    e["render_video_vb"] = gr.Button("Render Video", variant="primary")
+                    e["input_frame_rate_vb"] = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - When arrving at this tab via the _Frame Chooser_ Preview Video button, the _Path to PNG Sequence_ is automatically filled with the Video Blender project path
@@ -315,14 +319,14 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 
             with gr.Tab("MP4 to PNG Sequence"):
                 gr.Markdown("Convert MP4 to a PNG sequence")
-                input_path_text_mp = gr.Text(max_lines=1, label="MP4 File", placeholder="Path on this server to the MP4 file to be converted")
-                output_path_text_mp = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
+                e["input_path_text_mp"] = gr.Text(max_lines=1, label="MP4 File", placeholder="Path on this server to the MP4 file to be converted")
+                e["output_path_text_mp"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
                 with gr.Row():
-                    output_pattern_text_mp = gr.Text(max_lines=1, label="Output Filename Pattern", placeholder="Pattern like image%03d.png")
-                    input_frame_rate_mp = gr.Slider(minimum=1, maximum=60, value=config.mp4_to_png_settings["frame_rate"], step=1, label="Frame Rate")
+                    e["output_pattern_text_mp"] = gr.Text(max_lines=1, label="Output Filename Pattern", placeholder="Pattern like image%03d.png")
+                    e["input_frame_rate_mp"] = gr.Slider(minimum=1, maximum=60, value=config.mp4_to_png_settings["frame_rate"], step=1, label="Frame Rate")
                 with gr.Row():
-                    convert_button_mp = gr.Button("Convert", variant="primary")
-                    output_info_text_mp = gr.Textbox(label="Details", interactive=False)
+                    e["convert_button_mp"] = gr.Button("Convert", variant="primary")
+                    e["output_info_text_mp"] = gr.Textbox(label="Details", interactive=False)
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - The filename pattern should be based on the count of frames  for alphanumeric sorting
@@ -332,15 +336,15 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 
             with gr.Tab("PNG Sequence to MP4"):
                 gr.Markdown("Convert a PNG sequence to a MP4")
-                input_path_text_pm = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
-                output_path_text_pm = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
+                e["input_path_text_pm"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
+                e["output_path_text_pm"] = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
                 with gr.Row():
-                    input_pattern_text_pm = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
-                    input_frame_rate_pm = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
-                    quality_slider_pm = gr.Slider(minimum=config.png_to_mp4_settings["minimum_crf"], maximum=config.png_to_mp4_settings["maximum_crf"], step=1, value=config.png_to_mp4_settings["default_crf"], label="Quality (lower=better)")
+                    e["input_pattern_text_pm"] = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
+                    e["input_frame_rate_pm"] = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
+                    e["quality_slider_pm"] = gr.Slider(minimum=config.png_to_mp4_settings["minimum_crf"], maximum=config.png_to_mp4_settings["maximum_crf"], step=1, value=config.png_to_mp4_settings["default_crf"], label="Quality (lower=better)")
                 with gr.Row():
-                    convert_button_pm = gr.Button("Convert", variant="primary")
-                    output_info_text_pm = gr.Textbox(label="Details", interactive=False)
+                    e["convert_button_pm"] = gr.Button("Convert", variant="primary")
+                    e["output_info_text_pm"] = gr.Textbox(label="Details", interactive=False)
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
@@ -353,11 +357,11 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 
             with gr.Tab("GIF to PNG Sequence"):
                 gr.Markdown("Convert GIF to a PNG sequence")
-                input_path_text_gp = gr.Text(max_lines=1, label="GIF File", placeholder="Path on this server to the GIF file to be converted")
-                output_path_text_gp = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
+                e["input_path_text_gp"] = gr.Text(max_lines=1, label="GIF File", placeholder="Path on this server to the GIF file to be converted")
+                e["output_path_text_gp"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
                 with gr.Row():
-                    convert_button_gp = gr.Button("Convert", variant="primary")
-                    output_info_text_gp = gr.Textbox(label="Details", interactive=False)
+                    e["convert_button_gp"] = gr.Button("Convert", variant="primary")
+                    e["output_info_text_gp"] = gr.Textbox(label="Details", interactive=False)
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - The PNG files will be named based on the supplied GIF file
@@ -365,12 +369,12 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 
             with gr.Tab("PNG Sequence to GIF"):
                 gr.Markdown("Convert a PNG sequence to a GIF")
-                input_path_text_pg = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
-                output_path_text_pg = gr.Text(max_lines=1, label="GIF File", placeholder="Path and filename on this server for the converted GIF file")
-                input_pattern_text_pg = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
+                e["input_path_text_pg"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
+                e["output_path_text_pg"] = gr.Text(max_lines=1, label="GIF File", placeholder="Path and filename on this server for the converted GIF file")
+                e["input_pattern_text_pg"] = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
                 with gr.Row():
-                    convert_button_pg = gr.Button("Convert", variant="primary")
-                    output_info_text_pg = gr.Textbox(label="Details", interactive=False)
+                    e["convert_button_pg"] = gr.Button("Convert", variant="primary")
+                    e["output_info_text_pg"] = gr.Textbox(label="Details", interactive=False)
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
@@ -385,17 +389,17 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
             gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
             with gr.Row():
                 with gr.Column():
-                    input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
+                    e["input_path_text2"] = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
                     with gr.Row():
-                        input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
-                        input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
+                        e["input_filetype_text"] = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
+                        e["input_newname_text"] = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
                     with gr.Row():
-                        input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
-                        input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer tep for the sequentially numbered files", label="Integer Step")
-                        input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
+                        e["input_start_text"] = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
+                        e["input_step_text"] = gr.Text(value="1", max_lines=1, placeholder="Integer tep for the sequentially numbered files", label="Integer Step")
+                        e["input_zerofill_text"] = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
                     with gr.Row():
-                        input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
-                    resequence_button = gr.Button("Resequence Files", variant="primary")
+                        e["input_rename_check"] = gr.Checkbox(value=False, label="Rename instead of duplicate files")
+                    e["resequence_button"] = gr.Button("Resequence Files", variant="primary")
             with gr.Accordion(INFO_ICON + " Tips", open=False):
                 gr.Markdown("""
 _Resequence Files_ can be used to make a set of PNG files ready for important into video editing software
@@ -428,111 +432,11 @@ Idea: Recover the original video from animated GIF file
             gr.Markdown("Future: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
         with gr.Tab("Options" + GEAR_ICON):
-            restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
+            e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
 
-    elements = {}
-    elements["img1_input_fi"] = img1_input_fi
-    elements["img2_input_fi"] = img2_input_fi
-    elements["splits_input_fi"] = splits_input_fi
-    elements["info_output_fi"] = info_output_fi
-    elements["img_output_fi"] = img_output_fi
-    elements["file_output_fi"] = file_output_fi
-    elements["interpolate_button_fi"] = interpolate_button_fi
-    elements["img1_input_fs"] = img1_input_fs
-    elements["img2_input_fs"] = img2_input_fs
-    elements["splits_input_fs"] = splits_input_fs
-    elements["min_input_text_fs"] = min_input_text_fs
-    elements["max_input_text_fs"] = max_input_text_fs
-    elements["img_output_fs"] = img_output_fs
-    elements["file_output_fs"] = file_output_fs
-    elements["search_button_fs"] = search_button_fs
-    elements["input_path_text_vi"] = input_path_text_vi
-    elements["output_path_text_vi"] = output_path_text_vi
-    elements["splits_input_vi"] = splits_input_vi
-    elements["info_output_vi"] = info_output_vi
-    elements["interpolate_button_vi"] = interpolate_button_vi
-    elements["input_path_text_rv"] = input_path_text_rv
-    elements["output_path_text_rv"] = output_path_text_rv
-    elements["resynthesize_button_rv"] = resynthesize_button_rv
-    elements["img1_input_fr"] = img1_input_fr
-    elements["img2_input_fr"] = img2_input_fr
-    elements["frames_input_fr"] = frames_input_fr
-    elements["precision_input_fr"] = precision_input_fr
-    elements["times_output_fr"] = times_output_fr
-    elements["img_output_fr"] = img_output_fr
-    elements["file_output_fr"] = file_output_fr
-    elements["predictions_output_fr"] = predictions_output_fr
-    elements["restore_button_fr"] = restore_button_fr
-    elements["tabs_video_blender"] = tabs_video_blender
-    elements["input_project_name_vb"] = input_project_name_vb
-    elements["projects_dropdown_vb"] = projects_dropdown_vb
-    elements["load_project_button_vb"] = load_project_button_vb
-    elements["save_project_button_vb"] = save_project_button_vb
-    elements["input_project_path_vb"] = input_project_path_vb
-    elements["input_path1_vb"] = input_path1_vb
-    elements["input_path2_vb"] = input_path2_vb
-    elements["load_button_vb"] = load_button_vb
-    elements["output_img_path1_vb"] = output_img_path1_vb
-    elements["output_prev_frame_vb"] = output_prev_frame_vb
-    elements["output_curr_frame_vb"] = output_curr_frame_vb
-    elements["output_next_frame_vb"] = output_next_frame_vb
-    elements["prev_frame_button_vb"] = prev_frame_button_vb
-    elements["next_frame_button_vb"] = next_frame_button_vb
-    elements["go_button_vb"] = go_button_vb
-    elements["input_text_frame_vb"] = input_text_frame_vb ,
-    elements["prev_xframes_button_vb"] = prev_xframes_button_vb
-    elements["next_xframes_button_vb"] = next_xframes_button_vb
-    elements["output_img_path2_vb"] = output_img_path2_vb
-    elements["use_path_1_button_vb"] = use_path_1_button_vb
-    elements["use_path_2_button_vb"] = use_path_2_button_vb
-    elements["fix_frames_button_vb"] = fix_frames_button_vb
-    elements["preview_video_vb"] = preview_video_vb
-    elements["project_path_ff"] = project_path_ff
-    elements["input_clean_before_ff"] = input_clean_before_ff
-    elements["input_clean_after_ff"] = input_clean_after_ff
-    elements["preview_button_ff"] = preview_button_ff
-    elements["preview_image_ff"] = preview_image_ff
-    elements["fixed_path_ff"] = fixed_path_ff
-    elements["use_fixed_button_ff"] = use_fixed_button_ff
-    elements["video_preview_vb"] = video_preview_vb
-    elements["preview_path_vb"] = preview_path_vb
-    elements["render_video_vb"] = render_video_vb
-    elements["input_frame_rate_vb"] = input_frame_rate_vb
-    elements["restart_button"] = restart_button
-    elements["input_path_text2"] = input_path_text2
-    elements["input_filetype_text"] = input_filetype_text
-    elements["input_newname_text"] = input_newname_text
-    elements["input_start_text"] = input_start_text
-    elements["input_step_text"] = input_step_text
-    elements["input_zerofill_text"] = input_zerofill_text
-    elements["input_rename_check"] = input_rename_check
-    elements["resequence_button"] = resequence_button
-    elements["input_path_text_mp"] = input_path_text_mp
-    elements["output_path_text_mp"] = output_path_text_mp
-    elements["output_pattern_text_mp"] = output_pattern_text_mp
-    elements["input_frame_rate_mp"] = input_frame_rate_mp
-    elements["convert_button_mp"] = convert_button_mp
-    elements["output_info_text_mp"] = output_info_text_mp
-    elements["input_path_text_pm"] = input_path_text_pm
-    elements["output_path_text_pm"] = output_path_text_pm
-    elements["input_pattern_text_pm"] = input_pattern_text_pm
-    elements["input_frame_rate_pm"] = input_frame_rate_pm
-    elements["quality_slider_pm"] = quality_slider_pm
-    elements["convert_button_pm"] = convert_button_pm
-    elements["output_info_text_pm"] = output_info_text_pm
-    elements["input_path_text_gp"] = input_path_text_gp
-    elements["output_path_text_gp"] = output_path_text_gp
-    elements["convert_button_gp"] = convert_button_gp
-    elements["output_info_text_gp"] = output_info_text_gp
-    elements["input_path_text_pg"] = input_path_text_pg
-    elements["output_path_text_pg"] = output_path_text_pg
-    elements["input_pattern_text_pg"] = input_pattern_text_pg
-    elements["convert_button_pg"] = convert_button_pg
-    elements["output_info_text_pg"] = output_info_text_pg
+    return e
 
-    return elements
-
-# this created a code box in markdown for some reason
+# this created a code box in markdown for some reason (could be useful)
 # # Important
 #     - _Last clean frame BEFORE damaged ones_ MUST be the last clean frame before the set of damaged ones
 #     - _First clean frame AFTER damaged ones_ MUST be the first clean frame after the set of damaged ones
