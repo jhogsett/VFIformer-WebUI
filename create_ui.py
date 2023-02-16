@@ -1,6 +1,6 @@
 import gradio as gr
 from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions
-from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, UNDER_CONST, FILE_ICON, NUMBERS_ICON
+from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, UNDER_CONST, FILE_ICON, NUMBERS_ICON, ROCKET_ICON, PROPERTIES
 
 def create_ui(config, video_blender_projects):
     gr.HTML("VFIformer Web UI", elem_id="appheading")
@@ -163,16 +163,16 @@ def create_ui(config, video_blender_projects):
             with gr.Tab("Project Settings", id=0):
                 with gr.Row():
                     input_project_name_vb = gr.Textbox(label="Project Name")
-                    projects_dropdown_vb = gr.Dropdown(label="Saved Project Settings", choices=video_blender_projects.get_project_names())
-                    load_project_button_vb = gr.Button("Load").style(full_width=False)
-                    save_project_button_vb = gr.Button("Save").style(full_width=False)
+                    projects_dropdown_vb = gr.Dropdown(label=PROPERTIES + " Saved Projects", choices=video_blender_projects.get_project_names())
+                    load_project_button_vb = gr.Button(PROPERTIES + " Load").style(full_width=False)
+                    save_project_button_vb = gr.Button(PROPERTIES + " Save").style(full_width=False)
                 with gr.Row():
                     input_project_path_vb = gr.Textbox(label="Project Frames Path", placeholder="Path to frame PNG files for video being restored")
                 with gr.Row():
                     input_path1_vb = gr.Textbox(label="Original / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
                 with gr.Row():
                     input_path2_vb = gr.Textbox(label="Alternate / Video #2 Frames Path", placeholder="Path to alternate or video #2 PNG files")
-                load_button_vb = gr.Button("Open Video Blender Project", variant="primary")
+                load_button_vb = gr.Button("Open Video Blender Project " + ROCKET_ICON, variant="primary")
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - Set up the project with three directories, all with PNG files (only) with the _same file count, dimensions and starting sequence number_
@@ -228,9 +228,7 @@ General Use
                         with gr.Row():
                             prev_xframes_button_vb = gr.Button(f"<< {config.blender_settings['skip_frames']}")
                             next_xframes_button_vb = gr.Button(f"{config.blender_settings['skip_frames']} >>")
-                        with gr.Row():
-                            preview_video_vb = gr.Button("Preview Video")
-                        use_back_button_vb = gr.Button("< Back", visible=False)
+                        preview_video_vb = gr.Button("Preview Video")
                     with gr.Column():
                         output_img_path2_vb = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
                     with gr.Column():
@@ -239,6 +237,8 @@ General Use
                         with gr.Row():
                             prev_frame_button_vb = gr.Button("< Prev Frame", variant="primary")
                             next_frame_button_vb = gr.Button("Next Frame >", variant="primary")
+                        fix_frames_button_vb = gr.Button("Fix Frames")
+
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 # Important
@@ -253,7 +253,38 @@ Use the Next Frame > and < Prev Frame buttons to step through video one frame at
 Clicking _Preview Video_ will take you to the _Preview Video_ tab
 - The current set of project PNG frame files can be quickly rendered into a preview video and watched""")
 
-            with gr.Tab("Video Preview", id=2):
+            with gr.Tab("Frame Fixer", id=2):
+                with gr.Row():
+                    with gr.Column():
+                        with gr.Row():
+                            project_path_ff = gr.Text(label="Video Blender Project Path", placeholder="Path to video frame PNG files")
+                        with gr.Row():
+                            input_clean_before_ff = gr.Number(label="Last clean frame BEFORE damaged ones", value=0, precision=0)
+                            input_clean_after_ff = gr.Number(label="First clean frame AFTER damaged ones", value=0, precision=0)
+                        with gr.Row():
+                            preview_button_ff = gr.Button(value="Preview Fixed Frames", variant="primary")
+                    with gr.Column():
+                        preview_image_ff = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
+                        fixed_path_ff = gr.Text(label="Path to Restored Frames", interactive=False)
+                        use_fixed_button_ff = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
+                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                    gr.Markdown("""
+- When arrving at this tab via the _Frame Chooser_ Fix Frames button, the following fields are pre-filled from the project:
+    - Video Blender Project Path (PNG files for video being blended)
+    - Last clean frame BEFORE damaged ones (current frame from _Frame Chooser_)
+
+# Important
+- _Last clean frame BEFORE damaged ones_ MUST be the last clean frame before the set of damaged ones
+- _First clean frame AFTER damaged ones_ MUST be the first clean frame after the set of damaged ones
+- Frames may not be fixable in this cases:
+        - If a scene change occurs
+        - If the motion is too fast
+        - If the before and after clean frames are too far apart
+
+- Tip: the default search depth can be changed in _config.yaml_ by changing _blender_settings:frame_fixer_depth
+""")
+
+            with gr.Tab("Video Preview", id=3):
                 with gr.Row():
                     video_preview_vb = gr.Video(label="Preview", interactive=False, include_audio=False) #.style(width=config.blender_settings["preview_width"]) #height=config.blender_settings["preview_height"],
                 preview_path_vb = gr.Textbox(max_lines=1, label="Path to PNG Sequence", placeholder="Path on this server to the PNG files to be converted")
@@ -262,7 +293,7 @@ Clicking _Preview Video_ will take you to the _Preview Video_ tab
                     input_frame_rate_vb = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
-- When arrving at this tab via the _Frame Choose_ Preview Video button, the _Path to PNG Sequence_ is automatically filled with the Video Blender project path
+- When arrving at this tab via the _Frame Chooser_ Preview Video button, the _Path to PNG Sequence_ is automatically filled with the Video Blender project path
     - Simply click _Render Video_ to create and watch a preview of the project in its current state
 - Preview videos are rendered in the directory set by the `directories:working` variable in `config.yaml`
     - The directory is `./temp` by default and is NOT automatically purged
@@ -427,8 +458,15 @@ Idea: Recover the original video from animated GIF file
     elements["output_img_path2_vb"] = output_img_path2_vb
     elements["use_path_1_button_vb"] = use_path_1_button_vb
     elements["use_path_2_button_vb"] = use_path_2_button_vb
-    elements["use_back_button_vb"] = use_back_button_vb
+    elements["fix_frames_button_vb"] = fix_frames_button_vb
     elements["preview_video_vb"] = preview_video_vb
+    elements["project_path_ff"] = project_path_ff
+    elements["input_clean_before_ff"] = input_clean_before_ff
+    elements["input_clean_after_ff"] = input_clean_after_ff
+    elements["preview_button_ff"] = preview_button_ff
+    elements["preview_image_ff"] = preview_image_ff
+    elements["fixed_path_ff"] = fixed_path_ff
+    elements["use_fixed_button_ff"] = use_fixed_button_ff
     elements["video_preview_vb"] = video_preview_vb
     elements["preview_path_vb"] = preview_path_vb
     elements["render_video_vb"] = render_video_vb
@@ -455,4 +493,14 @@ Idea: Recover the original video from animated GIF file
     elements["quality_slider_pm"] = quality_slider_pm
     elements["convert_button_pm"] = convert_button_pm
     elements["output_info_text_pm"] = output_info_text_pm
+
     return elements
+
+# this created a code box in markdown for some reason
+# # Important
+#     - _Last clean frame BEFORE damaged ones_ MUST be the last clean frame before the set of damaged ones
+#     - _First clean frame AFTER damaged ones_ MUST be the first clean frame after the set of damaged ones
+#     - Frames may not be fixable in this cases:
+#         - If a scene change occurs
+#         - If the motion is too fast
+#         - If the before and after clean frames are too far apart

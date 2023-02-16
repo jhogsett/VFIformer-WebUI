@@ -32,3 +32,7 @@ def create_zip(files : list, filepath : str):
     with ZipFile(filepath, "w") as zipObj:
         for file in files:
             zipObj.write(file, arcname=os.path.basename(file))
+
+def locate_frame_file(png_files_path : str, frame_number : int):
+    files = sorted(get_files(png_files_path, "png"))
+    return files[frame_number]
