@@ -1,20 +1,20 @@
 import gradio as gr
 from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions
-from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, UNDER_CONST
+from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, UNDER_CONST, FILE_ICON, NUMBERS_ICON
 
 def create_ui(config, video_blender_projects):
     gr.HTML("VFIformer Web UI", elem_id="appheading")
 
     with gr.Tab("Frame Interpolation"):
         gr.HTML("Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
-        with gr.Row(variant="compact"):
-            with gr.Column(variant="panel"):
+        with gr.Row():
+            with gr.Column():
                 img1_input_fi = gr.Image(type="filepath", label="Before Image", tool=None)
                 img2_input_fi = gr.Image(type="filepath", label="After Image", tool=None)
-                with gr.Row(variant="compact"):
+                with gr.Row():
                     splits_input_fi = gr.Slider(value=1, minimum=1, maximum=config.interpolation_settings["max_splits"], step=1, label="Splits")
                     info_output_fi = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
-            with gr.Column(variant="panel"):
+            with gr.Column():
                 img_output_fi = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                 file_output_fi = gr.File(type="file", file_count="multiple", label="Download", visible=False)
         interpolate_button_fi = gr.Button("Interpolate", variant="primary")
@@ -28,15 +28,15 @@ def create_ui(config, video_blender_projects):
 
     with gr.Tab("Frame Search"):
         gr.HTML("Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
-        with gr.Row(variant="compact"):
-            with gr.Column(variant="panel"):
+        with gr.Row():
+            with gr.Column():
                 img1_input_fs = gr.Image(type="filepath", label="Before Image", tool=None)
                 img2_input_fs = gr.Image(type="filepath", label="After Image", tool=None)
-                with gr.Row(variant="compact"):
+                with gr.Row():
                     splits_input_fs = gr.Slider(value=1, minimum=1, maximum=config.search_settings["max_splits"], step=1, label="Search Depth")
                     min_input_text_fs = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
                     max_input_text_fs = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
-            with gr.Column(variant="panel"):
+            with gr.Column():
                 img_output_fs = gr.Image(type="filepath", label="Found Frame", interactive=False)
                 file_output_fs = gr.File(type="file", file_count="multiple", label="Download", visible=False)
         search_button_fs = gr.Button("Search", variant="primary")
@@ -52,11 +52,11 @@ def create_ui(config, video_blender_projects):
 
     with gr.Tab("Video Inflation"):
         gr.HTML("Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
-        with gr.Row(variant="compact"):
-            with gr.Column(variant="panel"):
+        with gr.Row():
+            with gr.Column():
                 input_path_text_vi = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
                 output_path_text_vi = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
-                with gr.Row(variant="compact"):
+                with gr.Row():
                     splits_input_vi = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
                     info_output_vi = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
         gr.Markdown("*Progress can be tracked in the console*")
@@ -82,8 +82,8 @@ def create_ui(config, video_blender_projects):
 
     with gr.Tab("Resynthesize Video"):
         gr.HTML("Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
-        with gr.Row(variant="compact"):
-            with gr.Column(variant="panel"):
+        with gr.Row():
+            with gr.Column():
                 input_path_text_rv = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
                 output_path_text_rv = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
         gr.Markdown("*Progress can be tracked in the console*")
@@ -114,18 +114,18 @@ def create_ui(config, video_blender_projects):
 
     with gr.Tab("Frame Restoration"):
         gr.HTML("Restore multiple adjacent bad frames using precision interpolation", elem_id="tabheading")
-        with gr.Row(variant="compact"):
-            with gr.Column(variant="panel"):
-                with gr.Row(variant="compact"):
+        with gr.Row():
+            with gr.Column():
+                with gr.Row():
                     img1_input_fr = gr.Image(type="filepath", label="Frame Before Replacement Frames", tool=None)
                     img2_input_fr = gr.Image(type="filepath", label="Frame After Replacement Frames", tool=None)
-                with gr.Row(variant="compact"):
+                with gr.Row():
                     frames_input_fr = gr.Slider(value=config.restoration_settings["default_frames"], minimum=1, maximum=config.restoration_settings["max_frames"], step=1, label="Frames to Restore")
                     precision_input_fr = gr.Slider(value=config.restoration_settings["default_precision"], minimum=1, maximum=config.restoration_settings["max_precision"], step=1, label="Search Precision")
-                with gr.Row(variant="compact"):
+                with gr.Row():
                     times_default = restored_frame_fractions(config.restoration_settings["default_frames"])
                     times_output_fr = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
-            with gr.Column(variant="panel"):
+            with gr.Column():
                 img_output_fr = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                 file_output_fr = gr.File(type="file", file_count="multiple", label="Download", visible=False)
         predictions_default = restored_frame_predictions(config.restoration_settings["default_frames"], config.restoration_settings["default_precision"])
@@ -278,19 +278,19 @@ Clicking _Preview Video_ will take you to the _Preview Video_ tab
     - There must be no other PNG files in the same directory""")
 
     with gr.Tab("Tools" + TOOLS_ICON):
-        with gr.Tab("Resequence Files"):
+        with gr.Tab("Resequence Files " + NUMBERS_ICON):
             gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="panel"):
+            with gr.Row():
+                with gr.Column():
                     input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
-                    with gr.Row(variant="compact"):
+                    with gr.Row():
                         input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
                         input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
-                    with gr.Row(variant="compact"):
+                    with gr.Row():
                         input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
                         input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer tep for the sequentially numbered files", label="Integer Step")
                         input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
-                    with gr.Row(variant="compact"):
+                    with gr.Row():
                         input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
                     resequence_button = gr.Button("Resequence Files", variant="primary")
             with gr.Accordion(INFO_ICON + " Tips", open=False):
@@ -311,7 +311,7 @@ The only PNG files present in the _Input Path_ should be the video frame files
 - Leave _Rename instead of duplicate files_ unchecked if the original files may be needed
     - They be useful for tracking back to a source frame""")
 
-        with gr.Tab("File Conversion"):
+        with gr.Tab("File Conversion " + FILE_ICON):
             gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
 
             with gr.Tab("MP4 to PNG Sequence"):
@@ -360,8 +360,8 @@ The only PNG files present in the _Input Path_ should be the video frame files
             gr.Markdown("Planned: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
         with gr.Tab("GIF to Video " + UNDER_CONST):
-            with gr.Row(variant="compact"):
-                with gr.Column(variant="panel"):
+            with gr.Row():
+                with gr.Column():
                     gr.Markdown("""
 Idea: Recover the original video from animated GIF file
 - split GIF into a series of PNG frames
