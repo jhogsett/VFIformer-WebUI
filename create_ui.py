@@ -251,7 +251,13 @@ Use the Next Frame > and < Prev Frame buttons to step through video one frame at
 - Tip: After clicking a button, SPACEBAR can be used to click repeatedly
 
 Clicking _Preview Video_ will take you to the _Preview Video_ tab
-- The current set of project PNG frame files can be quickly rendered into a preview video and watched""")
+- The current set of project PNG frame files can be quickly rendered into a preview video and watched
+
+Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
+- Make quick replacements for a series of damaged frames
+- See an animated preview of the recreated frames
+- Overwrite the damaged frames if good enough
+""")
 
             with gr.Tab("Frame Fixer", id=2):
                 with gr.Row():
@@ -304,39 +310,6 @@ Clicking _Preview Video_ will take you to the _Preview Video_ tab
     - There must be no other PNG files in the same directory""")
 
     with gr.Tab("Tools" + TOOLS_ICON):
-        with gr.Tab("Resequence Files " + NUMBERS_ICON):
-            gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
-            with gr.Row():
-                with gr.Column():
-                    input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
-                    with gr.Row():
-                        input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
-                        input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
-                    with gr.Row():
-                        input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
-                        input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer tep for the sequentially numbered files", label="Integer Step")
-                        input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
-                    with gr.Row():
-                        input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
-                    resequence_button = gr.Button("Resequence Files", variant="primary")
-            with gr.Accordion(INFO_ICON + " Tips", open=False):
-                gr.Markdown("""
-_Resequence Files_ can be used to make a set of PNG files ready for important into video editing software
-
-# Important
-The only PNG files present in the _Input Path_ should be the video frame files
-
-- _File Type_ is used for a wildcard search of files
-- _Base Filename_ is used to name the resequenced files with an added frame number
-- _Starting Sequence Number_ should usually be _0_
-    - A different value might be useful if inserting a PNG sequence into another
-- _Integer Step_ should usually be _1_
-    - This sets the increment between the added frame numbers
-- _Number Padding_ should usually be _-1_ for automatic detection
-    - Set to another value if a specific width of digits is needed for frame numbers
-- Leave _Rename instead of duplicate files_ unchecked if the original files may be needed
-    - They be useful for tracking back to a source frame""")
-
         with gr.Tab("File Conversion " + FILE_ICON):
             gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
 
@@ -382,8 +355,38 @@ The only PNG files present in the _Input Path_ should be the video frame files
             with gr.Tab("PNG Sequence to GIF " + UNDER_CONST):
                 gr.Markdown("Planned: Convert a PNG sequence to a GIF, specify duration and looping")
 
-        with gr.Tab("Upscaling " + UNDER_CONST):
-            gr.Markdown("Planned: Use Real-ESRGAN 4x+ to restore and/or upscale images")
+        with gr.Tab("Resequence Files " + NUMBERS_ICON):
+            gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
+            with gr.Row():
+                with gr.Column():
+                    input_path_text2 = gr.Text(max_lines=1, placeholder="Path on this server to the files to be resequenced", label="Input Path")
+                    with gr.Row():
+                        input_filetype_text = gr.Text(value="png", max_lines=1, placeholder="File type such as png", label="File Type")
+                        input_newname_text = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
+                    with gr.Row():
+                        input_start_text = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
+                        input_step_text = gr.Text(value="1", max_lines=1, placeholder="Integer tep for the sequentially numbered files", label="Integer Step")
+                        input_zerofill_text = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
+                    with gr.Row():
+                        input_rename_check = gr.Checkbox(value=False, label="Rename instead of duplicate files")
+                    resequence_button = gr.Button("Resequence Files", variant="primary")
+            with gr.Accordion(INFO_ICON + " Tips", open=False):
+                gr.Markdown("""
+_Resequence Files_ can be used to make a set of PNG files ready for important into video editing software
+
+# Important
+The only PNG files present in the _Input Path_ should be the video frame files
+
+- _File Type_ is used for a wildcard search of files
+- _Base Filename_ is used to name the resequenced files with an added frame number
+- _Starting Sequence Number_ should usually be _0_
+    - A different value might be useful if inserting a PNG sequence into another
+- _Integer Step_ should usually be _1_
+    - This sets the increment between the added frame numbers
+- _Number Padding_ should usually be _-1_ for automatic detection
+    - Set to another value if a specific width of digits is needed for frame numbers
+- Leave _Rename instead of duplicate files_ unchecked if the original files may be needed
+    - They be useful for tracking back to a source frame""")
 
         with gr.Tab("GIF to Video " + UNDER_CONST):
             with gr.Row():
@@ -394,6 +397,9 @@ Idea: Recover the original video from animated GIF file
 - use R-ESRGAN 4x+ to restore and/or upscale
 - use VFIformer to adjust frame rate to real time
 - reassemble new PNG frames into MP4 file""")
+
+        with gr.Tab("Upscaling " + UNDER_CONST):
+            gr.Markdown("Future: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
         with gr.Tab("Options" + GEAR_ICON):
             restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
