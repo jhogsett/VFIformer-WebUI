@@ -274,15 +274,10 @@ Clicking _Preview Video_ will take you to the _Preview Video_ tab
     - Last clean frame BEFORE damaged ones (current frame from _Frame Chooser_)
 
 # Important
+
 - _Last clean frame BEFORE damaged ones_ MUST be the last clean frame before the set of damaged ones
 - _First clean frame AFTER damaged ones_ MUST be the first clean frame after the set of damaged ones
-- Frames may not be fixable in this cases:
-        - If a scene change occurs
-        - If the motion is too fast
-        - If the before and after clean frames are too far apart
-
-- Tip: the default search depth can be changed in _config.yaml_ by changing _blender_settings:frame_fixer_depth
-""")
+- Frames may not be fixable if there's a scene change, motion is too fast, or the clean frames are too far apart""")
 
             with gr.Tab("Video Preview", id=3):
                 with gr.Row():
