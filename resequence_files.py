@@ -54,7 +54,7 @@ class ResequenceFiles:
 
         max_file_num = num_files * self.index_step
         num_width = len(str(max_file_num)) if self.zero_fill < 0 else self.zero_fill
-        index = 0
+        index = self.start_index
         pbar_title = "Renaming" if self.rename else "Copying"
 
         for file in tqdm(files, desc=pbar_title):

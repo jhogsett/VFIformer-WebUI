@@ -1,0 +1,27 @@
+#appheading {
+    font-size: 135%;
+    margin-bottom: -10;
+}
+
+#tabheading {
+    font-size: 115%;
+    margin-bottom: -10;
+}
+
+:root {
+    --frame-chooser-action: #008542;
+}
+
+#sideimage {
+    opacity: 0.75;
+    /*filter: grayscale(100%);*/
+}
+
+#mainimage {
+    filter: drop-shadow(0px 0px 17px var(--frame-chooser-action));
+}
+
+#actionbutton {
+    background : #008542;
+    border: #008542;
+}

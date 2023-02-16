@@ -1,4 +1,6 @@
 from collections import namedtuple
+from fractions import Fraction
+from .icons import WARNING_SYM
 
 # Computing the count of work steps needed based on the number of splits:
 # Before splitting, there's one existing region between the before and after frames.
@@ -13,8 +15,7 @@ def FauxArgs(**kwargs):
     return namedtuple("FauxArgs", kwargs.keys())(**kwargs)
 
 # True if target range is entirely within the domain range, inclusive
-def float_range_in_range(target_min : float, target_max : float, domain_min : float,
-                        domain_max : float, use_midpoint=False):
+def float_range_in_range(target_min : float, target_max : float, domain_min : float, domain_max : float, use_midpoint=False):
     if use_midpoint:
         target = target_min + (target_max - target_min) / 2.0
         if target >= domain_min and target <= domain_max:
@@ -26,3 +27,42 @@ def float_range_in_range(target_min : float, target_max : float, domain_min : fl
             return True
         else:
             return False
+
+
+# For Frame Search, given a frame time 0.0 - 1.0
+# and a search depth (split count) compute the fractional
+# time that will actually be found
+def predict_search_frame(num_splits : int, fractional_time : float) -> float:
+    resolution = 2 ** num_splits
+    return round(resolution * fractional_time) / resolution
+
+# For Frame Restoration, given a count of restored frames
+# compute the frame search times for the new frames that will be created
+def restored_frame_searches(restored_frame_count : int) -> list:
+    return [(n + 1.0) / (restored_frame_count + 1.0) for n in range(restored_frame_count)]
+
+# For Frame Restoration, given a count of restored frames
+# compute a human friendly display of the fractional
+# times for the new frames that will be created
+def restored_frame_fractions(restored_frame_count : int) -> str:
+    result = []
+    for n in range(restored_frame_count):
+        div = n + 1
+        den = restored_frame_count + 1
+        result.append(str(Fraction(div/den).limit_denominator()))
+    return ", ".join(result)
+
+# For Frame Restoration, given a count of restored frames
+# and a precision (split count) compute the frames that
+# are likely to be found given that precision
+def restored_frame_predictions(restored_frame_count : int, num_splits : int) -> list:
+    searches = restored_frame_searches(restored_frame_count)
+    predictions = [str(predict_search_frame(num_splits, search)) for search in searches]
+
+    # prepare to detect duplicates, including the outer frames
+    all_frames = predictions + ["0.0"] + ["1.0"]
+
+    warning = ""
+    if len(set(all_frames)) != len(all_frames):
+        warning = f" {WARNING_SYM} Repeated frames - increase precision"
+    return ", ".join(predictions) + warning

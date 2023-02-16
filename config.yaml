@@ -3,16 +3,40 @@ directories:
   output_interpolation: "./output/interpolation"
   output_inflation: "./output/inflation"
   output_search: "./output/search"
+  output_resynthesis: "./output/resynthesis"
+  output_restoration: "./output/restoration"
 model: "./pretrained_models/pretrained_VFIformer/net_220.pth"
 gpu_ids: "0"
 auto_launch_browser: True
 server_port: 7862
 server_name: "0.0.0.0"
-interpolate_settings:
+interpolation_settings:
+  max_splits: 10
   gif_duration: 3000
   create_gif: True
   create_zip: True
   create_txt: True
+search_settings:
+  max_splits: 60
+restoration_settings:
+  default_frames: 2
+  max_frames: 10
+  default_precision: 10
+  max_precision: 60
+  gif_duration: 1000
+  create_gif: True
+  create_zip: True
+  create_txt: True
+blender_settings:
+  projects_file: "./video_blender_projects.csv"
+  skip_frames: 100
+mp4_to_png_settings:
+  frame_rate: 30
+png_to_mp4_settings:
+  minimum_crf: 17 # near-lossless
+  maximum_crf: 28 # great quality, smaller file
+  default_crf: 23 # great quality (default)
+  frame_rate: 30
 user_interface:
   theme: "default"
   css_file: "webui.css"
