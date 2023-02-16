@@ -30,7 +30,6 @@ def main():
     frame_restorer = RestoreFrames(target_interpolater, log.log)
     series_upsampler = UpsampleSeries(frame_restorer, log.log)
 
-    file_list = get_files(args.input_path, extension="png")
     series_upsampler.upsample_series(args.input_path, args.output_path, args.num_frames, args.depth, args.base_filename)
 
 class UpsampleSeries():

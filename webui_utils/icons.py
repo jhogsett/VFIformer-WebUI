@@ -1,4 +1,5 @@
 
+# from https://emojiguide.org/
 WARNING_SYM = "⚠️"
 GEAR_ICON = "⚙️"
 INFO_ICON = "ℹ️"
@@ -12,3 +13,5 @@ IMAGE_ICON = "🖼️"
 RIGHT_ARROW = "➡️"
 DOCUMENT = "📄"
 PROPERTIES = "📝"
+FILM_ICON = "🎞️"
+FINGERS = "🤞"
