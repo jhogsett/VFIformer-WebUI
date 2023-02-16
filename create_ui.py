@@ -228,10 +228,7 @@ General Use
                         with gr.Row():
                             prev_xframes_button_vb = gr.Button(f"<< {config.blender_settings['skip_frames']}")
                             next_xframes_button_vb = gr.Button(f"{config.blender_settings['skip_frames']} >>")
-                        with gr.Row():
-                            fix_frames_button_vb = gr.Button("Fix Frames")
-                            preview_video_vb = gr.Button("Preview Video")
-                        use_back_button_vb = gr.Button("< Back", visible=False)
+                        preview_video_vb = gr.Button("Preview Video")
                     with gr.Column():
                         output_img_path2_vb = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
                     with gr.Column():
@@ -240,6 +237,8 @@ General Use
                         with gr.Row():
                             prev_frame_button_vb = gr.Button("< Prev Frame", variant="primary")
                             next_frame_button_vb = gr.Button("Next Frame >", variant="primary")
+                        fix_frames_button_vb = gr.Button("Fix Frames")
+
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 # Important
@@ -267,7 +266,7 @@ Clicking _Preview Video_ will take you to the _Preview Video_ tab
                     with gr.Column():
                         preview_image_ff = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
                         fixed_path_ff = gr.Text(label="Path to Restored Frames", interactive=False)
-                        use_fixed_button_ff = gr.Button(value="Use fixed Frames", elem_id="actionbutton")
+                        use_fixed_button_ff = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
 - When arrving at this tab via the _Frame Chooser_ Fix Frames button, the following fields are pre-filled from the project:
@@ -459,12 +458,8 @@ Idea: Recover the original video from animated GIF file
     elements["output_img_path2_vb"] = output_img_path2_vb
     elements["use_path_1_button_vb"] = use_path_1_button_vb
     elements["use_path_2_button_vb"] = use_path_2_button_vb
-    elements["use_back_button_vb"] = use_back_button_vb
-
     elements["fix_frames_button_vb"] = fix_frames_button_vb
-
     elements["preview_video_vb"] = preview_video_vb
-
     elements["project_path_ff"] = project_path_ff
     elements["input_clean_before_ff"] = input_clean_before_ff
     elements["input_clean_after_ff"] = input_clean_after_ff
@@ -472,7 +467,6 @@ Idea: Recover the original video from animated GIF file
     elements["preview_image_ff"] = preview_image_ff
     elements["fixed_path_ff"] = fixed_path_ff
     elements["use_fixed_button_ff"] = use_fixed_button_ff
-
     elements["video_preview_vb"] = video_preview_vb
     elements["preview_path_vb"] = preview_path_vb
     elements["render_video_vb"] = render_video_vb

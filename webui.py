@@ -261,7 +261,7 @@ def video_blender_fix_frames(project_path : str, frame : float):
 def video_blender_preview_fixed(project_path : str, before_frame : int, after_frame : int):
     global log, config, engine
 
-    if project_path:
+    if project_path and after_frame > before_frame:
         interpolater = Interpolate(engine.model, log.log)
         target_interpolater = TargetInterpolate(interpolater, log.log)
         frame_restorer = RestoreFrames(target_interpolater, log.log)
@@ -287,8 +287,14 @@ def video_blender_preview_fixed(project_path : str, before_frame : int, after_fr
 
         return gr.Image.update(value=preview_gif), gr.Text.update(value=output_path, visible=True)
 
-def video_blender_used_fixed(fixed_path_ff : str, before_frame : int):
-    # use the path to find the files and overwrite them
+def video_blender_used_fixed(project_path : str, fixed_frames_path : str, before_frame : int):
+    fixed_frames = sorted(get_files(fixed_frames_path, "png"))
+    frame = before_frame + 1
+    for file in fixed_frames:
+        project_file = locate_frame_file(project_path, frame)
+        log.log(f"copying {file} to {project_file}")
+        shutil.copy(file, project_file)
+        frame += 1
     return gr.update(selected=1)
 
 def video_blender_preview_video(input_path : str):
@@ -399,21 +405,15 @@ def setup_ui(config, video_blender_projects):
         output_img_path2_vb = elements["output_img_path2_vb"]
         use_path_1_button_vb = elements["use_path_1_button_vb"]
         use_path_2_button_vb = elements["use_path_2_button_vb"]
-        use_back_button_vb = elements["use_back_button_vb"]
-
         fix_frames_button_vb = elements["fix_frames_button_vb"]
-
         preview_video_vb = elements["preview_video_vb"]
-
         project_path_ff = elements["project_path_ff"]
         input_clean_before_ff = elements["input_clean_before_ff"]
         input_clean_after_ff = elements["input_clean_after_ff"]
         preview_button_ff = elements["preview_button_ff"]
         preview_image_ff = elements["preview_image_ff"]
         fixed_path_ff = elements["fixed_path_ff"]
-
         use_fixed_button_ff = elements["use_fixed_button_ff"]
-
         video_preview_vb = elements["video_preview_vb"]
         preview_path_vb = elements["preview_path_vb"]
         render_video_vb = elements["render_video_vb"]
@@ -464,7 +464,6 @@ def setup_ui(config, video_blender_projects):
         input_text_frame_vb.submit(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         use_path_1_button_vb.click(video_blender_use_path1, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         use_path_2_button_vb.click(video_blender_use_path2, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        use_back_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         preview_video_vb.click(video_blender_preview_video, inputs=input_project_path_vb, outputs=[tabs_video_blender, preview_path_vb])
@@ -473,7 +472,7 @@ def setup_ui(config, video_blender_projects):
 
         preview_button_ff.click(video_blender_preview_fixed, inputs=[project_path_ff, input_clean_before_ff, input_clean_after_ff], outputs=[preview_image_ff, fixed_path_ff])
 
-        use_fixed_button_ff.click(video_blender_used_fixed, inputs=[fixed_path_ff, input_clean_before_ff], outputs=tabs_video_blender)
+        use_fixed_button_ff.click(video_blender_used_fixed, inputs=[project_path_ff, fixed_path_ff, input_clean_before_ff], outputs=tabs_video_blender)
 
         render_video_vb.click(video_blender_render_preview, inputs=[preview_path_vb, input_frame_rate_vb], outputs=[video_preview_vb])
     return app
