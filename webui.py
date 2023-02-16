@@ -14,7 +14,7 @@ from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFile
 from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file
 from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
-from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE
+from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE, GIFtoPNG, PNGtoGIF
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
@@ -319,6 +319,14 @@ def convert_png_to_mp4(input_path : str, input_pattern : str, frame_rate : int, 
     ffmpeg_cmd = PNGtoMP4(input_path, input_pattern, int(frame_rate), output_filepath, crf=quality)
     return gr.update(value=ffmpeg_cmd, visible=True)
 
+def convert_gif_to_mp4(input_filepath : str, output_path : str):
+    ffmpeg_cmd = GIFtoPNG(input_filepath, output_path)
+    return gr.update(value=ffmpeg_cmd, visible=True)
+
+def convert_png_to_gif(input_path : str, input_pattern : str, output_filepath : str):
+    ffmpeg_cmd = PNGtoGIF(input_path, input_pattern, output_filepath)
+    return gr.update(value=ffmpeg_cmd, visible=True)
+
 #### UI Helpers
 
 def restart_app():
@@ -440,6 +448,15 @@ def setup_ui(config, video_blender_projects):
         quality_slider_pm = elements["quality_slider_pm"]
         convert_button_pm = elements["convert_button_pm"]
         output_info_text_pm = elements["output_info_text_pm"]
+        input_path_text_gp = elements["input_path_text_gp"]
+        output_path_text_gp = elements["output_path_text_gp"]
+        convert_button_gp = elements["convert_button_gp"]
+        output_info_text_gp = elements["output_info_text_gp"]
+        input_path_text_pg = elements["input_path_text_pg"]
+        output_path_text_pg = elements["output_path_text_pg"]
+        input_pattern_text_pg = elements["input_pattern_text_pg"]
+        convert_button_pg = elements["convert_button_pg"]
+        output_info_text_pg = elements["output_info_text_pg"]
 
         # bind UI elemements to event handlers
         interpolate_button_fi.click(frame_interpolation, inputs=[img1_input_fi, img2_input_fi, splits_input_fi], outputs=[img_output_fi, file_output_fi])
@@ -452,6 +469,10 @@ def setup_ui(config, video_blender_projects):
         resequence_button.click(resequence_files, inputs=[input_path_text2, input_filetype_text, input_newname_text, input_start_text, input_step_text, input_zerofill_text, input_rename_check])
         convert_button_mp.click(convert_mp4_to_png, inputs=[input_path_text_mp, output_pattern_text_mp, input_frame_rate_mp, output_path_text_mp], outputs=output_info_text_mp)
         convert_button_pm.click(convert_png_to_mp4, inputs=[input_path_text_pm, input_pattern_text_pm, input_frame_rate_pm, output_path_text_pm, quality_slider_pm], outputs=output_info_text_pm)
+
+        convert_button_gp.click(convert_gif_to_mp4, inputs=[input_path_text_gp, output_path_text_gp], outputs=output_info_text_gp)
+        convert_button_pg.click(convert_png_to_gif, inputs=[input_path_text_pg, input_pattern_text_pg, output_path_text_pg], outputs=output_info_text_pg)
+
         restore_button_fr.click(frame_restoration, inputs=[img1_input_fr, img2_input_fr, frames_input_fr, precision_input_fr], outputs=[img_output_fr, file_output_fr])
         frames_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
         precision_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
@@ -467,13 +488,9 @@ def setup_ui(config, video_blender_projects):
         prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         preview_video_vb.click(video_blender_preview_video, inputs=input_project_path_vb, outputs=[tabs_video_blender, preview_path_vb])
-
         fix_frames_button_vb.click(video_blender_fix_frames, inputs=[input_project_path_vb, input_text_frame_vb], outputs=[tabs_video_blender, project_path_ff, input_clean_before_ff, input_clean_after_ff])
-
         preview_button_ff.click(video_blender_preview_fixed, inputs=[project_path_ff, input_clean_before_ff, input_clean_after_ff], outputs=[preview_image_ff, fixed_path_ff])
-
         use_fixed_button_ff.click(video_blender_used_fixed, inputs=[project_path_ff, fixed_path_ff, input_clean_before_ff], outputs=tabs_video_blender)
-
         render_video_vb.click(video_blender_render_preview, inputs=[preview_path_vb, input_frame_rate_vb], outputs=[video_preview_vb])
     return app
 

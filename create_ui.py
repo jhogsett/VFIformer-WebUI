@@ -251,7 +251,13 @@ Use the Next Frame > and < Prev Frame buttons to step through video one frame at
 - Tip: After clicking a button, SPACEBAR can be used to click repeatedly
 
 Clicking _Preview Video_ will take you to the _Preview Video_ tab
-- The current set of project PNG frame files can be quickly rendered into a preview video and watched""")
+- The current set of project PNG frame files can be quickly rendered into a preview video and watched
+
+Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
+- Make quick replacements for a series of damaged frames
+- See an animated preview of the recreated frames
+- Overwrite the damaged frames if good enough
+""")
 
             with gr.Tab("Frame Fixer", id=2):
                 with gr.Row():
@@ -304,6 +310,77 @@ Clicking _Preview Video_ will take you to the _Preview Video_ tab
     - There must be no other PNG files in the same directory""")
 
     with gr.Tab("Tools" + TOOLS_ICON):
+        with gr.Tab("File Conversion " + FILE_ICON):
+            gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
+
+            with gr.Tab("MP4 to PNG Sequence"):
+                gr.Markdown("Convert MP4 to a PNG sequence")
+                input_path_text_mp = gr.Text(max_lines=1, label="MP4 File", placeholder="Path on this server to the MP4 file to be converted")
+                output_path_text_mp = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
+                with gr.Row():
+                    output_pattern_text_mp = gr.Text(max_lines=1, label="Output Filename Pattern", placeholder="Pattern like image%03d.png")
+                    input_frame_rate_mp = gr.Slider(minimum=1, maximum=60, value=config.mp4_to_png_settings["frame_rate"], step=1, label="Frame Rate")
+                with gr.Row():
+                    convert_button_mp = gr.Button("Convert", variant="primary")
+                    output_info_text_mp = gr.Textbox(label="Details", interactive=False)
+                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                    gr.Markdown("""
+- The filename pattern should be based on the count of frames  for alphanumeric sorting
+- Example: For a video with _24,578_ frames and a PNG base filename of "TENNIS", the pattern should be "TENNIS%05d.png"
+- Match the frame rate to the rate of the source video to avoid repeated or skipped frames
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
+
+            with gr.Tab("PNG Sequence to MP4"):
+                gr.Markdown("Convert a PNG sequence to a MP4")
+                input_path_text_pm = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
+                output_path_text_pm = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
+                with gr.Row():
+                    input_pattern_text_pm = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
+                    input_frame_rate_pm = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
+                    quality_slider_pm = gr.Slider(minimum=config.png_to_mp4_settings["minimum_crf"], maximum=config.png_to_mp4_settings["maximum_crf"], step=1, value=config.png_to_mp4_settings["default_crf"], label="Quality (lower=better)")
+                with gr.Row():
+                    convert_button_pm = gr.Button("Convert", variant="primary")
+                    output_info_text_pm = gr.Textbox(label="Details", interactive=False)
+                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                    gr.Markdown("""
+- The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
+- Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
+- The special pattern "auto" can be used to detect the pattern automatically. This works when:
+    - The only PNG files present are the frame images
+    - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
+    - The first found PNG file follows the same naming pattern as all the other files
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
+
+            with gr.Tab("GIF to PNG Sequence"):
+                gr.Markdown("Convert GIF to a PNG sequence")
+                input_path_text_gp = gr.Text(max_lines=1, label="GIF File", placeholder="Path on this server to the GIF file to be converted")
+                output_path_text_gp = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
+                with gr.Row():
+                    convert_button_gp = gr.Button("Convert", variant="primary")
+                    output_info_text_gp = gr.Textbox(label="Details", interactive=False)
+                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                    gr.Markdown("""
+- The PNG files will be named based on the supplied GIF file
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
+
+            with gr.Tab("PNG Sequence to GIF"):
+                gr.Markdown("Convert a PNG sequence to a GIF")
+                input_path_text_pg = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
+                output_path_text_pg = gr.Text(max_lines=1, label="GIF File", placeholder="Path and filename on this server for the converted GIF file")
+                input_pattern_text_pg = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
+                with gr.Row():
+                    convert_button_pg = gr.Button("Convert", variant="primary")
+                    output_info_text_pg = gr.Textbox(label="Details", interactive=False)
+                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                    gr.Markdown("""
+- The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
+- Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
+- The special pattern "auto" can be used to detect the pattern automatically. This works when:
+    - The only PNG files present are the frame images
+    - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
+    - The first found PNG file follows the same naming pattern as all the other files
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
+
         with gr.Tab("Resequence Files " + NUMBERS_ICON):
             gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
             with gr.Row():
@@ -337,54 +414,6 @@ The only PNG files present in the _Input Path_ should be the video frame files
 - Leave _Rename instead of duplicate files_ unchecked if the original files may be needed
     - They be useful for tracking back to a source frame""")
 
-        with gr.Tab("File Conversion " + FILE_ICON):
-            gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
-
-            with gr.Tab("MP4 to PNG Sequence"):
-                gr.Markdown("Convert MP4 to a PNG sequence")
-                input_path_text_mp = gr.Text(max_lines=1, label="MP4 File", placeholder="Path on this server to the MP4 file to be converted")
-                output_path_text_mp = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
-                with gr.Row():
-                    output_pattern_text_mp = gr.Text(max_lines=1, label="Output Filename Pattern", placeholder="Pattern like image%03d.png")
-                    input_frame_rate_mp = gr.Slider(minimum=1, maximum=60, value=config.mp4_to_png_settings["frame_rate"], step=1, label="Frame Rate")
-                convert_button_mp = gr.Button("Convert", variant="primary")
-                output_info_text_mp = gr.Textbox(label="Details", interactive=False)
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
-                    gr.Markdown("""
-- The filename pattern should be based on the count of frames  for alphanumeric sorting
-- Example: For a video with _24,578_ frames and a PNG base filename of "TENNIS", the pattern should be "TENNIS%05d.png"
-- Match the frame rate to the rate of the source video to avoid repeated or skipped frames
-- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
-
-            with gr.Tab("PNG Sequence to MP4"):
-                gr.Markdown("Convert a PNG sequence to a MP4")
-                input_path_text_pm = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
-                output_path_text_pm = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
-                with gr.Row():
-                    input_pattern_text_pm = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
-                    input_frame_rate_pm = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
-                    quality_slider_pm = gr.Slider(minimum=config.png_to_mp4_settings["minimum_crf"], maximum=config.png_to_mp4_settings["maximum_crf"], step=1, value=config.png_to_mp4_settings["default_crf"], label="Quality (lower=better)")
-                convert_button_pm = gr.Button("Convert", variant="primary")
-                output_info_text_pm = gr.Textbox(label="Details", interactive=False)
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
-                    gr.Markdown("""
-- The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
-- Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
-- The special pattern "auto" can be used to detect the pattern automatically. This works when:
-    - The only PNG files present are the frame images
-    - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
-    - The first found PNG file follows the same naming pattern as all the other files
-- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
-
-            with gr.Tab("GIF to PNG Sequence " + UNDER_CONST):
-                gr.Markdown("Planned: Convert a GIF to a PNG sequence")
-
-            with gr.Tab("PNG Sequence to GIF " + UNDER_CONST):
-                gr.Markdown("Planned: Convert a PNG sequence to a GIF, specify duration and looping")
-
-        with gr.Tab("Upscaling " + UNDER_CONST):
-            gr.Markdown("Planned: Use Real-ESRGAN 4x+ to restore and/or upscale images")
-
         with gr.Tab("GIF to Video " + UNDER_CONST):
             with gr.Row():
                 with gr.Column():
@@ -394,6 +423,9 @@ Idea: Recover the original video from animated GIF file
 - use R-ESRGAN 4x+ to restore and/or upscale
 - use VFIformer to adjust frame rate to real time
 - reassemble new PNG frames into MP4 file""")
+
+        with gr.Tab("Upscaling " + UNDER_CONST):
+            gr.Markdown("Future: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
         with gr.Tab("Options" + GEAR_ICON):
             restart_button = gr.Button("Restart App", variant="primary").style(full_width=False)
@@ -488,6 +520,15 @@ Idea: Recover the original video from animated GIF file
     elements["quality_slider_pm"] = quality_slider_pm
     elements["convert_button_pm"] = convert_button_pm
     elements["output_info_text_pm"] = output_info_text_pm
+    elements["input_path_text_gp"] = input_path_text_gp
+    elements["output_path_text_gp"] = output_path_text_gp
+    elements["convert_button_gp"] = convert_button_gp
+    elements["output_info_text_gp"] = output_info_text_gp
+    elements["input_path_text_pg"] = input_path_text_pg
+    elements["output_path_text_pg"] = output_path_text_pg
+    elements["input_pattern_text_pg"] = input_pattern_text_pg
+    elements["convert_button_pg"] = convert_button_pg
+    elements["output_info_text_pg"] = output_info_text_pg
 
     return elements
 

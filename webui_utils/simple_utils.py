@@ -28,7 +28,6 @@ def float_range_in_range(target_min : float, target_max : float, domain_min : fl
         else:
             return False
 
-
 # For Frame Search, given a frame time 0.0 - 1.0
 # and a search depth (split count) compute the fractional
 # time that will actually be found
