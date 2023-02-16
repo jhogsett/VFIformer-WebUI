@@ -360,27 +360,26 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                     output_info_text_gp = gr.Textbox(label="Details", interactive=False)
                 with gr.Accordion(INFO_ICON + " Tips", open=False):
                     gr.Markdown("""
+- The PNG files will be named based on the supplied GIF file
 - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
-#             with gr.Tab("PNG Sequence to GIF " + UNDER_CONST):
-#                 gr.Markdown("Convert a PNG sequence to a MP4")
-#                 input_path_text_pm = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
-#                 output_path_text_pm = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
-#                 with gr.Row():
-#                     input_pattern_text_pm = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
-#                     input_frame_rate_pm = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
-#                     quality_slider_pm = gr.Slider(minimum=config.png_to_mp4_settings["minimum_crf"], maximum=config.png_to_mp4_settings["maximum_crf"], step=1, value=config.png_to_mp4_settings["default_crf"], label="Quality (lower=better)")
-#                 convert_button_pm = gr.Button("Convert", variant="primary")
-#                 output_info_text_pm = gr.Textbox(label="Details", interactive=False)
-#                 with gr.Accordion(INFO_ICON + " Tips", open=False):
-#                     gr.Markdown("""
-# - The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
-# - Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
-# - The special pattern "auto" can be used to detect the pattern automatically. This works when:
-#     - The only PNG files present are the frame images
-#     - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
-#     - The first found PNG file follows the same naming pattern as all the other files
-# - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
+            with gr.Tab("PNG Sequence to GIF"):
+                gr.Markdown("Convert a PNG sequence to a GIF")
+                input_path_text_pg = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
+                output_path_text_pg = gr.Text(max_lines=1, label="GIF File", placeholder="Path and filename on this server for the converted GIF file")
+                input_pattern_text_pg = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
+                with gr.Row():
+                    convert_button_pg = gr.Button("Convert", variant="primary")
+                    output_info_text_pg = gr.Textbox(label="Details", interactive=False)
+                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                    gr.Markdown("""
+- The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
+- Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
+- The special pattern "auto" can be used to detect the pattern automatically. This works when:
+    - The only PNG files present are the frame images
+    - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
+    - The first found PNG file follows the same naming pattern as all the other files
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
         with gr.Tab("Resequence Files " + NUMBERS_ICON):
             gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
@@ -525,6 +524,11 @@ Idea: Recover the original video from animated GIF file
     elements["output_path_text_gp"] = output_path_text_gp
     elements["convert_button_gp"] = convert_button_gp
     elements["output_info_text_gp"] = output_info_text_gp
+    elements["input_path_text_pg"] = input_path_text_pg
+    elements["output_path_text_pg"] = output_path_text_pg
+    elements["input_pattern_text_pg"] = input_pattern_text_pg
+    elements["convert_button_pg"] = convert_button_pg
+    elements["output_info_text_pg"] = output_info_text_pg
 
     return elements
 

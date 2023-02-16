@@ -37,6 +37,11 @@ def locate_frame_file(png_files_path : str, frame_number : int):
     files = sorted(get_files(png_files_path, "png"))
     return files[frame_number]
 
+def split_filepath(filepath : str):
+    path, filename = os.path.split(filepath)
+    filename, ext = os.path.splitext(filename)
+    return path, filename, ext
+
 # def split_indexed_frame_path(frame_path : str):
 #     """Split a file path like path/image0123.png into path, base filename,
 #        frame index and file extenstion"""
