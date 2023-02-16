@@ -12,7 +12,7 @@ from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.image_utils import create_gif
-from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory
+from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file
 from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
 from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE
 from resequence_files import ResequenceFiles
@@ -255,8 +255,44 @@ def video_blender_use_path2(frame : str):
     frame += 1
     return frame, *video_blender_state.goto_frame(frame)
 
+def video_blender_fix_frames(project_path : str, frame : float):
+    return gr.update(selected=2), project_path, frame, frame
+
+def video_blender_preview_fixed(project_path : str, before_frame : int, after_frame : int):
+    global log, config, engine
+
+    if project_path:
+        interpolater = Interpolate(engine.model, log.log)
+        target_interpolater = TargetInterpolate(interpolater, log.log)
+        frame_restorer = RestoreFrames(target_interpolater, log.log)
+        base_output_path = config.directories["output_blender"]
+        create_directory(base_output_path)
+        output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
+        output_basename = "fixed_frames"
+
+        before_file = locate_frame_file(project_path, before_frame)
+        after_file = locate_frame_file(project_path, after_frame)
+        num_frames = (after_frame - before_frame) - 1
+        search_depth = int(config.blender_settings["frame_fixer_depth"])
+
+        log.log(f"beginning frame fixes at {output_path}")
+        frame_restorer.restore_frames(before_file, after_file, num_frames, search_depth, output_path, output_basename)
+        output_paths = frame_restorer.output_paths
+
+        preview_gif = os.path.join(output_path, output_basename + str(run_index) + ".gif")
+        log.log(f"creating preview file {preview_gif}")
+        duration = config.blender_settings["gif_duration"] / len(output_paths)
+        gif_paths = [before_file, *output_paths, after_file]
+        create_gif(gif_paths, preview_gif, duration=duration)
+
+        return gr.Image.update(value=preview_gif), gr.Text.update(value=output_path, visible=True)
+
+def video_blender_used_fixed(fixed_path_ff : str, before_frame : int):
+    # use the path to find the files and overwrite them
+    return gr.update(selected=1)
+
 def video_blender_preview_video(input_path : str):
-    return gr.update(selected=2), input_path
+    return gr.update(selected=3), input_path
 
 def video_blender_render_preview(input_path : str, frame_rate : int):
     global config
@@ -264,7 +300,7 @@ def video_blender_render_preview(input_path : str, frame_rate : int):
     ffmpeg_cmd = PNGtoMP4(input_path, "auto", int(frame_rate), output_filepath, crf=QUALITY_SMALLER_SIZE)
     return output_filepath
 
-def resequence_files(input_path : str, input_filetype : str, input_newname : str, input_start : str, input_step : str, input_zerofill : str, input_rename_check : bool):
+# def resequence_files(input_path : str, input_filetype : str, input_newname : str, input_start : str, input_step : str, input_zerofill : str, input_rename_check : bool):
     global log
     if input_path and input_filetype and input_newname and input_start and input_step and input_zerofill:
         ResequenceFiles(input_path, input_filetype, input_newname, int(input_start), int(input_step), int(input_zerofill), input_rename_check, log.log).resequence()
@@ -364,7 +400,20 @@ def setup_ui(config, video_blender_projects):
         use_path_1_button_vb = elements["use_path_1_button_vb"]
         use_path_2_button_vb = elements["use_path_2_button_vb"]
         use_back_button_vb = elements["use_back_button_vb"]
+
+        fix_frames_button_vb = elements["fix_frames_button_vb"]
+
         preview_video_vb = elements["preview_video_vb"]
+
+        project_path_ff = elements["project_path_ff"]
+        input_clean_before_ff = elements["input_clean_before_ff"]
+        input_clean_after_ff = elements["input_clean_after_ff"]
+        preview_button_ff = elements["preview_button_ff"]
+        preview_image_ff = elements["preview_image_ff"]
+        fixed_path_ff = elements["fixed_path_ff"]
+
+        use_fixed_button_ff = elements["use_fixed_button_ff"]
+
         video_preview_vb = elements["video_preview_vb"]
         preview_path_vb = elements["preview_path_vb"]
         render_video_vb = elements["render_video_vb"]
@@ -419,6 +468,13 @@ def setup_ui(config, video_blender_projects):
         prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         preview_video_vb.click(video_blender_preview_video, inputs=input_project_path_vb, outputs=[tabs_video_blender, preview_path_vb])
+
+        fix_frames_button_vb.click(video_blender_fix_frames, inputs=[input_project_path_vb, input_text_frame_vb], outputs=[tabs_video_blender, project_path_ff, input_clean_before_ff, input_clean_after_ff])
+
+        preview_button_ff.click(video_blender_preview_fixed, inputs=[project_path_ff, input_clean_before_ff, input_clean_after_ff], outputs=[preview_image_ff, fixed_path_ff])
+
+        use_fixed_button_ff.click(video_blender_used_fixed, inputs=[fixed_path_ff, input_clean_before_ff], outputs=tabs_video_blender)
+
         render_video_vb.click(video_blender_render_preview, inputs=[preview_path_vb, input_frame_rate_vb], outputs=[video_preview_vb])
     return app
 

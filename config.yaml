@@ -5,6 +5,7 @@ directories:
   output_search: "./output/search"
   output_resynthesis: "./output/resynthesis"
   output_restoration: "./output/restoration"
+  output_blender: "./output/blender"
 model: "./pretrained_models/pretrained_VFIformer/net_220.pth"
 gpu_ids: "0"
 auto_launch_browser: True
@@ -30,6 +31,8 @@ restoration_settings:
 blender_settings:
   projects_file: "./video_blender_projects.csv"
   skip_frames: 100
+  frame_fixer_depth: 31
+  gif_duration: 1000
 mp4_to_png_settings:
   frame_rate: 30
 png_to_mp4_settings:
