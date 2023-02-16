@@ -42,9 +42,9 @@ class RestoreFrames():
         if self.log_fn:
             self.log_fn(message)
 
-    def restore_frames(self, img_before : str, img_after : str, num_frames : int, depth: int, output_path : str, base_filename : str):
+    def restore_frames(self, img_before : str, img_after : str, num_frames : int, depth: int, output_path : str, base_filename : str, progress_label="Frames"):
         searches = restored_frame_searches(num_frames)
-        for search in tqdm(searches, desc="Frames"):
+        for search in tqdm(searches, desc=progress_label):
             self.log(f"searching for frame {search}")
             self.target_interpolater.split_frames(img_before,
                                                 img_after,
