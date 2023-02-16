@@ -358,140 +358,40 @@ def setup_ui(config, video_blender_projects):
                     title="VFIformer Web UI",
                     theme=config.user_interface["theme"],
                     css=config.user_interface["css_file"]) as app:
-        elements = create_ui(config, video_blender_projects)
-        img1_input_fi = elements["img1_input_fi"]
-        img2_input_fi = elements["img2_input_fi"]
-        splits_input_fi = elements["splits_input_fi"]
-        info_output_fi = elements["info_output_fi"]
-        img_output_fi = elements["img_output_fi"]
-        file_output_fi = elements["file_output_fi"]
-        interpolate_button_fi = elements["interpolate_button_fi"]
-        img1_input_fs = elements["img1_input_fs"]
-        img2_input_fs = elements["img2_input_fs"]
-        splits_input_fs = elements["splits_input_fs"]
-        min_input_text_fs = elements["min_input_text_fs"]
-        max_input_text_fs = elements["max_input_text_fs"]
-        img_output_fs = elements["img_output_fs"]
-        file_output_fs = elements["file_output_fs"]
-        search_button_fs = elements["search_button_fs"]
-        input_path_text_vi = elements["input_path_text_vi"]
-        output_path_text_vi = elements["output_path_text_vi"]
-        splits_input_vi = elements["splits_input_vi"]
-        info_output_vi = elements["info_output_vi"]
-        interpolate_button_vi = elements["interpolate_button_vi"]
-        input_path_text_rv = elements["input_path_text_rv"]
-        output_path_text_rv = elements["output_path_text_rv"]
-        resynthesize_button_rv = elements["resynthesize_button_rv"]
-        img1_input_fr = elements["img1_input_fr"]
-        img2_input_fr = elements["img2_input_fr"]
-        frames_input_fr = elements["frames_input_fr"]
-        precision_input_fr = elements["precision_input_fr"]
-        times_output_fr = elements["times_output_fr"]
-        img_output_fr = elements["img_output_fr"]
-        file_output_fr = elements["file_output_fr"]
-        predictions_output_fr = elements["predictions_output_fr"]
-        restore_button_fr = elements["restore_button_fr"]
-        tabs_video_blender = elements["tabs_video_blender"]
-        input_project_name_vb = elements["input_project_name_vb"]
-        projects_dropdown_vb = elements["projects_dropdown_vb"]
-        load_project_button_vb = elements["load_project_button_vb"]
-        save_project_button_vb = elements["save_project_button_vb"]
-        input_project_path_vb = elements["input_project_path_vb"]
-        input_path1_vb = elements["input_path1_vb"]
-        input_path2_vb = elements["input_path2_vb"]
-        load_button_vb = elements["load_button_vb"]
-        output_img_path1_vb = elements["output_img_path1_vb"]
-        output_prev_frame_vb = elements["output_prev_frame_vb"]
-        output_curr_frame_vb = elements["output_curr_frame_vb"]
-        output_next_frame_vb = elements["output_next_frame_vb"]
-        prev_frame_button_vb = elements["prev_frame_button_vb"]
-        next_frame_button_vb = elements["next_frame_button_vb"]
-        go_button_vb = elements["go_button_vb"]
-        input_text_frame_vb , = elements["input_text_frame_vb"]
-        prev_xframes_button_vb = elements["prev_xframes_button_vb"]
-        next_xframes_button_vb = elements["next_xframes_button_vb"]
-        output_img_path2_vb = elements["output_img_path2_vb"]
-        use_path_1_button_vb = elements["use_path_1_button_vb"]
-        use_path_2_button_vb = elements["use_path_2_button_vb"]
-        fix_frames_button_vb = elements["fix_frames_button_vb"]
-        preview_video_vb = elements["preview_video_vb"]
-        project_path_ff = elements["project_path_ff"]
-        input_clean_before_ff = elements["input_clean_before_ff"]
-        input_clean_after_ff = elements["input_clean_after_ff"]
-        preview_button_ff = elements["preview_button_ff"]
-        preview_image_ff = elements["preview_image_ff"]
-        fixed_path_ff = elements["fixed_path_ff"]
-        use_fixed_button_ff = elements["use_fixed_button_ff"]
-        video_preview_vb = elements["video_preview_vb"]
-        preview_path_vb = elements["preview_path_vb"]
-        render_video_vb = elements["render_video_vb"]
-        input_frame_rate_vb = elements["input_frame_rate_vb"]
-        restart_button = elements["restart_button"]
-        input_path_text2 = elements["input_path_text2"]
-        input_filetype_text = elements["input_filetype_text"]
-        input_newname_text = elements["input_newname_text"]
-        input_start_text = elements["input_start_text"]
-        input_step_text = elements["input_step_text"]
-        input_zerofill_text = elements["input_zerofill_text"]
-        input_rename_check = elements["input_rename_check"]
-        resequence_button = elements["resequence_button"]
-        input_path_text_mp = elements["input_path_text_mp"]
-        output_path_text_mp = elements["output_path_text_mp"]
-        output_pattern_text_mp = elements["output_pattern_text_mp"]
-        input_frame_rate_mp = elements["input_frame_rate_mp"]
-        convert_button_mp = elements["convert_button_mp"]
-        output_info_text_mp = elements["output_info_text_mp"]
-        input_path_text_pm = elements["input_path_text_pm"]
-        output_path_text_pm = elements["output_path_text_pm"]
-        input_pattern_text_pm = elements["input_pattern_text_pm"]
-        input_frame_rate_pm = elements["input_frame_rate_pm"]
-        quality_slider_pm = elements["quality_slider_pm"]
-        convert_button_pm = elements["convert_button_pm"]
-        output_info_text_pm = elements["output_info_text_pm"]
-        input_path_text_gp = elements["input_path_text_gp"]
-        output_path_text_gp = elements["output_path_text_gp"]
-        convert_button_gp = elements["convert_button_gp"]
-        output_info_text_gp = elements["output_info_text_gp"]
-        input_path_text_pg = elements["input_path_text_pg"]
-        output_path_text_pg = elements["output_path_text_pg"]
-        input_pattern_text_pg = elements["input_pattern_text_pg"]
-        convert_button_pg = elements["convert_button_pg"]
-        output_info_text_pg = elements["output_info_text_pg"]
+        e = create_ui(config, video_blender_projects)
 
         # bind UI elemements to event handlers
-        interpolate_button_fi.click(frame_interpolation, inputs=[img1_input_fi, img2_input_fi, splits_input_fi], outputs=[img_output_fi, file_output_fi])
-        splits_input_fi.change(update_splits_info, inputs=splits_input_fi, outputs=info_output_fi, show_progress=False)
-        search_button_fs.click(frame_search, inputs=[img1_input_fs, img2_input_fs, splits_input_fs, min_input_text_fs, max_input_text_fs], outputs=[img_output_fs, file_output_fs])
-        interpolate_button_vi.click(video_inflation, inputs=[input_path_text_vi, output_path_text_vi, splits_input_vi])
-        splits_input_vi.change(update_splits_info, inputs=splits_input_vi, outputs=info_output_vi, show_progress=False)
-        resynthesize_button_rv.click(resynthesize_video, inputs=[input_path_text_rv, output_path_text_rv])
-        restart_button.click(restart_app, _js="function(){setTimeout(function(){window.location.reload()},2000);return[]}")
-        resequence_button.click(resequence_files, inputs=[input_path_text2, input_filetype_text, input_newname_text, input_start_text, input_step_text, input_zerofill_text, input_rename_check])
-        convert_button_mp.click(convert_mp4_to_png, inputs=[input_path_text_mp, output_pattern_text_mp, input_frame_rate_mp, output_path_text_mp], outputs=output_info_text_mp)
-        convert_button_pm.click(convert_png_to_mp4, inputs=[input_path_text_pm, input_pattern_text_pm, input_frame_rate_pm, output_path_text_pm, quality_slider_pm], outputs=output_info_text_pm)
-
-        convert_button_gp.click(convert_gif_to_mp4, inputs=[input_path_text_gp, output_path_text_gp], outputs=output_info_text_gp)
-        convert_button_pg.click(convert_png_to_gif, inputs=[input_path_text_pg, input_pattern_text_pg, output_path_text_pg], outputs=output_info_text_pg)
-
-        restore_button_fr.click(frame_restoration, inputs=[img1_input_fr, img2_input_fr, frames_input_fr, precision_input_fr], outputs=[img_output_fr, file_output_fr])
-        frames_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
-        precision_input_fr.change(update_info_fr, inputs=[frames_input_fr, precision_input_fr], outputs=[times_output_fr, predictions_output_fr], show_progress=False)
-        load_project_button_vb.click(video_blender_choose_project, inputs=[projects_dropdown_vb], outputs=[input_project_name_vb, input_project_path_vb, input_path1_vb, input_path2_vb], show_progress=False)
-        save_project_button_vb.click(video_blender_save_project, inputs=[input_project_name_vb, input_project_path_vb, input_path1_vb, input_path2_vb], show_progress=False)
-        load_button_vb.click(video_blender_load, inputs=[input_project_path_vb, input_path1_vb, input_path2_vb], outputs=[tabs_video_blender, input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        prev_frame_button_vb.click(video_blender_prev_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        next_frame_button_vb.click(video_blender_next_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        go_button_vb.click(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        input_text_frame_vb.submit(video_blender_goto_frame, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        use_path_1_button_vb.click(video_blender_use_path1, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        use_path_2_button_vb.click(video_blender_use_path2, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        prev_xframes_button_vb.click(video_blender_skip_prev, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        next_xframes_button_vb.click(video_blender_skip_next, inputs=[input_text_frame_vb], outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb, output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
-        preview_video_vb.click(video_blender_preview_video, inputs=input_project_path_vb, outputs=[tabs_video_blender, preview_path_vb])
-        fix_frames_button_vb.click(video_blender_fix_frames, inputs=[input_project_path_vb, input_text_frame_vb], outputs=[tabs_video_blender, project_path_ff, input_clean_before_ff, input_clean_after_ff])
-        preview_button_ff.click(video_blender_preview_fixed, inputs=[project_path_ff, input_clean_before_ff, input_clean_after_ff], outputs=[preview_image_ff, fixed_path_ff])
-        use_fixed_button_ff.click(video_blender_used_fixed, inputs=[project_path_ff, fixed_path_ff, input_clean_before_ff], outputs=tabs_video_blender)
-        render_video_vb.click(video_blender_render_preview, inputs=[preview_path_vb, input_frame_rate_vb], outputs=[video_preview_vb])
+        e["interpolate_button_fi"].click(frame_interpolation, inputs=[e["img1_input_fi"], e["img2_input_fi"], e["splits_input_fi"]], outputs=[e["img_output_fi"], e["file_output_fi"]])
+        e["splits_input_fi"].change(update_splits_info, inputs=e["splits_input_fi"], outputs=e["info_output_fi"], show_progress=False)
+        e["search_button_fs"].click(frame_search, inputs=[e["img1_input_fs"], e["img2_input_fs"], e["splits_input_fs"], e["min_input_text_fs"], e["max_input_text_fs"]], outputs=[e["img_output_fs"], e["file_output_fs"]])
+        e["interpolate_button_vi"].click(video_inflation, inputs=[e["input_path_text_vi"], e["output_path_text_vi"], e["splits_input_vi"]])
+        e["splits_input_vi"].change(update_splits_info, inputs=e["splits_input_vi"], outputs=e["info_output_vi"], show_progress=False)
+        e["resynthesize_button_rv"].click(resynthesize_video, inputs=[e["input_path_text_rv"], e["output_path_text_rv"]])
+        e["restore_button_fr"].click(frame_restoration, inputs=[e["img1_input_fr"], e["img2_input_fr"], e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["img_output_fr"], e["file_output_fr"]])
+        e["frames_input_fr"].change(update_info_fr, inputs=[e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["times_output_fr"], e["predictions_output_fr"]], show_progress=False)
+        e["precision_input_fr"].change(update_info_fr, inputs=[e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["times_output_fr"], e["predictions_output_fr"]], show_progress=False)
+        e["load_project_button_vb"].click(video_blender_choose_project, inputs=[e["projects_dropdown_vb"]], outputs=[e["input_project_name_vb"], e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], show_progress=False)
+        e["save_project_button_vb"].click(video_blender_save_project, inputs=[e["input_project_name_vb"], e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], show_progress=False)
+        e["load_button_vb"].click(video_blender_load, inputs=[e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], outputs=[e["tabs_video_blender"], e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["prev_frame_button_vb"].click(video_blender_prev_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["next_frame_button_vb"].click(video_blender_next_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["go_button_vb"].click(video_blender_goto_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["input_text_frame_vb"].submit(video_blender_goto_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["use_path_1_button_vb"].click(video_blender_use_path1, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["use_path_2_button_vb"].click(video_blender_use_path2, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["prev_xframes_button_vb"].click(video_blender_skip_prev, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["next_xframes_button_vb"].click(video_blender_skip_next, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["preview_video_vb"].click(video_blender_preview_video, inputs=e["input_project_path_vb"], outputs=[e["tabs_video_blender"], e["preview_path_vb"]])
+        e["fix_frames_button_vb"].click(video_blender_fix_frames, inputs=[e["input_project_path_vb"], e["input_text_frame_vb"]], outputs=[e["tabs_video_blender"], e["project_path_ff"], e["input_clean_before_ff"], e["input_clean_after_ff"]])
+        e["preview_button_ff"].click(video_blender_preview_fixed, inputs=[e["project_path_ff"], e["input_clean_before_ff"], e["input_clean_after_ff"]], outputs=[e["preview_image_ff"], e["fixed_path_ff"]])
+        e["use_fixed_button_ff"].click(video_blender_used_fixed, inputs=[e["project_path_ff"], e["fixed_path_ff"], e["input_clean_before_ff"]], outputs=e["tabs_video_blender"])
+        e["render_video_vb"].click(video_blender_render_preview, inputs=[e["preview_path_vb"], e["input_frame_rate_vb"]], outputs=[e["video_preview_vb"]])
+        e["convert_button_mp"].click(convert_mp4_to_png, inputs=[e["input_path_text_mp"], e["output_pattern_text_mp"], e["input_frame_rate_mp"], e["output_path_text_mp"]], outputs=e["output_info_text_mp"])
+        e["convert_button_pm"].click(convert_png_to_mp4, inputs=[e["input_path_text_pm"], e["input_pattern_text_pm"], e["input_frame_rate_pm"], e["output_path_text_pm"], e["quality_slider_pm"]], outputs=e["output_info_text_pm"])
+        e["convert_button_gp"].click(convert_gif_to_mp4, inputs=[e["input_path_text_gp"], e["output_path_text_gp"]], outputs=e["output_info_text_gp"])
+        e["convert_button_pg"].click(convert_png_to_gif, inputs=[e["input_path_text_pg"], e["input_pattern_text_pg"], e["output_path_text_pg"]], outputs=e["output_info_text_pg"])
+        e["resequence_button"].click(resequence_files, inputs=[e["input_path_text2"], e["input_filetype_text"], e["input_newname_text"], e["input_start_text"], e["input_step_text"], e["input_zerofill_text"], e["input_rename_check"]])
+        e["restart_button"].click(restart_app, _js="function(){setTimeout(function(){window.location.reload()},2000);return[]}")
     return app
 
 # _js="function(){alert(\"Project Saved!\r\n\r\nReload application from the Tools page to see it in the dropdown list.\");return[]}"
