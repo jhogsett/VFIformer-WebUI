@@ -13,15 +13,15 @@ from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.image_utils import create_gif
-from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file, split_filepath
-from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
+from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file
+from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions, restored_frame_searches
 from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE, GIFtoPNG, PNGtoGIF
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
 from video_blender import VideoBlenderState, VideoBlenderProjects
 from create_ui import create_ui
-from upsample_series import UpsampleSeries
+from resample_series import ResampleSeries
 
 log = None
 config = None
@@ -334,27 +334,15 @@ def convert_fc(input_path : str, output_path : str, starting_fps : int, ending_f
     if input_path:
         interpolater = Interpolate(engine.model, log.log)
         target_interpolater = TargetInterpolate(interpolater, log.log)
-        frame_restorer = RestoreFrames(target_interpolater, log.log)
-        series_upsampler = UpsampleSeries(frame_restorer, log.log)
-
+        series_resampler = ResampleSeries(target_interpolater, log.log)
         if output_path:
             base_output_path = output_path
         else:
-            base_output_path, run_index = AutoIncrementDirectory(config.directories["output_fps_change"]).next_directory("run")
-
-        lowest_common_rate = math.lcm(starting_fps, ending_fps)
-        expansion = int(lowest_common_rate / starting_fps)
-        num_frames = expansion - 1
-        log.log("starting synthesis of frame superset")
-        series_upsampler.upsample_series(input_path, base_output_path, num_frames, precision, f"samples@{lowest_common_rate}fps")
-        frames_superset = series_upsampler.output_paths
-
-        sample_rate = int(lowest_common_rate / ending_fps)
-        sample_set = frames_superset[::sample_rate]
-        log.log(f"sampled a total of {len(frames_superset)} super set frames to {len(sample_set)} {ending_fps} FPS sample frames")
+            base_output_path, _ = AutoIncrementDirectory(config.directories["output_fps_change"]).next_directory("run")
+        series_resampler.resample_series(input_path, base_output_path, starting_fps, ending_fps, precision, f"resampled@{starting_fps}")
 
         log.log(f"auto-resequencing sampled frames at {output_path}")
-        ResequenceFiles(base_output_path, "png", f"resampled_frame@{ending_fps}fps", 1, 1, -1, True, log.log).resequence()
+        ResequenceFiles(base_output_path, "png", f"resampled@{ending_fps}fps", 0, 1, -1, True, log.log).resequence()
 
 #### UI Helpers
 
