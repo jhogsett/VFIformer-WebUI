@@ -13,7 +13,7 @@ from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.image_utils import create_gif
-from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file
+from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file, split_filepath
 from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
 from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE, GIFtoPNG, PNGtoGIF
 from resequence_files import ResequenceFiles
@@ -345,23 +345,16 @@ def convert_fc(input_path : str, output_path : str, starting_fps : int, ending_f
         lowest_common_rate = math.lcm(starting_fps, ending_fps)
         expansion = int(lowest_common_rate / starting_fps)
         num_frames = expansion - 1
-        sample_rate = int(lowest_common_rate / ending_fps)
+        log.log("starting synthesis of frame superset")
         series_upsampler.upsample_series(input_path, base_output_path, num_frames, precision, f"samples@{lowest_common_rate}fps")
+        frames_superset = series_upsampler.output_paths
 
-        # interpolater = Interpolate(engine.model, log.log)
-        # deep_interpolater = DeepInterpolate(interpolater, log.log)
-        # series_interpolater = InterpolateSeries(deep_interpolater, log.log)
-        # output_path, run_index =
-        # output_basename = "resynthesized_frames"
+        sample_rate = int(lowest_common_rate / ending_fps)
+        sample_set = frames_superset[::sample_rate]
+        log.log(f"sampled a total of {len(frames_superset)} super set frames to {len(sample_set)} {ending_fps} FPS sample frames")
 
-        # file_list = get_files(input_path, extension="png")
-        # log.log(f"beginning series of frame recreations at {output_path}")
-        # series_interpolater.interpolate_series(file_list, output_path, 1, output_basename, offset=2)
-        # log.log(f"auto-resequencing recreated frames at {output_path}")
-        # ResequenceFiles(output_path, "png", "resynthesized_frame", 1, 1, -1, True, log.log).resequence()
-
-    #
-    pass
+        log.log(f"auto-resequencing sampled frames at {output_path}")
+        ResequenceFiles(base_output_path, "png", f"resampled_frame@{ending_fps}fps", 1, 1, -1, True, log.log).resequence()
 
 #### UI Helpers
 

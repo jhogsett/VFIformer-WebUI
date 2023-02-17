@@ -61,12 +61,15 @@ class UpsampleSeries():
             # copy the original frame before the filler frames
             keyframe_filename = f"{filename}@0.0.png"
             self.log(f"creating keyframe file for frame files {before_file} - {after_file}")
-            shutil.copy(before_file, os.path.join(output_path, keyframe_filename))
+            keyframe_filepath = os.path.join(output_path, keyframe_filename)
+            shutil.copy(before_file, keyframe_filepath)
+            self.output_paths.append(keyframe_filepath)
 
             inner_bar_desc = f"Frame #{n}"
             self.log(f"creating upsampled frames for frame files {before_file} - {after_file}")
             self.frame_restorer.restore_frames(before_file, after_file, num_frames, num_splits, output_path, filename, progress_label=inner_bar_desc)
             self.output_paths.extend(self.frame_restorer.output_paths)
+            self.frame_restorer.output_paths = []
 
 if __name__ == '__main__':
     main()

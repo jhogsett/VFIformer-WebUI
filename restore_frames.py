@@ -55,6 +55,7 @@ class RestoreFrames():
                                                 base_filename=base_filename,
                                                 progress_label="Search")
         self.output_paths.extend(self.target_interpolater.output_paths)
+        self.target_interpolater.output_paths = []
 
 if __name__ == '__main__':
     main()
