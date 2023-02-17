@@ -1,6 +1,6 @@
 import gradio as gr
 from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions
-from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, UNDER_CONST, FILE_ICON, NUMBERS_ICON, ROCKET_ICON, PROPERTIES
+from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, FILE_ICON, NUMBERS_ICON, ROCKET_ICON, PROPERTIES, FILM_ICON, FINGERS
 
 def create_ui(config, video_blender_projects):
     # all UI elements are captured and returned
@@ -418,7 +418,35 @@ The only PNG files present in the _Input Path_ should be the video frame files
 - Leave _Rename instead of duplicate files_ unchecked if the original files may be needed
     - They be useful for tracking back to a source frame""")
 
-        with gr.Tab("GIF to Video " + UNDER_CONST):
+        with gr.Tab("FPS Change " + FILM_ICON):
+            gr.HTML("Change the frame rate for a set of PNG video frames using targeted interpolation", elem_id="tabheading")
+            max_fps = config.fps_change_settings["maximum_fps"]
+            starting_fps = config.fps_change_settings["starting_fps"]
+            ending_fps = config.fps_change_settings["starting_fps"]
+            max_precision = config.fps_change_settings["max_precision"]
+            precision = config.fps_change_settings["default_precision"]
+            default_frames = 0
+            times_default = restored_frame_fractions(default_frames)
+            predictions_default = restored_frame_predictions(default_frames, precision)
+            with gr.Row():
+                with gr.Column():
+                    with gr.Row():
+                        e["input_path_text_fc"] = gr.Text(max_lines=1, label="Input Path", placeholder="Path on this server to the PNG frame files to be converted")
+                        e["output_path_text_fc"] = gr.Text(max_lines=1, label="Output Path", placeholder="Path on this server for the converted PNG frame files, leave blank to use default")
+                    with gr.Row():
+                        e["starting_fps_fc"] = gr.Slider(value=starting_fps, minimum=1, maximum=max_fps, step=1, label="Starting FPS")
+                        e["ending_fps_fc"] = gr.Slider(value=ending_fps, minimum=1, maximum=max_fps, step=1, label="Ending FPS")
+                        e["output_lcm_text_fc"] = gr.Text(max_lines=1, label="Lowest Common FPS", interactive=False)
+                        e["output_filler_text_fc"] = gr.Text(max_lines=1, label="Filled Frames per Input Frame", interactive=False)
+                        e["output_sampled_text_fc"] = gr.Text(max_lines=1, label="Output Frames Sample Rate", interactive=False)
+                    with gr.Row():
+                        e["precision_fc"] = gr.Slider(value=precision, minimum=1, maximum=max_precision, step=1, label="Precision")
+                        e["times_output_fc"] = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=8, interactive=False)
+                        e["predictions_output_fc"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=8, interactive=False)
+            gr.Markdown("*Progress can be tracked in the console*")
+            e["convert_button_fc"] = gr.Button("Convert (this will take time)", variant="primary")
+
+        with gr.Tab("GIF to Video " + FINGERS):
             with gr.Row():
                 with gr.Column():
                     gr.Markdown("""
@@ -428,7 +456,7 @@ Idea: Recover the original video from animated GIF file
 - use VFIformer to adjust frame rate to real time
 - reassemble new PNG frames into MP4 file""")
 
-        with gr.Tab("Upscaling " + UNDER_CONST):
+        with gr.Tab("Upscaling " + FINGERS):
             gr.Markdown("Future: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
         with gr.Tab("Options" + GEAR_ICON):

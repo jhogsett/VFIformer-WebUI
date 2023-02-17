@@ -6,6 +6,7 @@ directories:
   output_resynthesis: "./output/resynthesis"
   output_restoration: "./output/restoration"
   output_blender: "./output/blender"
+  output_fps_change: "./output/fps_change"
 model: "./pretrained_models/pretrained_VFIformer/net_220.pth"
 gpu_ids: "0"
 auto_launch_browser: True
@@ -40,6 +41,12 @@ png_to_mp4_settings:
   maximum_crf: 28 # great quality, smaller file
   default_crf: 23 # great quality (default)
   frame_rate: 30
+fps_change_settings:
+  maximum_fps: 1024
+  starting_fps: 25
+  ending_fps: 30
+  default_precision: 10
+  max_precision: 60
 user_interface:
   theme: "default"
   css_file: "webui.css"

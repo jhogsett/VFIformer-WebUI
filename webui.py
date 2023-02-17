@@ -3,6 +3,7 @@ import shutil
 import time
 import signal
 import argparse
+import math
 import gradio as gr
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
@@ -12,7 +13,7 @@ from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.image_utils import create_gif
-from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file
+from webui_utils.file_utils import create_directories, create_zip, get_files, create_directory, locate_frame_file, split_filepath
 from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
 from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE, GIFtoPNG, PNGtoGIF
 from resequence_files import ResequenceFiles
@@ -20,6 +21,7 @@ from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
 from video_blender import VideoBlenderState, VideoBlenderProjects
 from create_ui import create_ui
+from upsample_series import UpsampleSeries
 
 log = None
 config = None
@@ -327,6 +329,33 @@ def convert_png_to_gif(input_path : str, input_pattern : str, output_filepath : 
     ffmpeg_cmd = PNGtoGIF(input_path, input_pattern, output_filepath)
     return gr.update(value=ffmpeg_cmd, visible=True)
 
+def convert_fc(input_path : str, output_path : str, starting_fps : int, ending_fps : int, precision : int):
+    global log, config, engine
+    if input_path:
+        interpolater = Interpolate(engine.model, log.log)
+        target_interpolater = TargetInterpolate(interpolater, log.log)
+        frame_restorer = RestoreFrames(target_interpolater, log.log)
+        series_upsampler = UpsampleSeries(frame_restorer, log.log)
+
+        if output_path:
+            base_output_path = output_path
+        else:
+            base_output_path, run_index = AutoIncrementDirectory(config.directories["output_fps_change"]).next_directory("run")
+
+        lowest_common_rate = math.lcm(starting_fps, ending_fps)
+        expansion = int(lowest_common_rate / starting_fps)
+        num_frames = expansion - 1
+        log.log("starting synthesis of frame superset")
+        series_upsampler.upsample_series(input_path, base_output_path, num_frames, precision, f"samples@{lowest_common_rate}fps")
+        frames_superset = series_upsampler.output_paths
+
+        sample_rate = int(lowest_common_rate / ending_fps)
+        sample_set = frames_superset[::sample_rate]
+        log.log(f"sampled a total of {len(frames_superset)} super set frames to {len(sample_set)} {ending_fps} FPS sample frames")
+
+        log.log(f"auto-resequencing sampled frames at {output_path}")
+        ResequenceFiles(base_output_path, "png", f"resampled_frame@{ending_fps}fps", 1, 1, -1, True, log.log).resequence()
+
 #### UI Helpers
 
 def restart_app():
@@ -340,6 +369,19 @@ def update_info_fr(num_frames : int, num_splits : int):
     fractions = restored_frame_fractions(num_frames)
     predictions = restored_frame_predictions(num_frames, num_splits)
     return fractions, predictions
+
+def update_info_fc(starting_fps : int, ending_fps : int, precision : int):
+    lowest_common_rate = math.lcm(starting_fps, ending_fps)
+    expansion = int(lowest_common_rate / starting_fps)
+    num_frames = expansion - 1
+    sample_rate = int(lowest_common_rate / ending_fps)
+
+    filled = num_frames #if num_frames > 0 else "None"
+    sampled = f"1/{sample_rate}"  #"None" if  lowest_common_rate / ending_fps
+
+    fractions = restored_frame_fractions(num_frames) or "n/a"
+    predictions = restored_frame_predictions(num_frames, precision) or "n/a"
+    return lowest_common_rate, filled, sampled, fractions, predictions
 
 def create_report(info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
     report = f"""before file: {img_before_file}
@@ -392,6 +434,11 @@ def setup_ui(config, video_blender_projects):
         e["convert_button_pg"].click(convert_png_to_gif, inputs=[e["input_path_text_pg"], e["input_pattern_text_pg"], e["output_path_text_pg"]], outputs=e["output_info_text_pg"])
         e["resequence_button"].click(resequence_files, inputs=[e["input_path_text2"], e["input_filetype_text"], e["input_newname_text"], e["input_start_text"], e["input_step_text"], e["input_zerofill_text"], e["input_rename_check"]])
         e["restart_button"].click(restart_app, _js="function(){setTimeout(function(){window.location.reload()},2000);return[]}")
+        e["starting_fps_fc"].change(update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
+        e["ending_fps_fc"].change(update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
+        e["precision_fc"].change(update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
+        e["convert_button_fc"].click(convert_fc, inputs=[e["input_path_text_fc"], e["output_path_text_fc"], e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]])
+
     return app
 
 # _js="function(){alert(\"Project Saved!\r\n\r\nReload application from the Tools page to see it in the dropdown list.\");return[]}"
