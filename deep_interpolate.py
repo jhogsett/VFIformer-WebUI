@@ -167,6 +167,5 @@ class DeepInterpolate():
     def indexed_filepath(self, filepath_prefix, index):
         return filepath_prefix + f"{index:1.24f}.png"
 
-
 if __name__ == '__main__':
     main()

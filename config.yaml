@@ -50,3 +50,4 @@ fps_change_settings:
 user_interface:
   theme: "default"
   css_file: "webui.css"
+  log_file: None # "./webui.log"

@@ -1,15 +1,24 @@
 import gradio as gr
 from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions
-from webui_utils.icons import TOOLS_ICON, GEAR_ICON, INFO_ICON, FILE_ICON, NUMBERS_ICON, ROCKET_ICON, PROPERTIES, FILM_ICON, FINGERS
+from webui_utils.simple_icons import SimpleIcons
+
+# shared symbols
+TIPS_SYMBOL = SimpleIcons.INFO
+SLOW_SYMBOL = SimpleIcons.WATCH
+PROP_SYMBOL = SimpleIcons.PROPERTIES
+WISH_SYMBOL = SimpleIcons.FINGERS_CROSSED
+CONV_SYMBOL = SimpleIcons.STILL
 
 def create_ui(config, video_blender_projects):
     # all UI elements are captured and returned
     # for use ing binding UI elements/events to functional code
     e = {}
 
-    gr.HTML("VFIformer Web UI", elem_id="appheading")
+    gr.HTML(SimpleIcons.MOVIE + "VFIformer Web UI", elem_id="appheading")
+
+    ### FRAME INTERPOLATION
     with gr.Tab("Frame Interpolation"):
-        gr.HTML("Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
+        gr.HTML(SimpleIcons.DIVIDE + "Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["img1_input_fi"] = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -21,7 +30,7 @@ def create_ui(config, video_blender_projects):
                 e["img_output_fi"] = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                 e["file_output_fi"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
         e["interpolate_button_fi"] = gr.Button("Interpolate", variant="primary")
-        with gr.Accordion(INFO_ICON + " Tips", open=False):
+        with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
             gr.Markdown("""
 - Use _Frame Interpolation_ to
     - Reveal intricate motion between two frames of a video
@@ -29,8 +38,9 @@ def create_ui(config, video_blender_projects):
         - Set split count to _1_ and provide _adjacent frames_
         - _Frame Restoration_ can be used to recreate an arbitrary number of adjacent damaged frames""")
 
+    ### FRAME SEARCH
     with gr.Tab("Frame Search"):
-        gr.HTML("Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
+        gr.HTML(SimpleIcons.MAGNIFIER + "Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["img1_input_fs"] = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -43,7 +53,7 @@ def create_ui(config, video_blender_projects):
                 e["img_output_fs"] = gr.Image(type="filepath", label="Found Frame", interactive=False)
                 e["file_output_fs"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
         e["search_button_fs"] = gr.Button("Search", variant="primary")
-        with gr.Accordion(INFO_ICON + " Tips", open=False):
+        with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
             gr.Markdown("""
 - Use _Frame Search_ to synthesize a new frame at a precise time using _Targeted Interpolation_
     - Targeted Interpolation is a _Binary Search_:
@@ -53,8 +63,9 @@ def create_ui(config, video_blender_projects):
     - _Search Depth_ should be set high if a precisely timed frame is needed
     - A low value for _Search Depth_ is faster but may return an inaccurate or outside the search window result""")
 
+    ### VIDEO INFLATION
     with gr.Tab("Video Inflation"):
-        gr.HTML("Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
+        gr.HTML(SimpleIcons.BALLOON + "Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["input_path_text_vi"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
@@ -63,8 +74,8 @@ def create_ui(config, video_blender_projects):
                     e["splits_input_vi"] = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
                     e["info_output_vi"] = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
         gr.Markdown("*Progress can be tracked in the console*")
-        e["interpolate_button_vi"] = gr.Button("Interpolate Series (this will take time)", variant="primary")
-        with gr.Accordion(INFO_ICON + " Tips", open=False):
+        e["interpolate_button_vi"] = gr.Button("Interpolate Series " + SLOW_SYMBOL, variant="primary")
+        with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
             gr.Markdown("""
 - _Video Inflation_ uses _Frame Interpolation_ to double a video's frame count any number of times
 - This has many useful purposes:
@@ -83,15 +94,16 @@ def create_ui(config, video_blender_projects):
         - Re-run the inflation
         - Use the _Resequence Files_ tool to rename the the two sets of rendered frames so they can be recombined""")
 
+    ### RESYNTHESIZE VIDEO
     with gr.Tab("Resynthesize Video"):
-        gr.HTML("Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
+        gr.HTML(SimpleIcons.TWO_HEARTS + "Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["input_path_text_rv"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
                 e["output_path_text_rv"] = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
         gr.Markdown("*Progress can be tracked in the console*")
-        e["resynthesize_button_rv"] = gr.Button("Resynthesize Video (this will take time)", variant="primary")
-        with gr.Accordion(INFO_ICON + " Tips", open=False):
+        e["resynthesize_button_rv"] = gr.Button("Resynthesize Video " + SLOW_SYMBOL, variant="primary")
+        with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
             gr.Markdown("""
 - _Resynthesize Video_ creates a set of replacement frames for a video by interpolating new ones between all existing frames
     - The replacement frames can be be used with _Video Blender_ to replace a video's damaged frames with clean substitutes
@@ -115,8 +127,9 @@ def create_ui(config, video_blender_projects):
         - _Frame Restoration_ can be used to recover an arbitrary number of adjacent damaged frames
     - Transitions between scenes will not produce usable resynthesized frames""")
 
+    ### FRAME RESTORATION
     with gr.Tab("Frame Restoration"):
-        gr.HTML("Restore multiple adjacent bad frames using precision interpolation", elem_id="tabheading")
+        gr.HTML(SimpleIcons.MAGIC_WAND + "Restore multiple adjacent bad frames using precision interpolation", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 with gr.Row():
@@ -134,7 +147,7 @@ def create_ui(config, video_blender_projects):
         predictions_default = restored_frame_predictions(config.restoration_settings["default_frames"], config.restoration_settings["default_precision"])
         e["predictions_output_fr"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=1, interactive=False)
         e["restore_button_fr"] = gr.Button("Restore Frames", variant="primary")
-        with gr.Accordion(INFO_ICON + " Tips", open=False):
+        with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
             gr.Markdown("""
 - _Frame Restoration_ uses _Frame Search_ to create restored frames for a set of adjacent damaged ones
 - The count of damaged frames and a pair of outer _clean_ frames are provided
@@ -159,25 +172,27 @@ def create_ui(config, video_blender_projects):
     - Actual found frames may differ from predictions
     - A warning is displayed if _Search Precision_ should be increased due to repeated frames""")
 
+    ### VIDEO BLENDER
     with gr.Tab("Video Blender"):
-        gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
-        # e["tabs_video_blender"] = gr.Tabs()
-        # with e["tabs_video_blender"]:
+        gr.HTML(SimpleIcons.MICROSCOPE + "Combine original and replacement frames to manually restore a video", elem_id="tabheading")
         with gr.Tabs() as e["tabs_video_blender"]:
-            with gr.Tab("Project Settings", id=0):
+
+            ### PROJECT SETTINGS
+
+            with gr.Tab(SimpleIcons.NOTEBOOK + "Project Settings", id=0):
                 with gr.Row():
                     e["input_project_name_vb"] = gr.Textbox(label="Project Name")
-                    e["projects_dropdown_vb"] = gr.Dropdown(label=PROPERTIES + " Saved Projects", choices=video_blender_projects.get_project_names())
-                    e["load_project_button_vb"] = gr.Button(PROPERTIES + " Load").style(full_width=False)
-                    e["save_project_button_vb"] = gr.Button(PROPERTIES + " Save").style(full_width=False)
+                    e["projects_dropdown_vb"] = gr.Dropdown(label=PROP_SYMBOL + " Saved Projects", choices=video_blender_projects.get_project_names())
+                    e["load_project_button_vb"] = gr.Button(PROP_SYMBOL + " Load").style(full_width=False)
+                    e["save_project_button_vb"] = gr.Button(PROP_SYMBOL + " Save").style(full_width=False)
                 with gr.Row():
                     e["input_project_path_vb"] = gr.Textbox(label="Project Frames Path", placeholder="Path to frame PNG files for video being restored")
                 with gr.Row():
                     e["input_path1_vb"] = gr.Textbox(label="Original / Video #1 Frames Path", placeholder="Path to original or video #1 PNG files")
                 with gr.Row():
                     e["input_path2_vb"] = gr.Textbox(label="Alternate / Video #2 Frames Path", placeholder="Path to alternate or video #2 PNG files")
-                e["load_button_vb"] = gr.Button("Open Video Blender Project " + ROCKET_ICON, variant="primary")
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                e["load_button_vb"] = gr.Button("Open Video Blender Project " + SimpleIcons.ROCKET, variant="primary")
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - Set up the project with three directories, all with PNG files (only) with the _same file count, dimensions and starting sequence number_
 - The _Original / Video #1 Frames Path_ should have the _original PNG files_ from the video being restored
@@ -209,7 +224,9 @@ General Use
 - This tool can also be used any time there's a need to mix three videos, selectively replacing frames in one with frames from two others
 - The Video Preview tab can be used to create and watch a preview video for any set of PNG files""")
 
-            with gr.Tab("Frame Chooser", id=1):
+            ### PROJECT SETTINGS
+
+            with gr.Tab(SimpleIcons.CONTROLS + "Frame Chooser", id=1):
                 with gr.Row():
                     with gr.Column():
                         gr.Textbox(visible=False)
@@ -243,7 +260,7 @@ General Use
                             e["next_frame_button_vb"] = gr.Button("Next Frame >", variant="primary")
                         e["fix_frames_button_vb"] = gr.Button("Fix Frames")
 
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 # Important
 The green buttons copy files!
@@ -263,7 +280,9 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 - Overwrite the damaged frames if good enough
 """)
 
-            with gr.Tab("Frame Fixer", id=2):
+            ### PROJECT SETTINGS
+
+            with gr.Tab(SimpleIcons.HAMMER + "Frame Fixer", id=2):
                 with gr.Row():
                     with gr.Column():
                         with gr.Row():
@@ -277,7 +296,7 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                         e["preview_image_ff"] = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
                         e["fixed_path_ff"] = gr.Text(label="Path to Restored Frames", interactive=False)
                         e["use_fixed_button_ff"] = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - When arrving at this tab via the _Frame Chooser_ Fix Frames button, the following fields are pre-filled from the project:
     - Video Blender Project Path (PNG files for video being blended)
@@ -289,14 +308,16 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
 - _First clean frame AFTER damaged ones_ MUST be the first clean frame after the set of damaged ones
 - Frames may not be fixable if there's a scene change, motion is too fast, or the clean frames are too far apart""")
 
-            with gr.Tab("Video Preview", id=3):
+            ### PROJECT SETTINGS
+
+            with gr.Tab(SimpleIcons.TELEVISION + "Video Preview", id=3):
                 with gr.Row():
                     e["video_preview_vb"] = gr.Video(label="Preview", interactive=False, include_audio=False) #.style(width=config.blender_settings["preview_width"]) #height=config.blender_settings["preview_height"],
                 e["preview_path_vb"] = gr.Textbox(max_lines=1, label="Path to PNG Sequence", placeholder="Path on this server to the PNG files to be converted")
                 with gr.Row():
                     e["render_video_vb"] = gr.Button("Render Video", variant="primary")
                     e["input_frame_rate_vb"] = gr.Slider(minimum=1, maximum=60, value=config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - When arrving at this tab via the _Frame Chooser_ Preview Video button, the _Path to PNG Sequence_ is automatically filled with the Video Blender project path
     - Simply click _Render Video_ to create and watch a preview of the project in its current state
@@ -313,11 +334,15 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
     - Example: `FRAME001.png` through `FRAME420.png`
     - There must be no other PNG files in the same directory""")
 
-    with gr.Tab("Tools" + TOOLS_ICON):
-        with gr.Tab("File Conversion " + FILE_ICON):
+    ### TOOLS
+    with gr.Tab(SimpleIcons.WRENCH + "Tools"):
+
+        ### FILE CONVERSION
+
+        with gr.Tab(SimpleIcons.FOLDER + "File Conversion"):
             gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
 
-            with gr.Tab("MP4 to PNG Sequence"):
+            with gr.Tab(CONV_SYMBOL + "MP4 to PNG Sequence"):
                 gr.Markdown("Convert MP4 to a PNG sequence")
                 e["input_path_text_mp"] = gr.Text(max_lines=1, label="MP4 File", placeholder="Path on this server to the MP4 file to be converted")
                 e["output_path_text_mp"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
@@ -327,14 +352,14 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                 with gr.Row():
                     e["convert_button_mp"] = gr.Button("Convert", variant="primary")
                     e["output_info_text_mp"] = gr.Textbox(label="Details", interactive=False)
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - The filename pattern should be based on the count of frames  for alphanumeric sorting
 - Example: For a video with _24,578_ frames and a PNG base filename of "TENNIS", the pattern should be "TENNIS%05d.png"
 - Match the frame rate to the rate of the source video to avoid repeated or skipped frames
 - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
-            with gr.Tab("PNG Sequence to MP4"):
+            with gr.Tab(CONV_SYMBOL + "PNG Sequence to MP4"):
                 gr.Markdown("Convert a PNG sequence to a MP4")
                 e["input_path_text_pm"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
                 e["output_path_text_pm"] = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
@@ -345,7 +370,7 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                 with gr.Row():
                     e["convert_button_pm"] = gr.Button("Convert", variant="primary")
                     e["output_info_text_pm"] = gr.Textbox(label="Details", interactive=False)
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
 - Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
@@ -355,19 +380,19 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
     - The first found PNG file follows the same naming pattern as all the other files
 - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
-            with gr.Tab("GIF to PNG Sequence"):
+            with gr.Tab(CONV_SYMBOL + "GIF to PNG Sequence"):
                 gr.Markdown("Convert GIF to a PNG sequence")
                 e["input_path_text_gp"] = gr.Text(max_lines=1, label="GIF File", placeholder="Path on this server to the GIF file to be converted")
                 e["output_path_text_gp"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to a directory for the converted PNG files")
                 with gr.Row():
                     e["convert_button_gp"] = gr.Button("Convert", variant="primary")
                     e["output_info_text_gp"] = gr.Textbox(label="Details", interactive=False)
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - The PNG files will be named based on the supplied GIF file
 - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
-            with gr.Tab("PNG Sequence to GIF"):
+            with gr.Tab(CONV_SYMBOL + "PNG Sequence to GIF"):
                 gr.Markdown("Convert a PNG sequence to a GIF")
                 e["input_path_text_pg"] = gr.Text(max_lines=1, label="PNG Files Path", placeholder="Path on this server to the PNG files to be converted")
                 e["output_path_text_pg"] = gr.Text(max_lines=1, label="GIF File", placeholder="Path and filename on this server for the converted GIF file")
@@ -375,7 +400,7 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                 with gr.Row():
                     e["convert_button_pg"] = gr.Button("Convert", variant="primary")
                     e["output_info_text_pg"] = gr.Textbox(label="Details", interactive=False)
-                with gr.Accordion(INFO_ICON + " Tips", open=False):
+                with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                     gr.Markdown("""
 - The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
 - Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
@@ -385,7 +410,9 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
     - The first found PNG file follows the same naming pattern as all the other files
 - The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files""")
 
-        with gr.Tab("Resequence Files " + NUMBERS_ICON):
+        ### RESEQUENCE FILES
+
+        with gr.Tab(SimpleIcons.NUMBERS + "Resequence Files "):
             gr.HTML("Rename a PNG sequence for import into video editing software", elem_id="tabheading")
             with gr.Row():
                 with gr.Column():
@@ -400,7 +427,7 @@ Clicking _Fix Frames_ will take you to the _Frame Fixer_ tab
                     with gr.Row():
                         e["input_rename_check"] = gr.Checkbox(value=False, label="Rename instead of duplicate files")
                     e["resequence_button"] = gr.Button("Resequence Files", variant="primary")
-            with gr.Accordion(INFO_ICON + " Tips", open=False):
+            with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
                 gr.Markdown("""
 _Resequence Files_ can be used to make a set of PNG files ready for important into video editing software
 
@@ -418,7 +445,9 @@ The only PNG files present in the _Input Path_ should be the video frame files
 - Leave _Rename instead of duplicate files_ unchecked if the original files may be needed
     - They be useful for tracking back to a source frame""")
 
-        with gr.Tab("FPS Change " + FILM_ICON):
+        ### Change FPS
+
+        with gr.Tab(SimpleIcons.FILM + "Change FPS"):
             gr.HTML("Change the frame rate for a set of PNG video frames using targeted interpolation", elem_id="tabheading")
             max_fps = config.fps_change_settings["maximum_fps"]
             starting_fps = config.fps_change_settings["starting_fps"]
@@ -444,9 +473,49 @@ The only PNG files present in the _Input Path_ should be the video frame files
                         e["times_output_fc"] = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=8, interactive=False)
                         e["predictions_output_fc"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=8, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
-            e["convert_button_fc"] = gr.Button("Convert (this will take time)", variant="primary")
+            e["convert_button_fc"] = gr.Button("Convert " + SLOW_SYMBOL, variant="primary")
+            with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
+                gr.Markdown("""
+- _Change FPS_ can be used to change the frame rate of a video by automatically inserting interpolated frames
+- How it FPS conversion works
+  - _Starting_ and _Ending_ frame rates are specified
+    - A _lowest common multiple_ super-sampling frame rate is computed
+      - The super-sampling rate is evenly divisible by the starting and ending frame rates
+      - This value is shown in the _Lowest Common FPS_ field
+    - If needed, _filler frames_ are created to inflate the original video's frame rate
+      - The count of filler frames is shown in the _Filled Frames per Input Frame_ field
+    - If needed, _sampling_ is done on the super sample set to collect the frames for the ending frame rate
+      - The sample rate is shown in the _Output Frames Sample Rate_ field
+  - _Precision_ is selected
+    - This sets the _search depth_ used to find the interpolated frames
+      - A higher search depth yields precise frames, but takes longer
+      - A lower search depth is faster, but the frame timing may be inaccurate
+  - A super-set of _targeted interpolation_ frame seaches are calculated at the higher _lowest common FPS_ frame rate
+    - The list is pre-sampled to filter out interpolations that are not needed for the final frame set
+  - _Targeted Interpolation_ runs to create the new frames
+    - Original video frames are copied rather than interpolated if present in the sample set
+  - When done, files are resequenced with a fixed-width frame index
+    - Filenames also include a reference to their current FPS
+- How to change a video's FPS
+  - Set _Input Path_ to a directory containing video frame PNG files for conversion
+  - Set _Output Path_ to a directory for the converted PNG files
+    - Output Path can be left blank to use default folder
+    - The default folder is set by the `config.output_fps_change` setting
+  - Set _Starting FPS_ to the frame rate of the video being converted
+  - Set _Ending FPS_ to the frame rate for the converted video frames
+  - Set _Precision_ to the search depth needed for the required accuracy
 
-        with gr.Tab("GIF to Video " + FINGERS):
+# Important
+
+- This process will be slow, perhaps many hours long!
+- Progress will be shown in the console using a standard _tqdm_ progress bar
+- The browser window can be safely closed without interupting the process
+- Some combinations of Starting FPS / Ending FPS may be impractical
+  - Check the _Frame Search Times_ and _Predicted Matched_ fields""")
+
+        ### WISHES
+
+        with gr.Tab(WISH_SYMBOL + "GIF to Video"):
             with gr.Row():
                 with gr.Column():
                     gr.Markdown("""
@@ -456,19 +525,63 @@ Idea: Recover the original video from animated GIF file
 - use VFIformer to adjust frame rate to real time
 - reassemble new PNG frames into MP4 file""")
 
-        with gr.Tab("Upscaling " + FINGERS):
+        with gr.Tab(WISH_SYMBOL + "Upscaling"):
             gr.Markdown("Future: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
-        with gr.Tab("Options" + GEAR_ICON):
-            e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
+        ### OPTIONS
+
+        with gr.Tab(SimpleIcons.GEAR + "Options"):
+            with gr.Row():
+                e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
+
+    # parts borrowed from stable-diffusion-webui
+    footer = SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett  •  <a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>  •  <a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>  •  <a href="https://gradio.app">Gradio</a>  •  <a href="/" onclick="javascript:gradioApp().getElementById(\'settings_restart_gradio\').click(); return false">Reload UI</a>'
+    gr.HTML(footer, elem_id="footer")
 
     return e
 
-# this created a code box in markdown for some reason (could be useful)
-# # Important
-#     - _Last clean frame BEFORE damaged ones_ MUST be the last clean frame before the set of damaged ones
-#     - _First clean frame AFTER damaged ones_ MUST be the first clean frame after the set of damaged ones
-#     - Frames may not be fixable in this cases:
-#         - If a scene change occurs
-#         - If the motion is too fast
-#         - If the before and after clean frames are too far apart
+def setup_ui(config, webui_events, restart_fn):
+    with gr.Blocks(analytics_enabled=False,
+                    title="VFIformer Web UI",
+                    theme=config.user_interface["theme"],
+                    css=config.user_interface["css_file"]) as app:
+        e = create_ui(config, webui_events.video_blender_projects)
+
+        # bind UI elemements to event handlers
+        e["interpolate_button_fi"].click(webui_events.frame_interpolation, inputs=[e["img1_input_fi"], e["img2_input_fi"], e["splits_input_fi"]], outputs=[e["img_output_fi"], e["file_output_fi"]])
+        e["splits_input_fi"].change(webui_events.update_splits_info, inputs=e["splits_input_fi"], outputs=e["info_output_fi"], show_progress=False)
+        e["search_button_fs"].click(webui_events.frame_search, inputs=[e["img1_input_fs"], e["img2_input_fs"], e["splits_input_fs"], e["min_input_text_fs"], e["max_input_text_fs"]], outputs=[e["img_output_fs"], e["file_output_fs"]])
+        e["interpolate_button_vi"].click(webui_events.video_inflation, inputs=[e["input_path_text_vi"], e["output_path_text_vi"], e["splits_input_vi"]])
+        e["splits_input_vi"].change(webui_events.update_splits_info, inputs=e["splits_input_vi"], outputs=e["info_output_vi"], show_progress=False)
+        e["resynthesize_button_rv"].click(webui_events.resynthesize_video, inputs=[e["input_path_text_rv"], e["output_path_text_rv"]])
+        e["restore_button_fr"].click(webui_events.frame_restoration, inputs=[e["img1_input_fr"], e["img2_input_fr"], e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["img_output_fr"], e["file_output_fr"]])
+        e["frames_input_fr"].change(webui_events.update_info_fr, inputs=[e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["times_output_fr"], e["predictions_output_fr"]], show_progress=False)
+        e["precision_input_fr"].change(webui_events.update_info_fr, inputs=[e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["times_output_fr"], e["predictions_output_fr"]], show_progress=False)
+        e["load_project_button_vb"].click(webui_events.video_blender_choose_project, inputs=[e["projects_dropdown_vb"]], outputs=[e["input_project_name_vb"], e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], show_progress=False)
+        e["save_project_button_vb"].click(webui_events.video_blender_save_project, inputs=[e["input_project_name_vb"], e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], show_progress=False)
+        e["load_button_vb"].click(webui_events.video_blender_load, inputs=[e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], outputs=[e["tabs_video_blender"], e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["prev_frame_button_vb"].click(webui_events.video_blender_prev_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["next_frame_button_vb"].click(webui_events.video_blender_next_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["go_button_vb"].click(webui_events.video_blender_goto_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["input_text_frame_vb"].submit(webui_events.video_blender_goto_frame, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["use_path_1_button_vb"].click(webui_events.video_blender_use_path1, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["use_path_2_button_vb"].click(webui_events.video_blender_use_path2, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["prev_xframes_button_vb"].click(webui_events.video_blender_skip_prev, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["next_xframes_button_vb"].click(webui_events.video_blender_skip_next, inputs=[e["input_text_frame_vb"]], outputs=[e["input_text_frame_vb"], e["output_img_path1_vb"], e["output_prev_frame_vb"], e["output_curr_frame_vb"], e["output_next_frame_vb"], e["output_img_path2_vb"]], show_progress=False)
+        e["preview_video_vb"].click(webui_events.video_blender_preview_video, inputs=e["input_project_path_vb"], outputs=[e["tabs_video_blender"], e["preview_path_vb"]])
+        e["fix_frames_button_vb"].click(webui_events.video_blender_fix_frames, inputs=[e["input_project_path_vb"], e["input_text_frame_vb"]], outputs=[e["tabs_video_blender"], e["project_path_ff"], e["input_clean_before_ff"], e["input_clean_after_ff"]])
+        e["preview_button_ff"].click(webui_events.video_blender_preview_fixed, inputs=[e["project_path_ff"], e["input_clean_before_ff"], e["input_clean_after_ff"]], outputs=[e["preview_image_ff"], e["fixed_path_ff"]])
+        e["use_fixed_button_ff"].click(webui_events.video_blender_used_fixed, inputs=[e["project_path_ff"], e["fixed_path_ff"], e["input_clean_before_ff"]], outputs=e["tabs_video_blender"])
+        e["render_video_vb"].click(webui_events.video_blender_render_preview, inputs=[e["preview_path_vb"], e["input_frame_rate_vb"]], outputs=[e["video_preview_vb"]])
+        e["convert_button_mp"].click(webui_events.convert_mp4_to_png, inputs=[e["input_path_text_mp"], e["output_pattern_text_mp"], e["input_frame_rate_mp"], e["output_path_text_mp"]], outputs=e["output_info_text_mp"])
+        e["convert_button_pm"].click(webui_events.convert_png_to_mp4, inputs=[e["input_path_text_pm"], e["input_pattern_text_pm"], e["input_frame_rate_pm"], e["output_path_text_pm"], e["quality_slider_pm"]], outputs=e["output_info_text_pm"])
+        e["convert_button_gp"].click(webui_events.convert_gif_to_mp4, inputs=[e["input_path_text_gp"], e["output_path_text_gp"]], outputs=e["output_info_text_gp"])
+        e["convert_button_pg"].click(webui_events.convert_png_to_gif, inputs=[e["input_path_text_pg"], e["input_pattern_text_pg"], e["output_path_text_pg"]], outputs=e["output_info_text_pg"])
+        e["resequence_button"].click(webui_events.resequence_files, inputs=[e["input_path_text2"], e["input_filetype_text"], e["input_newname_text"], e["input_start_text"], e["input_step_text"], e["input_zerofill_text"], e["input_rename_check"]])
+        e["starting_fps_fc"].change(webui_events.update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
+        e["ending_fps_fc"].change(webui_events.update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
+        e["precision_fc"].change(webui_events.update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
+        e["convert_button_fc"].click(webui_events.convert_fc, inputs=[e["input_path_text_fc"], e["output_path_text_fc"], e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]])
+        e["restart_button"].click(restart_fn, _js="function(){setTimeout(function(){window.location.reload()},2000);return[]}")
+
+    return app

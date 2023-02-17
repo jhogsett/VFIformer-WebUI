@@ -9,7 +9,6 @@ def MP4_frame_count(input_path : str) -> int:
     ff = FFprobe(inputs= {input_path : "-count_frames -show_entries stream=nb_read_frames -print_format default=nokey=1:noprint_wrappers=1"})
     return ff.run()
 
-
 QUALITY_NEAR_LOSSLESS = 17
 QUALITY_SMALLER_SIZE = 28
 QUALITY_DEFAULT = 23

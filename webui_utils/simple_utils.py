@@ -1,6 +1,6 @@
 from collections import namedtuple
 from fractions import Fraction
-from .icons import WARNING_SYM
+from .simple_icons import SimpleIcons
 
 # Computing the count of work steps needed based on the number of splits:
 # Before splitting, there's one existing region between the before and after frames.
@@ -63,5 +63,5 @@ def restored_frame_predictions(restored_frame_count : int, num_splits : int) -> 
 
     warning = ""
     if len(set(all_frames)) != len(all_frames):
-        warning = f" {WARNING_SYM} Repeated frames - increase precision"
+        warning = f" {SimpleIcons.WARNING} Repeated frames - increase precision"
     return ", ".join(predictions) + warning
