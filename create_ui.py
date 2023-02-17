@@ -461,7 +461,8 @@ Idea: Recover the original video from animated GIF file
             gr.Markdown("Future: Use Real-ESRGAN 4x+ to restore and/or upscale images")
 
         with gr.Tab(SimpleIcons.GEAR + "Options"):
-            e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
+            with gr.Row():
+                e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
 
     return e
 
