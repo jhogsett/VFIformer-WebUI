@@ -66,7 +66,7 @@ class WebuiEvents:
         if img_before_file and img_after_file and min_target and max_target:
             interpolater = Interpolate(self.engine.model, self.log.log)
             target_interpolater = TargetInterpolate(interpolater, self.log.log)
-            base_output_path = config.directories["output_search"]
+            base_output_path = self.config.directories["output_search"]
             create_directory(base_output_path)
             output_path, run_index = AutoIncrementDirectory(base_output_path).next_directory("run")
             output_basename = "frame"
