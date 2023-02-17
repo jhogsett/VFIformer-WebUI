@@ -13,17 +13,17 @@ from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE, GI
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
-from video_blender import VideoBlenderState
+from video_blender import VideoBlenderState, VideoBlenderProjects
 from create_ui import create_ui
 from resample_series import ResampleSeries
 
 class WebuiEvents:
-    def __init__(self, engine, config, log, video_blender_state, video_blender_projects):
-                    self.engine = engine
-                    self.config = config
-                    self.log = log
-                    self.video_blender_state = video_blender_state
-                    self.video_blender_projects = video_blender_projects
+    def __init__(self, engine, config, log):
+        self.engine = engine
+        self.config = config
+        self.log = log
+        self.video_blender_state = None
+        self.video_blender_projects = VideoBlenderProjects(self.config.blender_settings["projects_file"])
 
     def frame_interpolation(self, img_before_file : str, img_after_file : str, num_splits : float):
         if img_before_file and img_after_file:
