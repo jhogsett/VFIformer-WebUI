@@ -9,18 +9,18 @@
 
 # VFIformer-WebUI Features
 
-- Frame Interpolation: Reveal hidden motion between two video frames, restore a missing frame
-- Frame Search: Binary Search Interpolation synthesize a _between_ frame at a precise time
-- Video Inflation: Double a movie's frame count any number of times for super-slow-motion
-- Resynthesize Video: Make a complete set of synthesized frames for use in restoring movies
-- Frame Restoration: Magically restore an arbitrary number of adjacent damaged frames
-- Video Blender: Easy interface to step through a movie replacing damaged frames, with in-place frame repair and video preview
-- File Conversion Tools: Convert MP4 to PNG Sequence, PNG Sequence to MP4, GIF to PNG Sequence, PNG Sequence to GIF
-- Resequence Files: Automatically renumber a set of PNG files for import into video editing software
-- Arbitrary FPS conversion: Convert a video's from rate to any FPS from any FPS
-- A _Tips_ panel below each feature with detailed instructions
+- **Frame Interpolation**: Reveal hidden motion between two video frames, restore a missing frame
+- **Frame Search**: Binary Search Interpolation synthesize a _between_ frame at a precise time
+- **Video Inflation**: Double a movie's frame count any number of times for super-slow-motion
+- **Resynthesize Video**: Make a complete set of synthesized frames for use in restoring movies
+- **Frame Restoration**: Magically restore an arbitrary number of adjacent damaged frames
+- **Video Blender**: Easy interface to step through a movie replacing damaged frames, with in-place frame repair and video preview
+- **File Conversion**: Convert MP4 to PNG Sequence, PNG Sequence to MP4, GIF to PNG Sequence, PNG Sequence to GIF
+- **Resequence Files**: Automatically renumber a set of PNG files for import into video editing software
+- **FPS Conversion**: Convert a video's from rate to any FPS from any FPS using Frame Search
+- _Tips_ panel below each feature with detailed instructions
 - Command-line equivelents for all core features
-- Application configuration via `config.yaml`
+- Application configured via `config.yaml`
 - Usable over the local network
 
 # Set Up For Use
