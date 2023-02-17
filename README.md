@@ -7,9 +7,21 @@
 
 [Video Inflation example (YouTube)](https://youtu.be/rOiALIN805w)
 
-I have been writing my own Python code for some time to use the [VFIformer](https://github.com/dvlab-research/VFIformer) video frame interpolation engine for various purposes (here's an [example video](https://www.youtube.com/watch?v=JhibFQvP7X0) from my [YouTube channel](https://www.youtube.com/@jerryhogsett)). I thought, why don't I start learning Gradio by building a WebUI for this tool that I love and use so much. Of course, and make it available to the public.
+# VFIformer-WebUI Features
 
-_My code builds on their repo and borrows some code, but makes no changes._
+- Frame Interpolation: Reveal hidden motion between two video frames, restore a missing frame
+- Frame Search: Binary Search Interpolation synthesize a _between_ frame at a precise time
+- Video Inflation: Double a movie's frame count any number of times for super-slow-motion
+- Resynthesize Video: Make a complete set of synthesized frames for use in restoring movies
+- Frame Restoration: Magically restore an arbitrary number of adjacent damaged frames
+- Video Blender: Easy interface to step through a movie replacing damaged frames, with in-place frame repair and video preview
+- File Conversion Tools: Convert MP4 to PNG Sequence, PNG Sequence to MP4, GIF to PNG Sequence, PNG Sequence to GIF
+- Resequence Files: Automatically renumber a set of PNG files for import into video editing software
+- Arbitrary FPS conversion: Convert a video's from rate to any FPS from any FPS
+- A _Tips_ panel below each feature with detailed instructions
+- Command-line equivelents for all core features
+- Application configuration via `config.yaml`
+- Usable over the local network
 
 # Set Up For Use
 
