@@ -9,19 +9,35 @@
 
 # VFIformer-WebUI Features
 
-- **Frame Interpolation**: Reveal hidden motion between two video frames, restore a missing frame
-- **Frame Search**: Binary Search Interpolation synthesize a _between_ frame at a precise time
-- **Video Inflation**: Double a movie's frame count any number of times for super-slow-motion
-- **Resynthesize Video**: Make a complete set of synthesized frames for use in restoring movies
-- **Frame Restoration**: Magically restore an arbitrary number of adjacent damaged frames
-- **Video Blender**: Easy interface to step through a movie replacing damaged frames, with in-place frame repair and video preview
-- **File Conversion**: Convert MP4 to PNG Sequence, PNG Sequence to MP4, GIF to PNG Sequence, PNG Sequence to GIF
-- **Resequence Files**: Automatically renumber a set of PNG files for import into video editing software
-- **FPS Conversion**: Convert a video's from rate to any FPS from any FPS using Frame Search
-- _Tips_ panel below each feature with detailed instructions
-- Command-line equivelents for all core features
-- Application configured via `config.yaml`
-- Usable over the local network
+### Frame Interpolation
+- Reveal hidden motion between two video frames
+- Restore a missing or damaged frame
+
+### Frame Search
+- Binary Search Interpolation
+- Synthesize a _between_ frame at a precise time
+
+### Video Inflation
+- Double a movie's frame count any number of times for super-slow-motion
+
+### Resynthesize Video
+- Automatically create a set of synthesized frames for use in restoring films
+
+### Frame Restoration
+- Like magic, restore an arbitrary number of adjacent damaged frames
+
+### Video Blender
+- Easy tool to step through a movie replacing damaged frames
+- With in-place frame repair and video preview
+
+### File Conversion
+- Convert MP4 to PNG Sequence, PNG Sequence to MP4, GIF to PNG Sequence, PNG Sequence to GIF
+
+### Resequence Files
+- Automatically re-number a set of PNG files for import into video editing software
+
+### FPS Conversion
+- Convert a video from any FPS to any other FPS using Frame Search
 
 # Set Up For Use
 
