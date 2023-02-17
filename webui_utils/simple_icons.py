@@ -9,6 +9,7 @@ class SimpleIcons:
     FOLDER = "📁"
     OPEN_FOLDER = "📂"
 
+    DIVIDE = "➗"
     GEAR = "⚙️"
     INFO = "ℹ️"
     LEFTRIGHT_ARROW = "↔️"
@@ -44,15 +45,19 @@ class SimpleIcons:
     THUMBS_DOWN = "👎"
     THUMBS_UP = "👍"
 
+    COPYRIGHT = "©️"
     NO_ENTRY = "⛔"
     PROHIBITED = "🚫"
     WARNING = "⚠️"
 
+    BALLOON = "🎈"
     BOMB = "💣"
     CHERRY_BLOSSOM = "🌸"
     EGGPLANT = "🍆"
+    GHOST = "👻"
     HAMMER = "🔨"
     HEART = "❤️"
+    TWO_HEARTS = "💕"
     MAGIC_WAND = "🪄"
     MICROSCOPE = "🔬"
     ROCKET = "🚀"

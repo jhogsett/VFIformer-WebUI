@@ -18,7 +18,7 @@ def create_ui(config, video_blender_projects):
 
     ### FRAME INTERPOLATION
     with gr.Tab("Frame Interpolation"):
-        gr.HTML("Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
+        gr.HTML(SimpleIcons.DIVIDE + "Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["img1_input_fi"] = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -40,7 +40,7 @@ def create_ui(config, video_blender_projects):
 
     ### FRAME SEARCH
     with gr.Tab("Frame Search"):
-        gr.HTML("Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
+        gr.HTML(SimpleIcons.MAGNIFIER + "Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["img1_input_fs"] = gr.Image(type="filepath", label="Before Image", tool=None)
@@ -65,7 +65,7 @@ def create_ui(config, video_blender_projects):
 
     ### VIDEO INFLATION
     with gr.Tab("Video Inflation"):
-        gr.HTML("Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
+        gr.HTML(SimpleIcons.BALLOON + "Double the number of video frames to any depth for super slow motion", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["input_path_text_vi"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
@@ -96,7 +96,7 @@ def create_ui(config, video_blender_projects):
 
     ### RESYNTHESIZE VIDEO
     with gr.Tab("Resynthesize Video"):
-        gr.HTML("Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
+        gr.HTML(SimpleIcons.TWO_HEARTS + "Interpolate replacement frames from an entire video for use in movie restoration", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 e["input_path_text_rv"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
@@ -129,7 +129,7 @@ def create_ui(config, video_blender_projects):
 
     ### FRAME RESTORATION
     with gr.Tab("Frame Restoration"):
-        gr.HTML("Restore multiple adjacent bad frames using precision interpolation", elem_id="tabheading")
+        gr.HTML(SimpleIcons.MAGIC_WAND + "Restore multiple adjacent bad frames using precision interpolation", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
                 with gr.Row():
@@ -174,7 +174,7 @@ def create_ui(config, video_blender_projects):
 
     ### VIDEO BLENDER
     with gr.Tab("Video Blender"):
-        gr.HTML("Combine original and replacement frames to manually restore a video", elem_id="tabheading")
+        gr.HTML(SimpleIcons.MICROSCOPE + "Combine original and replacement frames to manually restore a video", elem_id="tabheading")
         with gr.Tabs() as e["tabs_video_blender"]:
 
             ### PROJECT SETTINGS
@@ -474,6 +474,44 @@ The only PNG files present in the _Input Path_ should be the video frame files
                         e["predictions_output_fc"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=8, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
             e["convert_button_fc"] = gr.Button("Convert " + SLOW_SYMBOL, variant="primary")
+            with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
+                gr.Markdown("""
+- _Change FPS_ can be used to change the frame rate of a video by automatically inserting interpolated frames
+- How it FPS conversion works
+  - _Starting_ and _Ending_ frame rates are specified
+    - A _lowest common multiple_ super-sampling frame rate is computed
+      - The super-sampling rate is evenly divisible by the starting and ending frame rates
+      - This value is shown in the _Lowest Common FPS_ field
+    - If needed, _filler frames_ are created to inflate the original video's frame rate
+      - The count of filler frames is shown in the _Filled Frames per Input Frame_ field
+    - If needed, _sampling_ is done on the super sample set to collect the frames for the ending frame rate
+      - The sample rate is shown in the _Output Frames Sample Rate_ field
+  - _Precision_ is selected
+    - This sets the _search depth_ used to find the interpolated frames
+      - A higher search depth yields precise frames, but takes longer
+      - A lower search depth is faster, but the frame timing may be inaccurate
+  - A super-set of _targeted interpolation_ frame seaches are calculated at the higher _lowest common FPS_ frame rate
+    - The list is pre-sampled to filter out interpolations that are not needed for the final frame set
+  - _Targeted Interpolation_ runs to create the new frames
+    - Original video frames are copied rather than interpolated if present in the sample set
+  - When done, files are resequenced with a fixed-width frame index
+    - Filenames also include a reference to their current FPS
+- How to change a video's FPS
+  - Set _Input Path_ to a directory containing video frame PNG files for conversion
+  - Set _Output Path_ to a directory for the converted PNG files
+    - Output Path can be left blank to use default folder
+    - The default folder is set by the `config.output_fps_change` setting
+  - Set _Starting FPS_ to the frame rate of the video being converted
+  - Set _Ending FPS_ to the frame rate for the converted video frames
+  - Set _Precision_ to the search depth needed for the required accuracy
+
+# Important
+
+- This process will be slow, perhaps many hours long!
+- Progress will be shown in the console using a standard _tqdm_ progress bar
+- The browser window can be safely closed without interupting the process
+- Some combinations of Starting FPS / Ending FPS may be impractical
+  - Check the _Frame Search Times_ and _Predicted Matched_ fields""")
 
         ### WISHES
 
@@ -497,7 +535,7 @@ Idea: Recover the original video from animated GIF file
                 e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
 
     # parts borrowed from stable-diffusion-webui
-    footer = SimpleIcons.MOVIE + 'VFIformer Web UI  •  <a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>  •  <a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>  •  <a href="https://gradio.app">Gradio</a>  •  <a href="/" onclick="javascript:gradioApp().getElementById(\'settings_restart_gradio\').click(); return false">Reload UI</a>'
+    footer = SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett  •  <a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>  •  <a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>  •  <a href="https://gradio.app">Gradio</a>  •  <a href="/" onclick="javascript:gradioApp().getElementById(\'settings_restart_gradio\').click(); return false">Reload UI</a>'
     gr.HTML(footer, elem_id="footer")
 
     return e

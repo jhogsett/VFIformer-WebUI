@@ -16,6 +16,7 @@ from restore_frames import RestoreFrames
 from video_blender import VideoBlenderState, VideoBlenderProjects
 from create_ui import create_ui
 from resample_series import ResampleSeries
+from webui_utils.simple_icons import SimpleIcons
 
 class WebuiEvents:
     def __init__(self, engine, config, log):
@@ -299,6 +300,13 @@ class WebuiEvents:
 
         filled = num_frames
         sampled = f"1/{sample_rate}"
+
+        # the below warning suffices
+        # if lowest_common_rate > 10000:
+        #     lowest_common_rate = str(lowest_common_rate) + " " + SimpleIcons.WARNING
+
+        if filled > 100:
+            filled = str(filled) + " " + SimpleIcons.WARNING
 
         fractions = restored_frame_fractions(num_frames) or "n/a"
         predictions = restored_frame_predictions(num_frames, precision) or "n/a"
