@@ -7,8 +7,8 @@ from deep_interpolate import DeepInterpolate
 from interpolate_series import InterpolateSeries
 from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.image_utils import create_gif
-from webui_utils.file_utils import create_zip, get_files, create_directory, locate_frame_file
-from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions
+from webui_utils.file_utils import create_zip, get_files, create_directory, locate_frame_file, split_filepath
+from webui_utils.simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions, fps_change_details
 from webui_utils.video_utils import MP4toPNG, PNGtoMP4, QUALITY_SMALLER_SIZE, GIFtoPNG, PNGtoGIF
 from resequence_files import ResequenceFiles
 from interpolation_target import TargetInterpolate
@@ -253,20 +253,30 @@ class WebuiEvents:
         return output_filepath
 
     def convert_mp4_to_png(self, input_filepath : str, output_pattern : str, frame_rate : int, output_path: str):
-        ffmpeg_cmd = MP4toPNG(input_filepath, output_pattern, int(frame_rate), output_path)
-        return gr.update(value=ffmpeg_cmd, visible=True)
+        if input_filepath and output_pattern and output_path:
+            create_directory(output_path)
+            ffmpeg_cmd = MP4toPNG(input_filepath, output_pattern, int(frame_rate), output_path)
+            return gr.update(value=ffmpeg_cmd, visible=True)
 
     def convert_png_to_mp4(self, input_path : str, input_pattern : str, frame_rate : int, output_filepath: str, quality : str):
-        ffmpeg_cmd = PNGtoMP4(input_path, input_pattern, int(frame_rate), output_filepath, crf=quality)
-        return gr.update(value=ffmpeg_cmd, visible=True)
+        if input_path and input_pattern and output_filepath:
+            directory, _, _ = split_filepath(output_filepath)
+            create_directory(directory)
+            ffmpeg_cmd = PNGtoMP4(input_path, input_pattern, int(frame_rate), output_filepath, crf=quality)
+            return gr.update(value=ffmpeg_cmd, visible=True)
 
-    def convert_gif_to_mp4(self, input_filepath : str, output_path : str):
-        ffmpeg_cmd = GIFtoPNG(input_filepath, output_path)
-        return gr.update(value=ffmpeg_cmd, visible=True)
+    def convert_gif_to_png(self, input_filepath : str, output_path : str):
+        if input_filepath and output_path:
+            create_directory(output_path)
+            ffmpeg_cmd = GIFtoPNG(input_filepath, output_path)
+            return gr.update(value=ffmpeg_cmd, visible=True)
 
     def convert_png_to_gif(self, input_path : str, input_pattern : str, output_filepath : str):
-        ffmpeg_cmd = PNGtoGIF(input_path, input_pattern, output_filepath)
-        return gr.update(value=ffmpeg_cmd, visible=True)
+        if input_path and input_pattern and output_filepath:
+            directory, _, _ = split_filepath(output_filepath)
+            create_directory(directory)
+            ffmpeg_cmd = PNGtoGIF(input_path, input_pattern, output_filepath)
+            return gr.update(value=ffmpeg_cmd, visible=True)
 
     def convert_fc(self, input_path : str, output_path : str, starting_fps : int, ending_fps : int, precision : int):
         if input_path:
@@ -275,6 +285,7 @@ class WebuiEvents:
             series_resampler = ResampleSeries(target_interpolater, self.log.log)
             if output_path:
                 base_output_path = output_path
+                create_directory(base_output_path)
             else:
                 base_output_path, _ = AutoIncrementDirectory(self.config.directories["output_fps_change"]).next_directory("run")
             series_resampler.resample_series(input_path, base_output_path, starting_fps, ending_fps, precision, f"resampled@{starting_fps}")
@@ -293,24 +304,26 @@ class WebuiEvents:
         return fractions, predictions
 
     def update_info_fc(self, starting_fps : int, ending_fps : int, precision : int):
-        lowest_common_rate = math.lcm(starting_fps, ending_fps)
-        expansion = int(lowest_common_rate / starting_fps)
-        num_frames = expansion - 1
-        sample_rate = int(lowest_common_rate / ending_fps)
+        return fps_change_details(starting_fps, ending_fps, precision)
 
-        filled = num_frames
-        sampled = f"1/{sample_rate}"
+        # lowest_common_rate = math.lcm(starting_fps, ending_fps)
+        # expansion = int(lowest_common_rate / starting_fps)
+        # num_frames = expansion - 1
+        # sample_rate = int(lowest_common_rate / ending_fps)
 
-        # the below warning suffices
-        # if lowest_common_rate > 10000:
-        #     lowest_common_rate = str(lowest_common_rate) + " " + SimpleIcons.WARNING
+        # filled = num_frames
+        # sampled = f"1/{sample_rate}"
 
-        if filled > 100:
-            filled = str(filled) + " " + SimpleIcons.WARNING
+        # # the below warning suffices
+        # # if lowest_common_rate > 10000:
+        # #     lowest_common_rate = str(lowest_common_rate) + " " + SimpleIcons.WARNING
 
-        fractions = restored_frame_fractions(num_frames) or "n/a"
-        predictions = restored_frame_predictions(num_frames, precision) or "n/a"
-        return lowest_common_rate, filled, sampled, fractions, predictions
+        # if filled > 100:
+        #     filled = str(filled) + " " + SimpleIcons.WARNING
+
+        # fractions = restored_frame_fractions(num_frames) or "n/a"
+        # predictions = restored_frame_predictions(num_frames, precision) or "n/a"
+        # return lowest_common_rate, filled, sampled, fractions, predictions
 
     def create_report(self, info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
         report = f"""before file: {img_before_file}
