@@ -59,9 +59,10 @@ def PNGtoPalette(input_path : str, filename_pattern : str, output_filepath : str
     return cmd
 
 # ffmpeg -i gifframes_%02d.png -i palette.png -lavfi paletteuse video.gif
+# ffmpeg -framerate 3 -i image%01d.png video.gif
 # if filename_pattern is "auto" it uses the filename of the first found file
 # and the count of file to determine the pattern, .png as the file type
-def PNGtoGIF(input_path : str, filename_pattern : str, output_filepath : str):
+def PNGtoGIF(input_path : str, filename_pattern : str, output_filepath : str, frame_rate : int):
     if filename_pattern == "auto":
         filename_pattern = determine_pattern(input_path)
     output_path, base_filename, _ = split_filepath(output_filepath)
@@ -69,7 +70,7 @@ def PNGtoGIF(input_path : str, filename_pattern : str, output_filepath : str):
     palette_cmd = PNGtoPalette(input_path, filename_pattern, palette_filepath)
 
     ff = FFmpeg(inputs= {
-                    os.path.join(input_path, filename_pattern) : None,
+                    os.path.join(input_path, filename_pattern) : f"-framerate {frame_rate}",
                     palette_filepath : None},
                 outputs={output_filepath : "-lavfi paletteuse"},
                 global_options="-y")
