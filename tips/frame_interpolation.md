@@ -1,4 +1,4 @@
-**Frame Interpolation** uses VFIformer AI to create one or more evenly-spaced _between frames_
+**Frame Interpolation** Use VFIformer AI to create one or more evenly-spaced _between frames_
 
 ## Uses
 
@@ -24,7 +24,6 @@
     - `B-------A`
 - X is the new frame, splitting the time between B and A @ 50%
     - `B---X---A`
-
 
 **Example:** _3 Splits Create 7 New Frames:_
 - B is the _Before_ frame, A is the _After_ frame

@@ -1,4 +1,9 @@
-**Change FPS** is used to change a video's frame rate by automatically _Inserting_ and/or _Removing_ frames
+**Change FPS** Use _Frame Search_ to change a video frame rate by _Inserting_ and _Removing_ frames
+
+## Uses
+- Convert a video from any FPS to any FPS
+- Create slow-motion video at any slow-down rate
+- Create time-lapse video at any speed-up rate
 
 ## How it works
 
@@ -16,13 +21,13 @@
         - The fill count shows in the `Filled Frames per Input Frame` box
     - If needed. the super-sample set is _Sampled_ to achieve the final frame rate
         - The sample rate shows in the `Output Frames Sample Rate` box
-1. Set _Precision_ to the search depth needed for accuracy
+1. Set _Precision_ to the depth of search needed for accuracy
       - High precision yields precise frame timing, but takes a long time
       - Less precision is faster, with possible imprecise frame timing
       - The target search times and predicted matches are shown in the`Frame Search Times` and `Predicted Matches` box
-1. A super-set of _targeted interpolation_ frame seaches is computed at the higher _lowest common FPS_ frame rate
+1. A super-set of frame seaches is computed at the higher _lowest common FPS_ frame rate
     - The sample-set is pre-sampled to filter out frame interpolations not needed in the final frame set
-1. _Targeted Interpolation_ is run to create new filler frames
+1. Frame search is run to create all new filler frames
     - Original video frames are also copied if in the sample set
 1. When complete, files are resequenced to have a fixed-width frame index
     - Filenames include a reference to their new resampled FPS

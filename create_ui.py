@@ -38,10 +38,10 @@ def create_ui(config, video_blender_projects):
         gr.HTML(SimpleIcons.MAGNIFIER + "Search for an arbitrarily precise timed frame and return the closest match", elem_id="tabheading")
         with gr.Row():
             with gr.Column():
-                e["img1_input_fs"] = gr.Image(type="filepath", label="Before Image", tool=None)
-                e["img2_input_fs"] = gr.Image(type="filepath", label="After Image", tool=None)
+                e["img1_input_fs"] = gr.Image(type="filepath", label="Before Frame", tool=None)
+                e["img2_input_fs"] = gr.Image(type="filepath", label="After Frame", tool=None)
                 with gr.Row():
-                    e["splits_input_fs"] = gr.Slider(value=1, minimum=1, maximum=config.search_settings["max_splits"], step=1, label="Search Depth")
+                    e["splits_input_fs"] = gr.Slider(value=1, minimum=1, maximum=config.search_settings["max_splits"], step=1, label="Search Precision")
                     e["min_input_text_fs"] = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
                     e["max_input_text_fs"] = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
             with gr.Column():
@@ -267,7 +267,7 @@ def create_ui(config, video_blender_projects):
 
         ### CHANGE FPS
         with gr.Tab(SimpleIcons.FILM + "Change FPS"):
-            gr.HTML("Change the frame rate for a set of PNG video frames using targeted interpolation", elem_id="tabheading")
+            gr.HTML("Change the frame rate for a set of PNG video frames using frame search", elem_id="tabheading")
             max_fps = config.fps_change_settings["maximum_fps"]
             starting_fps = config.fps_change_settings["starting_fps"]
             ending_fps = config.fps_change_settings["ending_fps"]
