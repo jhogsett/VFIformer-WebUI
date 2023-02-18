@@ -1,0 +1,7 @@
+- Use _Frame Search_ to synthesize a new frame at a precise time using _Targeted Interpolation_
+    - Targeted Interpolation is a _Binary Search_:
+        - The interval between two frames is _halved_ recursively toward the search window
+        - A new _between frame_ is interpolated at each step
+        - A matching frame is returned if found inside the search window, or when the search depth is reached
+    - _Search Depth_ should be set high if a precisely timed frame is needed
+    - A low value for _Search Depth_ is faster but may return an inaccurate or outside the search window result

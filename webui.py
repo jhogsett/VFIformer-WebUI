@@ -8,6 +8,7 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.file_utils import create_directories
 from create_ui import setup_ui
 from webui_events import WebuiEvents
+from webui_tips import WebuiTips
 
 def main():
     global prevent_inbrowser
@@ -18,6 +19,7 @@ def main():
     log = SimpleLog(args.verbose)
     config = SimpleConfig(args.config_path).config_obj()
     create_directories(config.directories)
+    WebuiTips.set_tips_path(config.user_interface["tips_path"])
     engine = InterpolateEngine(config.model, config.gpu_ids)
     webui_events = WebuiEvents(engine, config, log)
     while True:

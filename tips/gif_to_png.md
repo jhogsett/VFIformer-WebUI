@@ -1,0 +1,2 @@
+- The PNG files will be named based on the supplied GIF file
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files

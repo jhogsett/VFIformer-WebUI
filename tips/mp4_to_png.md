@@ -1,0 +1,4 @@
+- The filename pattern should be based on the count of frames  for alphanumeric sorting
+- Example: For a video with _24,578_ frames and a PNG base filename of "TENNIS", the pattern should be "TENNIS%05d.png"
+- Match the frame rate to the rate of the source video to avoid repeated or skipped frames
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files

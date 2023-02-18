@@ -1,0 +1,22 @@
+- _Frame Restoration_ uses _Frame Search_ to create restored frames for a set of adjacent damaged ones
+- The count of damaged frames and a pair of outer _clean_ frames are provided
+- _Targeted interpolation_ is used to resynthesize a set of replacement frames at precise times
+
+# Important
+- Provide only CLEAN frames adjacent to the damaged ones
+    - The frames should not cross scenes
+    - Motion that is too fast may not produce good results
+- Set _Frames to Restore_ to the exact number of needed replacement frames for accurate results
+- _Frame Search Times_ shows the fractional search times for the restored frames
+    - Example with 4 frames:
+    - If there are 2 good frames _A_ and _D_ and 2 bad frames _b_ and _c_:
+        - A---b---c---D
+        - Replacement frame B is 1/3 of the way between frames A and D
+        - Replacement frame C is 2/3 of the way between frames A and D
+        - _Targeted Interpolation_ creates synthesized frames at these precise times
+- Set _Search Precision_ to the _search depth_ needed for accuracy
+    - Low _Search Precision_ is faster but can lead to repeated or poorly-timed frames
+    - High _Search Precision_ takes longer but can produce near-perfect results
+- _Predicted Matches_ estimates the frame times based on _Frames to Restore_ and _Search Precision_
+    - Actual found frames may differ from predictions
+    - A warning is displayed if _Search Precision_ should be increased due to repeated frames

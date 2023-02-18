@@ -1,0 +1,5 @@
+- Use _Frame Interpolation_ to
+    - Reveal intricate motion between two frames of a video
+    - Recreate a damaged frame
+        - Set split count to _1_ and provide _adjacent frames_
+        - _Frame Restoration_ can be used to recreate an arbitrary number of adjacent damaged frames

@@ -1,0 +1,7 @@
+- The filename pattern should be based on the number of PNG files to ensure they're read in alphanumeric order
+- Example: For a PNG sequence with _24,578_ files and filenames like "TENNIS24577.png", the pattern should be "TENNIS%05d.png"
+- The special pattern "auto" can be used to detect the pattern automatically. This works when:
+    - The only PNG files present are the frame images
+    - All files have the same naming pattern, starting with a base filename, and the same width zero-filled frame number
+    - The first found PNG file follows the same naming pattern as all the other files
+- The _Video Preview_ tab on the _Video Blender_ page can be used to watch a preview video of a set of PNG files

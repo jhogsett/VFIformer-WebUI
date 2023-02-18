@@ -1,0 +1,36 @@
+- _Change FPS_ can be used to change the frame rate of a video by automatically inserting interpolated frames
+- How it FPS conversion works
+  - _Starting_ and _Ending_ frame rates are specified
+    - A _lowest common multiple_ super-sampling frame rate is computed
+      - The super-sampling rate is evenly divisible by the starting and ending frame rates
+      - This value is shown in the _Lowest Common FPS_ field
+    - If needed, _filler frames_ are created to inflate the original video's frame rate
+      - The count of filler frames is shown in the _Filled Frames per Input Frame_ field
+    - If needed, _sampling_ is done on the super sample set to collect the frames for the ending frame rate
+      - The sample rate is shown in the _Output Frames Sample Rate_ field
+  - _Precision_ is selected
+    - This sets the _search depth_ used to find the interpolated frames
+      - A higher search depth yields precise frames, but takes longer
+      - A lower search depth is faster, but the frame timing may be inaccurate
+  - A super-set of _targeted interpolation_ frame seaches are calculated at the higher _lowest common FPS_ frame rate
+    - The list is pre-sampled to filter out interpolations that are not needed for the final frame set
+  - _Targeted Interpolation_ runs to create the new frames
+    - Original video frames are copied rather than interpolated if present in the sample set
+  - When done, files are resequenced with a fixed-width frame index
+    - Filenames also include a reference to their current FPS
+- How to change a video's FPS
+  - Set _Input Path_ to a directory containing video frame PNG files for conversion
+  - Set _Output Path_ to a directory for the converted PNG files
+    - Output Path can be left blank to use default folder
+    - The default folder is set by the `config.output_fps_change` setting
+  - Set _Starting FPS_ to the frame rate of the video being converted
+  - Set _Ending FPS_ to the frame rate for the converted video frames
+  - Set _Precision_ to the search depth needed for the required accuracy
+
+# Important
+
+- This process will be slow, perhaps many hours long!
+- Progress will be shown in the console using a standard _tqdm_ progress bar
+- The browser window can be safely closed without interupting the process
+- Some combinations of Starting FPS / Ending FPS may be impractical
+  - Check the _Frame Search Times_ and _Predicted Matched_ fields

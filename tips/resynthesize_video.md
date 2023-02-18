@@ -1,0 +1,21 @@
+- _Resynthesize Video_ creates a set of replacement frames for a video by interpolating new ones between all existing frames
+    - The replacement frames can be be used with _Video Blender_ to replace a video's damaged frames with clean substitutes
+- How it works
+    - For each new frame, the two adjacent original frames are used to interpolate a new _replacement frame_ using VFIformer
+    - Example:
+        - create a new frame #1 by interpolating a _between frame_ using original frames #0 and #2
+        - then create a new frame #2 using original frames #1 and #3
+        - and so on for all frames in the original video
+    - When done, there will be a complete set of synthesized replacement frames, matching the ones from the original video
+        - The _first_ and _last_ original frames cannot be resynthesized
+        - When using _Video Blender_ ensure frame #0 from the original video PNG filesis is not present
+- How to use the replacement frames
+    - _Video Blender_ can be used to manually step through a video and replace frames one at a time from a restoration set
+- Why this works
+    - A video may have a single damaged frame between two clean ones
+    - Examples: a bad splice, a video glitch, a double-exposed frame due to frame rate mismatch, etc.
+    - VFIformer excels at detecting motion in all parts of a scene, and will very accurately create a new clean replacement frame
+- Sometimes it doesn't work
+    - Replacement frames cannot be resynthesized when there are not two CLEAN adjacent original frames
+        - _Frame Restoration_ can be used to recover an arbitrary number of adjacent damaged frames
+    - Transitions between scenes will not produce usable resynthesized frames
