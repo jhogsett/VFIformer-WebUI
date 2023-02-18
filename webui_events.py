@@ -16,7 +16,6 @@ from restore_frames import RestoreFrames
 from video_blender import VideoBlenderState, VideoBlenderProjects
 from create_ui import create_ui
 from resample_series import ResampleSeries
-from webui_utils.simple_icons import SimpleIcons
 
 class WebuiEvents:
     def __init__(self, engine, config, log):
@@ -304,25 +303,6 @@ class WebuiEvents:
 
     def update_info_fc(self, starting_fps : int, ending_fps : int, precision : int):
         return fps_change_details(starting_fps, ending_fps, precision)
-
-        # lowest_common_rate = math.lcm(starting_fps, ending_fps)
-        # expansion = int(lowest_common_rate / starting_fps)
-        # num_frames = expansion - 1
-        # sample_rate = int(lowest_common_rate / ending_fps)
-
-        # filled = num_frames
-        # sampled = f"1/{sample_rate}"
-
-        # # the below warning suffices
-        # # if lowest_common_rate > 10000:
-        # #     lowest_common_rate = str(lowest_common_rate) + " " + SimpleIcons.WARNING
-
-        # if filled > 100:
-        #     filled = str(filled) + " " + SimpleIcons.WARNING
-
-        # fractions = restored_frame_fractions(num_frames) or "n/a"
-        # predictions = restored_frame_predictions(num_frames, precision) or "n/a"
-        # return lowest_common_rate, filled, sampled, fractions, predictions
 
     def create_report(self, info_file : str, img_before_file : str, img_after_file : str, num_splits : int, output_path : str, output_paths : list):
         report = f"""before file: {img_before_file}
