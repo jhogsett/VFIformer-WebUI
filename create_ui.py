@@ -1,5 +1,5 @@
 import gradio as gr
-from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions
+from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions, fps_change_details
 from webui_utils.simple_icons import SimpleIcons
 
 # shared symbols
@@ -454,9 +454,7 @@ The only PNG files present in the _Input Path_ should be the video frame files
             ending_fps = config.fps_change_settings["ending_fps"]
             max_precision = config.fps_change_settings["max_precision"]
             precision = config.fps_change_settings["default_precision"]
-            default_frames = 0
-            times_default = restored_frame_fractions(default_frames)
-            predictions_default = restored_frame_predictions(default_frames, precision)
+            lowest_common_rate, filled, sampled, fractions, predictions = fps_change_details(starting_fps, ending_fps, precision)
             with gr.Row():
                 with gr.Column():
                     with gr.Row():
@@ -465,13 +463,13 @@ The only PNG files present in the _Input Path_ should be the video frame files
                     with gr.Row():
                         e["starting_fps_fc"] = gr.Slider(value=starting_fps, minimum=1, maximum=max_fps, step=1, label="Starting FPS")
                         e["ending_fps_fc"] = gr.Slider(value=ending_fps, minimum=1, maximum=max_fps, step=1, label="Ending FPS")
-                        e["output_lcm_text_fc"] = gr.Text(max_lines=1, label="Lowest Common FPS", interactive=False)
-                        e["output_filler_text_fc"] = gr.Text(max_lines=1, label="Filled Frames per Input Frame", interactive=False)
-                        e["output_sampled_text_fc"] = gr.Text(max_lines=1, label="Output Frames Sample Rate", interactive=False)
+                        e["output_lcm_text_fc"] = gr.Text(value=lowest_common_rate, max_lines=1, label="Lowest Common FPS", interactive=False)
+                        e["output_filler_text_fc"] = gr.Text(value=filled, max_lines=1, label="Filled Frames per Input Frame", interactive=False)
+                        e["output_sampled_text_fc"] = gr.Text(value=sampled, max_lines=1, label="Output Frames Sample Rate", interactive=False)
                     with gr.Row():
                         e["precision_fc"] = gr.Slider(value=precision, minimum=1, maximum=max_precision, step=1, label="Precision")
-                        e["times_output_fc"] = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=8, interactive=False)
-                        e["predictions_output_fc"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=8, interactive=False)
+                        e["times_output_fc"] = gr.Textbox(value=fractions, label="Frame Search Times", max_lines=8, interactive=False)
+                        e["predictions_output_fc"] = gr.Textbox(value=predictions, label="Predicted Matches", max_lines=8, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
             e["convert_button_fc"] = gr.Button("Convert " + SLOW_SYMBOL, variant="primary")
             with gr.Accordion(TIPS_SYMBOL + " Tips", open=False):
@@ -575,7 +573,7 @@ def setup_ui(config, webui_events, restart_fn):
         e["render_video_vb"].click(webui_events.video_blender_render_preview, inputs=[e["preview_path_vb"], e["input_frame_rate_vb"]], outputs=[e["video_preview_vb"]])
         e["convert_button_mp"].click(webui_events.convert_mp4_to_png, inputs=[e["input_path_text_mp"], e["output_pattern_text_mp"], e["input_frame_rate_mp"], e["output_path_text_mp"]], outputs=e["output_info_text_mp"])
         e["convert_button_pm"].click(webui_events.convert_png_to_mp4, inputs=[e["input_path_text_pm"], e["input_pattern_text_pm"], e["input_frame_rate_pm"], e["output_path_text_pm"], e["quality_slider_pm"]], outputs=e["output_info_text_pm"])
-        e["convert_button_gp"].click(webui_events.convert_gif_to_mp4, inputs=[e["input_path_text_gp"], e["output_path_text_gp"]], outputs=e["output_info_text_gp"])
+        e["convert_button_gp"].click(webui_events.convert_gif_to_png, inputs=[e["input_path_text_gp"], e["output_path_text_gp"]], outputs=e["output_info_text_gp"])
         e["convert_button_pg"].click(webui_events.convert_png_to_gif, inputs=[e["input_path_text_pg"], e["input_pattern_text_pg"], e["output_path_text_pg"]], outputs=e["output_info_text_pg"])
         e["resequence_button"].click(webui_events.resequence_files, inputs=[e["input_path_text2"], e["input_filetype_text"], e["input_newname_text"], e["input_start_text"], e["input_step_text"], e["input_zerofill_text"], e["input_rename_check"]])
         e["starting_fps_fc"].change(webui_events.update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)

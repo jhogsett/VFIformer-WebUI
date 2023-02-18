@@ -1,3 +1,4 @@
+import math
 from collections import namedtuple
 from fractions import Fraction
 from .simple_icons import SimpleIcons
@@ -65,3 +66,19 @@ def restored_frame_predictions(restored_frame_count : int, num_splits : int) -> 
     if len(set(all_frames)) != len(all_frames):
         warning = f" {SimpleIcons.WARNING} Repeated frames - increase precision"
     return ", ".join(predictions) + warning
+
+def fps_change_details(starting_fps : int, ending_fps : int, precision : int):
+    lowest_common_rate = math.lcm(starting_fps, ending_fps)
+    expansion = int(lowest_common_rate / starting_fps)
+    num_frames = expansion - 1
+    sample_rate = int(lowest_common_rate / ending_fps)
+
+    filled = num_frames
+    sampled = f"1/{sample_rate}"
+
+    if filled > 100:
+        filled = str(filled) + " " + SimpleIcons.WARNING
+
+    fractions = restored_frame_fractions(num_frames) or "n/a"
+    predictions = restored_frame_predictions(num_frames, precision) or "n/a"
+    return lowest_common_rate, filled, sampled, fractions, predictions
