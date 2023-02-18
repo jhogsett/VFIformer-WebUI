@@ -1,36 +1,37 @@
-- _Change FPS_ can be used to change the frame rate of a video by automatically inserting interpolated frames
-- How it FPS conversion works
-  - _Starting_ and _Ending_ frame rates are specified
-    - A _lowest common multiple_ super-sampling frame rate is computed
-      - The super-sampling rate is evenly divisible by the starting and ending frame rates
-      - This value is shown in the _Lowest Common FPS_ field
-    - If needed, _filler frames_ are created to inflate the original video's frame rate
-      - The count of filler frames is shown in the _Filled Frames per Input Frame_ field
-    - If needed, _sampling_ is done on the super sample set to collect the frames for the ending frame rate
-      - The sample rate is shown in the _Output Frames Sample Rate_ field
-  - _Precision_ is selected
-    - This sets the _search depth_ used to find the interpolated frames
-      - A higher search depth yields precise frames, but takes longer
-      - A lower search depth is faster, but the frame timing may be inaccurate
-  - A super-set of _targeted interpolation_ frame seaches are calculated at the higher _lowest common FPS_ frame rate
-    - The list is pre-sampled to filter out interpolations that are not needed for the final frame set
-  - _Targeted Interpolation_ runs to create the new frames
-    - Original video frames are copied rather than interpolated if present in the sample set
-  - When done, files are resequenced with a fixed-width frame index
-    - Filenames also include a reference to their current FPS
-- How to change a video's FPS
-  - Set _Input Path_ to a directory containing video frame PNG files for conversion
-  - Set _Output Path_ to a directory for the converted PNG files
-    - Output Path can be left blank to use default folder
+**Change FPS** is used to change a video's frame rate by automatically _Inserting_ and/or _Removing_ frames
+
+## How it works
+
+1. Set _Input Path_ to a directory containing video frame PNG files for conversion
+1. Set _Output Path_ to a directory for the converted PNG files
+    - Output Path can be left blank to use the default folder
     - The default folder is set by the `config.output_fps_change` setting
-  - Set _Starting FPS_ to the frame rate of the video being converted
-  - Set _Ending FPS_ to the frame rate for the converted video frames
-  - Set _Precision_ to the search depth needed for the required accuracy
+1. Set _Starting FPS_ to the frame rate of the video being converted
+1. Set _Ending FPS_ to the frame rate for the converted video frames
+1.  The lowest-common-multiple _Super-Sampling_ frame rate is computed
+    - This rate is the smallest that's evenly divisible by both rates
+        - The super-sample rate shows in the `Lowest Common FPS` box
+1. A _Super-Sampling Set_ of frames is computed at the higher common frame rate
+    - If needed, _Filler Frames_ will be interpolated to inflate the original video's frame rate to the super-sample rate
+        - The fill count shows in the `Filled Frames per Input Frame` box
+    - If needed. the super-sample set is _Sampled_ to achieve the final frame rate
+        - The sample rate shows in the `Output Frames Sample Rate` box
+1. Set _Precision_ to the search depth needed for accuracy
+      - High precision yields precise frame timing, but takes a long time
+      - Less precision is faster, with possible imprecise frame timing
+      - The target search times and predicted matches are shown in the`Frame Search Times` and `Predicted Matches` box
+1. A super-set of _targeted interpolation_ frame seaches is computed at the higher _lowest common FPS_ frame rate
+    - The sample-set is pre-sampled to filter out frame interpolations not needed in the final frame set
+1. _Targeted Interpolation_ is run to create new filler frames
+    - Original video frames are also copied if in the sample set
+1. When complete, files are resequenced to have a fixed-width frame index
+    - Filenames include a reference to their new resampled FPS
 
-# Important
+## Important
 
-- This process will be slow, perhaps many hours long!
-- Progress will be shown in the console using a standard _tqdm_ progress bar
-- The browser window can be safely closed without interupting the process
+- This process could be slow, perhaps many hours long!
 - Some combinations of Starting FPS / Ending FPS may be impractical
+    - A warning is displayed if the `Filled Frames per Input Frame` exceeds 100
   - Check the _Frame Search Times_ and _Predicted Matched_ fields
+- Progress is shown in the console using a standard progress bar
+- The browser window does NOT need to be left open
