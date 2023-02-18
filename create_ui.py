@@ -451,7 +451,7 @@ The only PNG files present in the _Input Path_ should be the video frame files
             gr.HTML("Change the frame rate for a set of PNG video frames using targeted interpolation", elem_id="tabheading")
             max_fps = config.fps_change_settings["maximum_fps"]
             starting_fps = config.fps_change_settings["starting_fps"]
-            ending_fps = config.fps_change_settings["starting_fps"]
+            ending_fps = config.fps_change_settings["ending_fps"]
             max_precision = config.fps_change_settings["max_precision"]
             precision = config.fps_change_settings["default_precision"]
             default_frames = 0
