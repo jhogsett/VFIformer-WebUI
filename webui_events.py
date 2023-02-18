@@ -271,11 +271,11 @@ class WebuiEvents:
             ffmpeg_cmd = GIFtoPNG(input_filepath, output_path)
             return gr.update(value=ffmpeg_cmd, visible=True)
 
-    def convert_png_to_gif(self, input_path : str, input_pattern : str, output_filepath : str):
+    def convert_png_to_gif(self, input_path : str, input_pattern : str, output_filepath : str, frame_rate : int):
         if input_path and input_pattern and output_filepath:
             directory, _, _ = split_filepath(output_filepath)
             create_directory(directory)
-            ffmpeg_cmd = PNGtoGIF(input_path, input_pattern, output_filepath)
+            ffmpeg_cmd = PNGtoGIF(input_path, input_pattern, output_filepath, frame_rate)
             return gr.update(value=ffmpeg_cmd, visible=True)
 
     def convert_fc(self, input_path : str, output_path : str, starting_fps : int, ending_fps : int, precision : int):
