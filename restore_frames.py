@@ -1,3 +1,4 @@
+import sys
 import argparse
 from typing import Callable
 from tqdm import tqdm
@@ -50,7 +51,7 @@ class RestoreFrames():
                                                 img_after,
                                                 depth,
                                                 min_target=search,
-                                                max_target=search,
+                                                max_target=search + sys.float_info.epsilon,
                                                 output_path=output_path,
                                                 base_filename=base_filename,
                                                 progress_label="Search")
