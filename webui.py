@@ -7,8 +7,7 @@ from interpolate_engine import InterpolateEngine
 from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.file_utils import create_directories
-from create_ui import setup_ui
-from webui_events import WebuiEvents
+from create_ui import create_ui
 from webui_tips import WebuiTips
 
 def main():
@@ -19,7 +18,7 @@ def main():
     log = SimpleLog(args.verbose)
     config = SimpleConfig(args.config_path).config_obj()
     create_directories(config.directories)
-    WebUI(config, log).start()
+    WebUI(config, log.log).start()
 
 class WebUI:
     def __init__(self,
@@ -33,11 +32,10 @@ class WebUI:
     def start(self):
         WebuiTips.set_tips_path(self.config.user_interface["tips_path"])
         engine = InterpolateEngine(self.config.model, self.config.gpu_ids)
-        webui_events = WebuiEvents(engine, self.config, self.log_fn)
         while True:
             print("\nStarting VFIformer-WebUI")
             print("Models are loaded on the first interpolation")
-            app = setup_ui(self.config, webui_events, self.restart_app)
+            app = create_ui(self.config, engine, self.log_fn, self.restart_app)
             app.launch(inbrowser = self.config.auto_launch_browser and not self.prevent_inbrowser,
                         server_name = self.config.server_name,
                         server_port = self.config.server_port,
