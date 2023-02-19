@@ -52,7 +52,7 @@ class VideoBlender():
                     with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_project_settings.render()
 
-                ### PROJECT SETTINGS
+                ### FRAME CHOOSER
                 with gr.Tab(SimpleIcons.CONTROLS + "Frame Chooser", id=1):
                     with gr.Row():
                         with gr.Column():
@@ -90,7 +90,7 @@ class VideoBlender():
                     with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_frame_chooser.render()
 
-                ### PROJECT SETTINGS
+                ### FRAME FIXER
                 with gr.Tab(SimpleIcons.HAMMER + "Frame Fixer", id=2):
                     with gr.Row():
                         with gr.Column():
@@ -102,7 +102,7 @@ class VideoBlender():
                             with gr.Row():
                                 e["preview_button_ff"] = gr.Button(value="Preview Fixed Frames", variant="primary")
                         with gr.Column():
-                            e["preview_image_ff"] = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
+                            e["preview_image_ff"] = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False, elem_id="mainoutput")
                             e["fixed_path_ff"] = gr.Text(label="Path to Restored Frames", interactive=False)
                             e["use_fixed_button_ff"] = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
                     with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):

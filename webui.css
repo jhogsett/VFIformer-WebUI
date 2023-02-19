@@ -10,6 +10,7 @@
 
 :root {
     --frame-chooser-action: #008542;
+    --main-output-highlight: #ee7400;
 }
 
 #sideimage {
@@ -21,12 +22,15 @@
     filter: drop-shadow(0px 0px 17px var(--frame-chooser-action));
 }
 
+#mainoutput {
+    filter: drop-shadow(0px 0px 17px var(--main-output-highlight));
+}
+
 #actionbutton {
     background : #008542;
     border: #008542;
 }
 
-/* # borrowed from stable-diffusion-webui */
 footer {
     display: none !important;
 }

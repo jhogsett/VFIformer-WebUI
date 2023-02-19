@@ -36,7 +36,7 @@ class FrameInterpolation():
                         e["splits_input_fi"] = gr.Slider(value=1, minimum=1, maximum=self.config.interpolation_settings["max_splits"], step=1, label="Split Count")
                         e["info_output_fi"] = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
                 with gr.Column():
-                    e["img_output_fi"] = gr.Image(type="filepath", label="Animated Preview", interactive=False)
+                    e["img_output_fi"] = gr.Image(type="filepath", label="Animated Preview", interactive=False, elem_id="mainoutput")
                     e["file_output_fi"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             e["interpolate_button_fi"] = gr.Button("Interpolate", variant="primary")
             with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):

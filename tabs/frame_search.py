@@ -34,7 +34,7 @@ class FrameSearch():
                         e["min_input_text_fs"] = gr.Text(placeholder="0.0-1.0", label="Lower Bound")
                         e["max_input_text_fs"] = gr.Text(placeholder="0.0-1.0", label="Upper Bound")
                 with gr.Column():
-                    e["img_output_fs"] = gr.Image(type="filepath", label="Found Frame", interactive=False)
+                    e["img_output_fs"] = gr.Image(type="filepath", label="Found Frame", interactive=False, elem_id="mainoutput")
                     e["file_output_fs"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             e["search_button_fs"] = gr.Button("Search", variant="primary")
             with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):

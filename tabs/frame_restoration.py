@@ -43,7 +43,7 @@ class FrameRestoration():
                         times_default = restored_frame_fractions(self.config.restoration_settings["default_frames"])
                         e["times_output_fr"] = gr.Textbox(value=times_default, label="Frame Search Times", max_lines=1, interactive=False)
                 with gr.Column():
-                    e["img_output_fr"] = gr.Image(type="filepath", label="Animated Preview", interactive=False)
+                    e["img_output_fr"] = gr.Image(type="filepath", label="Animated Preview", interactive=False, elem_id="mainoutput")
                     e["file_output_fr"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             predictions_default = restored_frame_predictions(self.config.restoration_settings["default_frames"], self.config.restoration_settings["default_precision"])
             e["predictions_output_fr"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=1, interactive=False)
