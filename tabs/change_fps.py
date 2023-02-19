@@ -26,15 +26,15 @@ class ChangeFPS():
         self.log_fn(message)
 
     def render_tab(self):
+        max_fps = self.config.fps_change_settings["maximum_fps"]
+        starting_fps = self.config.fps_change_settings["starting_fps"]
+        ending_fps = self.config.fps_change_settings["ending_fps"]
+        max_precision = self.config.fps_change_settings["max_precision"]
+        precision = self.config.fps_change_settings["default_precision"]
+        lowest_common_rate, filled, sampled, fractions, predictions = fps_change_details(starting_fps, ending_fps, precision)
         e = {}
         with gr.Tab(SimpleIcons.FILM + "Change FPS"):
             gr.HTML("Change the frame rate for a set of PNG video frames using frame search", elem_id="tabheading")
-            max_fps = self.config.fps_change_settings["maximum_fps"]
-            starting_fps = self.config.fps_change_settings["starting_fps"]
-            ending_fps = self.config.fps_change_settings["ending_fps"]
-            max_precision = self.config.fps_change_settings["max_precision"]
-            precision = self.config.fps_change_settings["default_precision"]
-            lowest_common_rate, filled, sampled, fractions, predictions = fps_change_details(starting_fps, ending_fps, precision)
             with gr.Row():
                 with gr.Column():
                     with gr.Row():

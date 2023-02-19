@@ -20,6 +20,10 @@ class PNGtoMP4():
         self.log_fn(message)
 
     def render_tab(self):
+        frame_rate = self.config.png_to_mp4_settings["frame_rate"]
+        minimum_crf = self.config.png_to_mp4_settings["minimum_crf"]
+        maximum_crf = self.config.png_to_mp4_settings["maximum_crf"]
+        default_crf = self.config.png_to_mp4_settings["default_crf"]
         e = {}
         with gr.Tab(SimpleIcons.CONV_SYMBOL + "PNG Sequence to MP4"):
             gr.Markdown("Convert a PNG sequence to a MP4")
@@ -27,8 +31,8 @@ class PNGtoMP4():
             e["output_path_text_pm"] = gr.Text(max_lines=1, label="MP4 File", placeholder="Path and filename on this server for the converted MP4 file")
             with gr.Row():
                 e["input_pattern_text_pm"] = gr.Text(max_lines=1, label="Input Filename Pattern", placeholder="Pattern like image%03d.png (auto=automatic pattern)")
-                e["input_frame_rate_pm"] = gr.Slider(minimum=1, maximum=60, value=self.config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
-                e["quality_slider_pm"] = gr.Slider(minimum=self.config.png_to_mp4_settings["minimum_crf"], maximum=self.config.png_to_mp4_settings["maximum_crf"], step=1, value=self.config.png_to_mp4_settings["default_crf"], label="Quality (lower=better)")
+                e["input_frame_rate_pm"] = gr.Slider(minimum=1, maximum=60, value=frame_rate, step=1, label="Frame Rate")
+                e["quality_slider_pm"] = gr.Slider(minimum=minimum_crf, maximum=maximum_crf, step=1, value=default_crf, label="Quality (lower=better)")
             with gr.Row():
                 e["convert_button_pm"] = gr.Button("Convert", variant="primary")
                 e["output_info_text_pm"] = gr.Textbox(label="Details", interactive=False)

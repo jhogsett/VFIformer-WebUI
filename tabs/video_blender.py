@@ -30,6 +30,8 @@ class VideoBlender():
         self.log_fn(message)
 
     def render_tab(self):
+        skip_frames = self.config.blender_settings['skip_frames']
+        frame_rate = self.config.png_to_mp4_settings["frame_rate"]
         e = {}
         with gr.Tab("Video Blender"):
             gr.HTML(SimpleIcons.MICROSCOPE + "Combine original and replacement frames to manually restore a video", elem_id="tabheading")
@@ -74,8 +76,8 @@ class VideoBlender():
                                 e["go_button_vb"] = gr.Button("Go").style(full_width=False)
                                 e["input_text_frame_vb"] = gr.Number(value=0, precision=0, label="Frame Number")
                             with gr.Row():
-                                e["prev_xframes_button_vb"] = gr.Button(f"<< {self.config.blender_settings['skip_frames']}")
-                                e["next_xframes_button_vb"] = gr.Button(f"{self.config.blender_settings['skip_frames']} >>")
+                                e["prev_xframes_button_vb"] = gr.Button(f"<< {skip_frames}")
+                                e["next_xframes_button_vb"] = gr.Button(f"{skip_frames} >>")
                             e["preview_video_vb"] = gr.Button("Preview Video")
                         with gr.Column():
                             e["output_img_path2_vb"] = gr.Image(label="Repair / Path 2 Frame", interactive=False, type="filepath")
@@ -115,7 +117,7 @@ class VideoBlender():
                     e["preview_path_vb"] = gr.Textbox(max_lines=1, label="Path to PNG Sequence", placeholder="Path on this server to the PNG files to be converted")
                     with gr.Row():
                         e["render_video_vb"] = gr.Button("Render Video", variant="primary")
-                        e["input_frame_rate_vb"] = gr.Slider(minimum=1, maximum=60, value=self.config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
+                        e["input_frame_rate_vb"] = gr.Slider(minimum=1, maximum=60, value=frame_rate, step=1, label="Frame Rate")
                     with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_video_preview.render()
 

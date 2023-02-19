@@ -25,6 +25,7 @@ class FrameInterpolation():
         self.log_fn(message)
 
     def render_tab(self):
+        max_splits = self.config.interpolation_settings["max_splits"]
         e = {}
         with gr.Tab("Frame Interpolation"):
             gr.HTML(SimpleIcons.DIVIDE + "Divide the time between two frames to any depth, see an animation of result and download the new frames", elem_id="tabheading")
@@ -33,7 +34,7 @@ class FrameInterpolation():
                     e["img1_input_fi"] = gr.Image(type="filepath", label="Before Frame", tool=None)
                     e["img2_input_fi"] = gr.Image(type="filepath", label="After Frame", tool=None)
                     with gr.Row():
-                        e["splits_input_fi"] = gr.Slider(value=1, minimum=1, maximum=self.config.interpolation_settings["max_splits"], step=1, label="Split Count")
+                        e["splits_input_fi"] = gr.Slider(value=1, minimum=1, maximum=max_splits, step=1, label="Split Count")
                         e["info_output_fi"] = gr.Textbox(value="1", label="Interpolated Frames", max_lines=1, interactive=False)
                 with gr.Column():
                     e["img_output_fi"] = gr.Image(type="filepath", label="Animated Preview", interactive=False, elem_id="mainoutput")
