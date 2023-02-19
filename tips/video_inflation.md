@@ -1,3 +1,4 @@
+
 - _Video Inflation_ uses _Frame Interpolation_ to double a video's frame count any number of times
 - This has many useful purposes:
     - Create a Super-Slow-Motion video

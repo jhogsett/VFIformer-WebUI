@@ -1,5 +1,6 @@
-Idea: Recover the original video from animated GIF file
-- split GIF into a series of PNG frames
-- use R-ESRGAN 4x+ to restore and/or upscale
-- use VFIformer to adjust frame rate to real time
-- reassemble new PNG frames into MP4 file
+## Idea
+Recover the original video from an animated GIF
+- Split the GIF into a series of PNG frames
+- Use _R-ESRGAN 4x+_ to restore and/or upscale the frames
+- Use VFIformer AI to adjust the frame rate to real time
+- Reassemble new PNG frames into a MP4 file

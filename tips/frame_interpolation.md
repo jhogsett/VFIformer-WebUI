@@ -1,4 +1,4 @@
-**Frame Interpolation** Use VFIformer AI to create one or more evenly-spaced _between frames_
+**Frame Interpolation** - Use VFIformer AI to create one or more evenly-spaced _between frames_
 
 ## Uses
 

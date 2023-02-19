@@ -1,4 +1,4 @@
-**Resynthesize Video** Use _Frame Interpolation_ to a full set of replacement frames for a movie
+**Resynthesize Video** - Use _Frame Interpolation_ to make a set of replacement frames for a movie
 
 ## Uses
 

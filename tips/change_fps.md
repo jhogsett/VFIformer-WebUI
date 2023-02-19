@@ -1,4 +1,4 @@
-**Change FPS** Use _Frame Search_ to change a video frame rate by _Inserting_ and _Removing_ frames
+**Change FPS** - Use _Frame Search_ to change a video frame rate by _Inserting_ and _Removing_ frames
 
 ## Uses
 - Convert a video from any FPS to any FPS

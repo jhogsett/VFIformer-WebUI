@@ -1,7 +1,7 @@
-**Resequence Files** Renumber PNG files with a base filename and fixed-width frame index
+**Resequence Files** - Renumber PNG files with a base filename and fixed-width frame index
 
 ## Uses
-- Import PNG frames into video editing software as a sequence
+- Prepare a PNG sequence for import into video editing software
 - Rearrange a set of PNG frames for insertion into another set
 
 ## How It Works
@@ -23,4 +23,4 @@
 1. Click _Resequence Files_
 
 ## Important
-1. Ensure no other files are present in the input path other than the ones to be resequenced
+1. Ensure the only files present in the input path are the ones to be resequenced

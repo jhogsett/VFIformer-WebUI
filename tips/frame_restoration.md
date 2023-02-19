@@ -1,4 +1,4 @@
-**Frame Restoration** Use _Frame Search_ to recreate frames for a series of adjacent damaged frames
+**Frame Restoration** - Use _Frame Search_ to recreate adjacent damaged frames
 
 ## Uses
 

@@ -1,9 +1,9 @@
-**Frame Search** Use VFIformer AI to interpolate between frames at _precise times_
+**Frame Search** - Use VFIformer AI to interpolate _between_ frames at _precise times_
 
 ## Uses
 * Create a _between frame_ at a precise time between two frames
 * Recreate a frame that can't easily be created with _Frame Interpolation_
-    - See _Frame Restoration_ for automatic recreation of a series of frames
+    - See _Frame Restoration_ for automatic recreation of adjacent frames
 
 ## How It Works
 1. Drag and drop, or click to upload _Before Frame_ and _After Frame_ PNG files
