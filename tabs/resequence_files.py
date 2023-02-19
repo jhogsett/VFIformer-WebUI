@@ -30,7 +30,7 @@ class ResequenceFiles():
                         e["input_newname_text"] = gr.Text(value="pngsequence", max_lines=1, placeholder="Base filename for the resequenced files", label="Base Filename")
                     with gr.Row():
                         e["input_start_text"] = gr.Text(value="0", max_lines=1, placeholder="Starting integer for the sequence", label="Starting Sequence Number")
-                        e["input_step_text"] = gr.Text(value="1", max_lines=1, placeholder="Integer tep for the sequentially numbered files", label="Integer Step")
+                        e["input_step_text"] = gr.Text(value="1", max_lines=1, placeholder="Integer step for the sequentially numbered files", label="Integer Step")
                         e["input_zerofill_text"] = gr.Text(value="-1", max_lines=1, placeholder="Padding with for sequential numbers, -1=auto", label="Number Padding")
                     with gr.Row():
                         e["input_rename_check"] = gr.Checkbox(value=False, label="Rename instead of duplicate files")

@@ -10,7 +10,7 @@
 1. Set _Input Path_ to a directory containing video frame PNG files for conversion
 1. Set _Output Path_ to a directory for the converted PNG files
     - Output Path can be left blank to use the default folder
-    - The default folder is set by the `config.output_fps_change` setting
+    - The default folder is set by the `config.directories.output_fps_change` setting
 1. Set _Starting FPS_ to the frame rate of the video being converted
 1. Set _Ending FPS_ to the frame rate for the converted video frames
 1.  The lowest-common-multiple _Super-Sampling_ frame rate is computed
@@ -27,6 +27,7 @@
       - The target search times and predicted matches are shown in the`Frame Search Times` and `Predicted Matches` box
 1. A super-set of frame seaches is computed at the higher _lowest common FPS_ frame rate
     - The sample-set is pre-sampled to filter out frame interpolations not needed in the final frame set
+1. Click _Convert_
 1. Frame search is run to create all new filler frames
     - Original video frames are also copied if in the sample set
 1. When complete, files are resequenced to have a fixed-width frame index
