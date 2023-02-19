@@ -1,4 +1,4 @@
-**Change FPS** - Use _Frame Search_ to change a video frame rate by _Inserting_ and _Removing_ frames
+**Change FPS** - Use _Frame Search_ to change frame rate by _Inserting_ and _Removing_ frames
 
 ## Uses
 - Convert a video from any FPS to any FPS
@@ -7,8 +7,8 @@
 
 ## How it works
 
-1. Set _Input Path_ to a directory containing video frame PNG files for conversion
-1. Set _Output Path_ to a directory for the converted PNG files
+1. Set _Input Path_ to a directory on this server containing video frame PNG files for conversion
+1. Set _Output Path_ to a directory on this server for the converted PNG files
     - Output Path can be left blank to use the default folder
     - The default folder is set by the `config.directories.output_fps_change` setting
 1. Set _Starting FPS_ to the frame rate of the video being converted
@@ -36,8 +36,8 @@
 ## Important
 
 - This process could be slow, perhaps many hours long!
+- Progress is shown in the console using a standard progress bar
+- The browser window does NOT need to be left open
 - Some combinations of Starting FPS / Ending FPS may be impractical
     - A warning is displayed if the `Filled Frames per Input Frame` exceeds 100
   - Check the _Frame Search Times_ and _Predicted Matched_ fields
-- Progress is shown in the console using a standard progress bar
-- The browser window does NOT need to be left open

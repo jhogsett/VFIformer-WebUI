@@ -52,7 +52,7 @@ class ChangeFPS():
                         e["predictions_output_fc"] = gr.Textbox(value=predictions, label="Predicted Matches", max_lines=8, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
             e["convert_button_fc"] = gr.Button("Convert " + SimpleIcons.SLOW_SYMBOL, variant="primary")
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.change_fps.render()
         e["starting_fps_fc"].change(update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)
         e["ending_fps_fc"].change(update_info_fc, inputs=[e["starting_fps_fc"], e["ending_fps_fc"], e["precision_fc"]], outputs=[e["output_lcm_text_fc"], e["output_filler_text_fc"], e["output_sampled_text_fc"], e["times_output_fc"], e["predictions_output_fc"]], show_progress=False)

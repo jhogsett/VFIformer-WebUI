@@ -29,7 +29,7 @@ class PNGtoGIF():
             with gr.Row():
                 e["convert_button_pg"] = gr.Button("Convert", variant="primary")
                 e["output_info_text_pg"] = gr.Textbox(label="Details", interactive=False)
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.png_to_gif.render()
         e["convert_button_pg"].click(self.convert_png_to_gif, inputs=[e["input_path_text_pg"], e["input_pattern_text_pg"], e["output_path_text_pg"]], outputs=e["output_info_text_pg"])
         return e

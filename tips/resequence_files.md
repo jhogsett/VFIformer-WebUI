@@ -1,4 +1,4 @@
-**Resequence Files** - Renumber PNG files with a base filename and fixed-width frame index
+**Resequence Files** - Renumber PNG files with a fixed-width frame index
 
 ## Uses
 - Prepare a PNG sequence for import into video editing software

@@ -39,7 +39,7 @@ class FrameInterpolation():
                     e["img_output_fi"] = gr.Image(type="filepath", label="Animated Preview", interactive=False)
                     e["file_output_fi"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             e["interpolate_button_fi"] = gr.Button("Interpolate", variant="primary")
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.frame_interpolation.render()
 
         e["interpolate_button_fi"].click(self.frame_interpolation, inputs=[e["img1_input_fi"], e["img2_input_fi"], e["splits_input_fi"]], outputs=[e["img_output_fi"], e["file_output_fi"]])

@@ -37,7 +37,7 @@ class FrameSearch():
                     e["img_output_fs"] = gr.Image(type="filepath", label="Found Frame", interactive=False)
                     e["file_output_fs"] = gr.File(type="file", file_count="multiple", label="Download", visible=False)
             e["search_button_fs"] = gr.Button("Search", variant="primary")
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.frame_search.render()
         e["search_button_fs"].click(self.frame_search, inputs=[e["img1_input_fs"], e["img2_input_fs"], e["splits_input_fs"], e["min_input_text_fs"], e["max_input_text_fs"]], outputs=[e["img_output_fs"], e["file_output_fs"]])
         return e

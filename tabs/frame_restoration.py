@@ -48,7 +48,7 @@ class FrameRestoration():
             predictions_default = restored_frame_predictions(self.config.restoration_settings["default_frames"], self.config.restoration_settings["default_precision"])
             e["predictions_output_fr"] = gr.Textbox(value=predictions_default, label="Predicted Matches", max_lines=1, interactive=False)
             e["restore_button_fr"] = gr.Button("Restore Frames", variant="primary")
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.frame_restoration.render()
         e["restore_button_fr"].click(self.frame_restoration, inputs=[e["img1_input_fr"], e["img2_input_fr"], e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["img_output_fr"], e["file_output_fr"]])
         e["frames_input_fr"].change(update_info_fr, inputs=[e["frames_input_fr"], e["precision_input_fr"]], outputs=[e["times_output_fr"], e["predictions_output_fr"]], show_progress=False)

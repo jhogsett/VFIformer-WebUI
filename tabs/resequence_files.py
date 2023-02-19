@@ -35,7 +35,7 @@ class ResequenceFiles():
                     with gr.Row():
                         e["input_rename_check"] = gr.Checkbox(value=False, label="Rename instead of duplicate files")
                     e["resequence_button"] = gr.Button("Resequence Files", variant="primary")
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.resequence_files.render()
         e["resequence_button"].click(self.resequence_files, inputs=[e["input_path_text2"], e["input_filetype_text"], e["input_newname_text"], e["input_start_text"], e["input_step_text"], e["input_zerofill_text"], e["input_rename_check"]])
         return e

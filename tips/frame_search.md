@@ -1,4 +1,4 @@
-**Frame Search** - Use VFIformer AI to interpolate _between_ frames at _precise times_
+**Frame Search** - Use VFIformer AI to interpolate _between_ frames at precise times
 
 ## Uses
 * Create a _between frame_ at a precise time between two frames

@@ -49,7 +49,7 @@ class VideoBlender():
                     with gr.Row():
                         e["input_path2_vb"] = gr.Textbox(label="Alternate / Video #2 Frames Path", placeholder="Path to alternate or video #2 PNG files")
                     e["load_button_vb"] = gr.Button("Open Video Blender Project " + SimpleIcons.ROCKET, variant="primary")
-                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_project_settings.render()
 
                 ### PROJECT SETTINGS
@@ -72,7 +72,7 @@ class VideoBlender():
                         with gr.Column():
                             with gr.Row():
                                 e["go_button_vb"] = gr.Button("Go").style(full_width=False)
-                                e["input_text_frame_vb"] = gr.Number(value=0, precision=0, label="Frame")
+                                e["input_text_frame_vb"] = gr.Number(value=0, precision=0, label="Frame Number")
                             with gr.Row():
                                 e["prev_xframes_button_vb"] = gr.Button(f"<< {self.config.blender_settings['skip_frames']}")
                                 e["next_xframes_button_vb"] = gr.Button(f"{self.config.blender_settings['skip_frames']} >>")
@@ -87,7 +87,7 @@ class VideoBlender():
                                 e["next_frame_button_vb"] = gr.Button("Next Frame >", variant="primary")
                             e["fix_frames_button_vb"] = gr.Button("Fix Frames")
 
-                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_frame_chooser.render()
 
                 ### PROJECT SETTINGS
@@ -105,7 +105,7 @@ class VideoBlender():
                             e["preview_image_ff"] = gr.Image(type="filepath", label="Fixed Frames Preview", interactive=False)
                             e["fixed_path_ff"] = gr.Text(label="Path to Restored Frames", interactive=False)
                             e["use_fixed_button_ff"] = gr.Button(value="Apply Fixed Frames", elem_id="actionbutton")
-                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_frame_fixer.render()
 
                 ### VIDEO PREVIEW
@@ -116,7 +116,7 @@ class VideoBlender():
                     with gr.Row():
                         e["render_video_vb"] = gr.Button("Render Video", variant="primary")
                         e["input_frame_rate_vb"] = gr.Slider(minimum=1, maximum=60, value=self.config.png_to_mp4_settings["frame_rate"], step=1, label="Frame Rate")
-                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+                    with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_video_preview.render()
 
         e["load_project_button_vb"].click(self.video_blender_choose_project, inputs=[e["projects_dropdown_vb"]], outputs=[e["input_project_name_vb"], e["input_project_path_vb"], e["input_path1_vb"], e["input_path2_vb"]], show_progress=False)

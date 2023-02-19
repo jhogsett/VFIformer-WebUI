@@ -1,4 +1,5 @@
 ## Idea
+
 Recover the original video from an animated GIF
 - Split the GIF into a series of PNG frames
 - Use _R-ESRGAN 4x+_ to restore and/or upscale the frames

@@ -32,11 +32,11 @@ class VideoInflation():
                     e["input_path_text_vi"] = gr.Text(max_lines=1, placeholder="Path on this server to the frame PNG files", label="Input Path")
                     e["output_path_text_vi"] = gr.Text(max_lines=1, placeholder="Where to place the generated frames, leave blank to use default", label="Output Path")
                     with gr.Row():
-                        e["splits_input_vi"] = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Splits")
+                        e["splits_input_vi"] = gr.Slider(value=1, minimum=1, maximum=10, step=1, label="Split Count")
                         e["info_output_vi"] = gr.Textbox(value="1", label="Interpolations per Frame", max_lines=1, interactive=False)
             gr.Markdown("*Progress can be tracked in the console*")
-            e["interpolate_button_vi"] = gr.Button("Interpolate Series " + SimpleIcons.SLOW_SYMBOL, variant="primary")
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            e["interpolate_button_vi"] = gr.Button("Inflate Video " + SimpleIcons.SLOW_SYMBOL, variant="primary")
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.video_inflation.render()
         e["interpolate_button_vi"].click(self.video_inflation, inputs=[e["input_path_text_vi"], e["output_path_text_vi"], e["splits_input_vi"]])
         e["splits_input_vi"].change(update_splits_info, inputs=e["splits_input_vi"], outputs=e["info_output_vi"], show_progress=False)

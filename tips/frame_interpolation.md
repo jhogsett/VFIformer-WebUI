@@ -35,7 +35,7 @@
 - Z, Z, Z & Z are the frames for the third split, dividing the times between B & Y, Y & X, X & Y, Y & A @ 12.5%, 37.5%, 62.5% and 87.5%
     - `B---Z---Y---Z---X---Z---Y---Z---A`
 
-The number of interpolated frames is computed as:
+The number of interpolated frames is computed by this formula:
 - F=2**S-1, where
 - F is the count of interpolated frames
 - S is the split count

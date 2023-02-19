@@ -32,7 +32,7 @@ class PNGtoMP4():
             with gr.Row():
                 e["convert_button_pm"] = gr.Button("Convert", variant="primary")
                 e["output_info_text_pm"] = gr.Textbox(label="Details", interactive=False)
-            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Tips", open=False):
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.png_to_mp4.render()
         e["convert_button_pm"].click(self.convert_png_to_mp4, inputs=[e["input_path_text_pm"], e["input_pattern_text_pm"], e["input_frame_rate_pm"], e["output_path_text_pm"], e["quality_slider_pm"]], outputs=e["output_info_text_pm"])
         return e
