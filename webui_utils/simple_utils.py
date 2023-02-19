@@ -1,3 +1,4 @@
+import sys
 import math
 from collections import namedtuple
 from fractions import Fraction
@@ -82,3 +83,11 @@ def fps_change_details(starting_fps : int, ending_fps : int, precision : int):
     fractions = restored_frame_fractions(num_frames) or "n/a"
     predictions = restored_frame_predictions(num_frames, precision) or "n/a"
     return lowest_common_rate, filled, sampled, fractions, predictions
+
+def sortable_float_index(float_value : float, fixed_width = False, mantissa_width : float | None = None):
+    """return a floating point number formatted to be sortable"""
+    if mantissa_width is None:
+        mantissa_width = sys.float_info.mant_dig
+    format = "f" if fixed_width else "g"
+    format_str = "{:0." + str(mantissa_width) + format + "}"
+    return format_str.format(float_value)

@@ -1,3 +1,4 @@
+import sys
 import os
 import shutil
 import argparse
@@ -8,7 +9,7 @@ from tqdm import tqdm
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from webui_utils.simple_log import SimpleLog
-from webui_utils.simple_utils import float_range_in_range
+from webui_utils.simple_utils import float_range_in_range, sortable_float_index
 from webui_utils.file_utils import create_directory
 
 def main():
@@ -129,7 +130,8 @@ class TargetInterpolate():
             found_file = frame_files.pop(-1)
 
         filepath, fvalue, ext = self.split_indexed_filepath(found_file)
-        new_found_file = f"{filepath}@{fvalue:1.60g}{ext}"
+        float_index = sortable_float_index(fvalue)
+        new_found_file = f"{filepath}@{float_index}{ext}"
 
         if keep_samples:
             self.log("copying " + found_file + " to " + new_found_file)
@@ -188,7 +190,8 @@ class TargetInterpolate():
 
     # filepath prefix representing the split position while splitting
     def indexed_filepath(self, filepath_prefix, index):
-        return filepath_prefix + f"{index:1.60g}.png"
+        float_index = sortable_float_index(index)
+        return filepath_prefix + f"{float_index}.png"
 
     def split_indexed_filepath(self, filepath : str):
         regex = r"(.+)([1|0]\..+)(\..+$)"
