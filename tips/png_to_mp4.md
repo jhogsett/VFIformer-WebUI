@@ -13,7 +13,7 @@
 1. Set _Quality_ to the required video quality
     - The range is 17-28 (17 is near-lossless)
     - Lower numbers = better quality with a higher file size
-    - This value is passed to `ffmpeg.exe` as the `-crf` paramter
+    - This value is passed to `ffmpeg.exe` as the `-crf` parameter
     - The range of quality values can be changed in `config.yaml`
 1. Click _Convert_
 1. `ffmpeg.exe` is used to perform the conversion

@@ -55,6 +55,7 @@ class SimpleIcons:
     CHERRY_BLOSSOM = "🌸"
     EGGPLANT = "🍆"
     GHOST = "👻"
+    GLOBE = "🌎"
     HAMMER = "🔨"
     HEART = "❤️"
     TWO_HEARTS = "💕"

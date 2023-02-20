@@ -14,6 +14,7 @@ from tabs.resequence_files import ResequenceFiles
 from tabs.change_fps import ChangeFPS
 from tabs.future import Future
 from tabs.options import Options
+from tabs.resources import Resources
 
 def create_ui(config, engine, log_fn, restart_fn):
     with gr.Blocks(analytics_enabled=False,
@@ -38,6 +39,7 @@ def create_ui(config, engine, log_fn, restart_fn):
             ChangeFPS(config, engine, log_fn).render_tab()
             Future(config, engine, log_fn).render_tab()
             Options(config, engine, log_fn, restart_fn).render_tab()
+            Resources(config, engine, log_fn, restart_fn).render_tab()
         footer = SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett  •  <a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>  •  <a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>  •  <a href="https://gradio.app">Gradio</a>  •  <a href="/" onclick="javascript:gradioApp().getElementById(\'settings_restart_gradio\').click(); return false">Reload UI</a>'
         gr.HTML(footer, elem_id="footer")
     return app

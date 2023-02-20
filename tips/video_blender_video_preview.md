@@ -14,7 +14,7 @@
 - Preview videos are rendered in the directory set by the config setting `directories:working`
     - The directory is NOT automatically purged
 
-# Tip
+## Tip
 - This tab can be used to render and watch a preview video for any directory of video frame PNG files
 - **Requirements:**
     - The files must be video frame PNG files with the same dimensions
