@@ -66,3 +66,10 @@ class SimpleIcons:
     SWEAT = "💦"
     GEMSTONE = "💎"
     LABCOAT = "🥼"
+
+    # shared symbol definitions
+    TIPS_SYMBOL = INFO
+    SLOW_SYMBOL = WATCH
+    PROP_SYMBOL = PROPERTIES
+    WISH_SYMBOL = FINGERS_CROSSED
+    CONV_SYMBOL = STILL

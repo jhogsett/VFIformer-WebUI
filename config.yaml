@@ -48,6 +48,7 @@ fps_change_settings:
   default_precision: 10
   max_precision: 60
 user_interface:
+  tips_path: "./tips"
   theme: "default"
   css_file: "webui.css"
   log_file: None # "./webui.log"

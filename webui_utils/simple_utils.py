@@ -1,3 +1,4 @@
+import sys
 import math
 from collections import namedtuple
 from fractions import Fraction
@@ -30,7 +31,7 @@ def float_range_in_range(target_min : float, target_max : float, domain_min : fl
             return False
 
 # For Frame Search, given a frame time 0.0 - 1.0
-# and a search depth (split count) compute the fractional
+# and a search precision (split count) compute the fractional
 # time that will actually be found
 def predict_search_frame(num_splits : int, fractional_time : float) -> float:
     resolution = 2 ** num_splits
@@ -82,3 +83,11 @@ def fps_change_details(starting_fps : int, ending_fps : int, precision : int):
     fractions = restored_frame_fractions(num_frames) or "n/a"
     predictions = restored_frame_predictions(num_frames, precision) or "n/a"
     return lowest_common_rate, filled, sampled, fractions, predictions
+
+def sortable_float_index(float_value : float, fixed_width = False, mantissa_width : float | None = None):
+    """return a floating point number formatted to be sortable"""
+    if mantissa_width is None:
+        mantissa_width = sys.float_info.mant_dig
+    format = "f" if fixed_width else "g"
+    format_str = "{:0." + str(mantissa_width) + format + "}"
+    return format_str.format(float_value)
