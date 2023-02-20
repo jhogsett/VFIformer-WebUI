@@ -27,8 +27,33 @@
 }
 
 #actionbutton {
-    background : #008542;
+    background: #008542;
     border: #008542;
+}
+
+#restartbutton {
+    background: blueviolet;
+    border: blueviolet;
+}
+
+#linkcontainer {
+    background: #492900 !important;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#linkcontainer2 {
+    background: #5D4300 !important;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+#linkitem {
+    margin: unset;
+    font-size: large;
+    font-weight: bold;
 }
 
 footer {

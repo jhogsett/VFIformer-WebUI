@@ -22,6 +22,6 @@ class Options():
         e = {}
         with gr.Tab(SimpleIcons.GEAR + "Options"):
             with gr.Row():
-                e["restart_button"] = gr.Button("Restart App", variant="primary").style(full_width=False)
+                e["restart_button"] = gr.Button("Restart App", variant="primary", elem_id="restartbutton").style(full_width=False)
         e["restart_button"].click(self.restart_fn, _js="function(){setTimeout(function(){window.location.reload()},2000);return[]}")
         return e
