@@ -37,7 +37,7 @@ _**Resequence Files**_
 * Renumber for Import into Video Editing Software
 
 _**Change FPS**_
-* Convert any FPS to any other FPS | [[Change FPS]] |
+* Convert any FPS to any other FPS 
 
 # Set Up For Use
 
