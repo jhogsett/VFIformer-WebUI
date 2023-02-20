@@ -1,3 +1,4 @@
+"""Create the Gradio UI elements"""
 import gradio as gr
 from webui_utils.simple_icons import SimpleIcons
 from tabs.frame_interpolation import FrameInterpolation
@@ -17,6 +18,7 @@ from tabs.options import Options
 from tabs.resources import Resources
 
 def create_ui(config, engine, log_fn, restart_fn):
+    """Construct the Gradio Blocks UI"""
     with gr.Blocks(analytics_enabled=False,
                     title="VFIformer Web UI",
                     theme=config.user_interface["theme"],
@@ -30,7 +32,8 @@ def create_ui(config, engine, log_fn, restart_fn):
         VideoBlender(config, engine, log_fn).render_tab()
         with gr.Tab(SimpleIcons.WRENCH + "Tools"):
             with gr.Tab(SimpleIcons.FOLDER + "File Conversion"):
-                gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)", elem_id="tabheading")
+                gr.HTML("Tools for common video file conversion tasks (ffmpeg.exe must be in path)",
+                    elem_id="tabheading")
                 MP4toPNG(config, engine, log_fn).render_tab()
                 PNGtoMP4(config, engine, log_fn).render_tab()
                 GIFtoPNG(config, engine, log_fn).render_tab()
@@ -40,6 +43,14 @@ def create_ui(config, engine, log_fn, restart_fn):
             Future(config, engine, log_fn).render_tab()
             Options(config, engine, log_fn, restart_fn).render_tab()
             Resources(config, engine, log_fn, restart_fn).render_tab()
-        footer = SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett  •  <a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>  •  <a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>  •  <a href="https://gradio.app">Gradio</a>  •  <a href="/" onclick="javascript:gradioApp().getElementById(\'settings_restart_gradio\').click(); return false">Reload UI</a>'
+        sep = '  •  '
+        footer = (
+            SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett' + sep +
+            '<a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>' + sep +
+            '<a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>' + sep +
+            '<a href="https://gradio.app">Gradio</a>' + sep +
+            '<a href="/" onclick="javascript:gradioApp()' +
+            '.getElementById(\'settings_restart_gradio\').click();' +
+            'return false">Reload UI</a>')
         gr.HTML(footer, elem_id="footer")
     return app

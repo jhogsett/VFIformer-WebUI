@@ -2,7 +2,6 @@
 
 class SimpleIcons:
     """Icons for use in web output from https://emojiguide.org/"""
-
     NOTEBOOK = "📒"
     DOCUMENT = "📄"
     PROPERTIES = "📝"

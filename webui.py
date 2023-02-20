@@ -1,3 +1,4 @@
+"""VFIformer-WebUI Application"""
 import os
 import time
 import signal
@@ -11,6 +12,7 @@ from create_ui import create_ui
 from webui_tips import WebuiTips
 
 def main():
+    """Run the application"""
     parser = argparse.ArgumentParser(description='VFIformer Web UI')
     parser.add_argument("--config_path", type=str, default="config.yaml", help="path to config YAML file")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
@@ -21,6 +23,7 @@ def main():
     WebUI(config, log.log).start()
 
 class WebUI:
+    """Top-Level application logic"""
     def __init__(self,
                     config : SimpleConfig,
                     log_fn : Callable):
@@ -30,6 +33,7 @@ class WebUI:
         self.prevent_inbrowser = False
 
     def start(self):
+        """Create the UI and start the event loop"""
         WebuiTips.set_tips_path(self.config.user_interface["tips_path"])
         engine = InterpolateEngine(self.config.model, self.config.gpu_ids)
         while True:
@@ -46,9 +50,11 @@ class WebUI:
             print("\n--- Restarting\n")
 
     def restart_app(self):
+        """Signal to the event loop to restart the application"""
         self.restart = True
 
     def wait_on_server(self, app):
+        """Restart application if signal is set"""
         while True:
             time.sleep(0.5)
             if self.restart:
@@ -58,10 +64,10 @@ class WebUI:
                 time.sleep(0.5)
                 break
 
-# make the program just exit at ctrl+c without waiting for anything
 def sigint_handler(sig, frame):
+    """Make the program just exit at ctrl+c without waiting for anything"""
     print(f'Interrupted with signal {sig} in {frame}')
-    os._exit(0)
+    os._exit(0) #pylint: disable=protected-access
 signal.signal(signal.SIGINT, sigint_handler)
 
 if __name__ == '__main__':
