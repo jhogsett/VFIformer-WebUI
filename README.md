@@ -6,7 +6,7 @@
 |:--:| 
 | Example - Interpolated Frames |
 
-| [Video Inflation example (YouTube)](https://youtu.be/rOiALIN805w) | 
+| [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) | 
 |:--:| 
 | Example - Video Inflation (YouTube) |
 
