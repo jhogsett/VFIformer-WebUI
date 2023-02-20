@@ -130,7 +130,7 @@ The application can be started in any of these ways:
 
 ## All Features
 
-* [Wiki Home](https://github.com/jhogsett/VFIformer-WebUI/wiki)
+[Wiki - Home](https://github.com/jhogsett/VFIformer-WebUI/wiki)
 
 # Command Line Tools
 
@@ -140,43 +140,27 @@ The core feature have command-line equivalents
 
 # App Configuration
 
-App configuration is set via `config.yaml`
+[Wiki - App Configuration](https://github.com/jhogsett/VFIformer-WebUI/wiki/App-Configuration)
 
-### Notable settings
-- model (parameter passed to VFIformer)
-  - path to the VFIformer downloaded model
-- gpu_ids (parameter passed to VFIformer)
-  - should be "0" to use the local GPU and "-1" for CPU
-  - I tried and was unable to run VFIformer without the GPU
-- auto_launch_browser
-  - True to open the app in a browser tab
-- server_port
-  - local port to use for Web UI access
-  - default is `7862` rather than the usual Gradio default of `7860` to avoid conflicting with other Gradio apps
-- server_name
-  - server address to use for Gradio http server
-  - default is "0.0.0.0" which makes the app available on the local network as well
-  - to prevent this, set to "127.0.0.1" or None
-- interpolation_settings\[gif_duration\]
-  - total time in ms for the animated GIF preview
-  - default is 3000
-
-# Future Plans
+# Future Ideas
 - incorporate Real-ESRGAN for frame restoration and upscaling
   - https://github.com/xinntao/Real-ESRGAN
 - add a GIF-to-MP4 feature to recover the original video from an animated GIF
   - uses Real-ESRGAN to denoise the GIF frames and upscale them
   - uses VFIformer to fill in missing frames
   - saved as a MP4 files or PNG sequence
-- add tools to easily switch between GIF PNG & MP4 formats
-- make the tool available in a Hugging Face space https://huggingface.co/
-  - I could use help with this
-- Suggestions are very welcome
-- Contributions are also very welcome
+- add Audio tools
 
-# Thanks!
+# My Public Uses of VFIformer
 
-Thanks! to the VFIformer folks for their amazing tool
+YouTube
+- Feb 01 2023 "Fun with AI: De-Ticking a Ticking Clock" https://youtu.be/JhibFQvP7X0
+- Jan 28 2023 "Fun with AI: Infinite Slow Motion" https://youtu.be/sKQKuYU-fcQ
+- Jan 24 2023 "Fun with AI: Me as a Baby, Restoring 60 year old 8mm film" https://youtu.be/PiLv5u1PYiE
+
+# Acknowledgements
+
+Thanks! to the VFIformer folks for their amazing AI Tool
 - https://github.com/dvlab-research/VFIformer
 
 Thanks! to the stable-diffusion-webui folks for their great UI, amazing tool, and for inspiring me to learn Gradio
@@ -186,16 +170,7 @@ Thanks to Gradio for their easy-to-use Web UI building tool and great docs
 - https://gradio.app/
 - https://github.com/gradio-app/gradio
 
-# Credits
-
 Royalty-Free Videos used for the examples
 - "FunfaIr in Barcelona" https://motionarray.com/stock-video/funfair-in-barcelona-1163645/
 - "Batter Misses A Pitch" https://motionarray.com/stock-video/batter-misses-a-pitch-1231021/
 - "Bursting A Balloon" https://motionarray.com/stock-video/bursting-a-balloon-253645/
-
-# My Public Uses of VFIformer
-
-YouTube
-- Feb 01 2023 "Fun with AI: De-Ticking a Ticking Clock" https://youtu.be/JhibFQvP7X0
-- Jan 28 2023 "Fun with AI: Infinite Slow Motion" https://youtu.be/sKQKuYU-fcQ
-- Jan 24 2023 "Fun with AI: Me as a Baby, Restoring 60 year old 8mm film" https://youtu.be/PiLv5u1PYiE
