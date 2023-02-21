@@ -133,7 +133,6 @@ output/
 
 # VFIformer core bits
 dataloader/
-models/
 pretrained_models/
 utils/
 
