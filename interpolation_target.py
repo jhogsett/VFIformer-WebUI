@@ -126,12 +126,12 @@ class TargetInterpolate():
                 # recurse into the half that gets closer to the target range
                 if float_range_in_range(min_target, max_target, first_index, mid_index,
                     use_midpoint=True):
-                    self._recursive_split_frames(first_index, mid_index, filepath_prefix, min_target,
-                        max_target)
+                    self._recursive_split_frames(first_index, mid_index, filepath_prefix,
+                        min_target, max_target)
                 elif float_range_in_range(min_target, max_target, mid_index, last_index,
                     use_midpoint=True):
-                    self._recursive_split_frames(mid_index, last_index, filepath_prefix, min_target,
-                        max_target)
+                    self._recursive_split_frames(mid_index, last_index, filepath_prefix,
+                        min_target, max_target)
                 else:
                     self.log("skipping, unable to locate target "+ f"{min_target},{max_target}"
                         + " within split ranges " + f"{first_index},{mid_index}" + " and "

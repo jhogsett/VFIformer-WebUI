@@ -1,5 +1,6 @@
 """UI Functions"""
-from .simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions, fps_change_details
+from .simple_utils import max_steps, restored_frame_fractions, restored_frame_predictions, \
+    fps_change_details
 
 def update_splits_info(num_splits : float):
     """Given a count of splits/search depth/search precision, compute the count of work steps"""
@@ -30,5 +31,5 @@ number of splits: {num_splits}
 output path: {output_path}
 frames:
 """ + "\n".join(output_paths)
-    with open(info_file, 'w', encoding='utf-8') as f:
-        f.write(report)
+    with open(info_file, 'w', encoding='utf-8') as file:
+        file.write(report)

@@ -12,7 +12,7 @@ from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
 from resample_series import ResampleSeries
-from resequence_files import ResequenceFiles as ResequenceFiles
+from resequence_files import ResequenceFiles as _ResequenceFiles
 
 class ChangeFPS():
     """Encapsulates UI elements and events for the Change FPS feature"""
@@ -103,5 +103,5 @@ placeholder="Path on this server for the converted PNG frame files, leave blank 
                 ending_fps, precision, f"resampled@{starting_fps}")
 
             self.log(f"auto-resequencing sampled frames at {output_path}")
-            ResequenceFiles(base_output_path, "png", f"resampled@{ending_fps}fps", 0, 1, -1, True,
+            _ResequenceFiles(base_output_path, "png", f"resampled@{ending_fps}fps", 0, 1, -1, True,
                  self.log).resequence()

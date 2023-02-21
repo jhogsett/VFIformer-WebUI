@@ -14,8 +14,10 @@ from webui_tips import WebuiTips
 def main():
     """Run the application"""
     parser = argparse.ArgumentParser(description='VFIformer Web UI')
-    parser.add_argument("--config_path", type=str, default="config.yaml", help="path to config YAML file")
-    parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
+    parser.add_argument("--config_path", type=str, default="config.yaml",
+        help="path to config YAML file")
+    parser.add_argument("--verbose", dest="verbose", default=False, action="store_true",
+        help="Show extra details")
     args = parser.parse_args()
     log = SimpleLog(args.verbose)
     config = SimpleConfig(args.config_path).config_obj()
