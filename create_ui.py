@@ -44,13 +44,14 @@ def create_ui(config, engine, log_fn, restart_fn):
             Options(config, engine, log_fn, restart_fn).render_tab()
             Resources(config, engine, log_fn, restart_fn).render_tab()
         sep = '  •  '
-        footer = (
-            SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett' + sep +
-            '<a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>' + sep +
-            '<a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>' + sep +
-            '<a href="https://gradio.app">Gradio</a>' + sep +
-            '<a href="/" onclick="javascript:gradioApp()' +
+        _js = ('<a href="/" ' +
+            'onclick="javascript:gradioApp()' +
             '.getElementById(\'settings_restart_gradio\').click();' +
             'return false">Reload UI</a>')
+        footer = (SimpleIcons.COPYRIGHT + ' 2023 J. Hogsett' +
+            sep + '<a href="https://github.com/jhogsett/VFIformer-WebUI">Github</a>' +
+            sep + '<a href="https://github.com/dvlab-research/VFIformer">VFIformer</a>' +
+            sep + '<a href="https://gradio.app">Gradio</a>' +
+            sep + _js)
         gr.HTML(footer, elem_id="footer")
     return app
