@@ -8,10 +8,10 @@ from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import create_zip
 from webui_utils.ui_utils import update_splits_info, create_report
 from webui_utils.auto_increment import AutoIncrementDirectory
-from webui_tips import WebuiTips
-from interpolate_engine import InterpolateEngine
-from interpolate import Interpolate
-from deep_interpolate import DeepInterpolate
+from scripts.webui_tips import WebuiTips
+from scripts.interpolate_engine import InterpolateEngine
+from scripts.interpolate import Interpolate
+from scripts.deep_interpolate import DeepInterpolate
 
 class FrameInterpolation():
     """Encapsulates UI elements and events for the Frame Interpolation feature"""

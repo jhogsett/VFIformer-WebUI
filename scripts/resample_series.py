@@ -5,9 +5,9 @@ import shutil
 import math
 from typing import Callable
 from tqdm import tqdm
-from interpolate_engine import InterpolateEngine
-from interpolate import Interpolate
-from interpolation_target import TargetInterpolate
+from scripts.interpolate_engine import InterpolateEngine
+from scripts.interpolate import Interpolate
+from scripts.interpolation_target import TargetInterpolate
 from webui_utils.simple_log import SimpleLog
 from webui_utils.file_utils import create_directory, get_files
 from webui_utils.simple_utils import restored_frame_searches

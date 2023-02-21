@@ -1,11 +1,11 @@
 """Future tabs UI and event handlers"""
 from typing import Callable
 import gradio as gr
-from interpolate_engine import InterpolateEngine
+from scripts.interpolate_engine import InterpolateEngine
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 
-from webui_tips import WebuiTips
+from scripts.webui_tips import WebuiTips
 
 class Future():
     """Encapsulates UI elements and events for the Future tabs"""
