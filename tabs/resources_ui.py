@@ -3,7 +3,7 @@ from typing import Callable
 import gradio as gr
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
-from scripts.interpolate_engine import InterpolateEngine
+from interpolate_engine import InterpolateEngine
 
 class Resources():
     """Encapsulates UI elements and events for the Resources page"""

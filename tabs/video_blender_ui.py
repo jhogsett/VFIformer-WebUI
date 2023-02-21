@@ -9,12 +9,12 @@ from webui_utils.image_utils import create_gif
 from webui_utils.file_utils import get_files, create_directory, locate_frame_file
 from webui_utils.auto_increment import AutoIncrementDirectory, AutoIncrementFilename
 from webui_utils.video_utils import PNGtoMP4, QUALITY_SMALLER_SIZE
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
-from scripts.interpolate import Interpolate
-from scripts.interpolation_target import TargetInterpolate
-from scripts.restore_frames import RestoreFrames
-from scripts.video_blender import VideoBlenderState, VideoBlenderProjects
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
+from interpolate import Interpolate
+from interpolation_target import TargetInterpolate
+from restore_frames import RestoreFrames
+from video_blender import VideoBlenderState, VideoBlenderProjects
 
 class VideoBlender():
     """Encapsulates UI elements and events for the Video Blender eature"""

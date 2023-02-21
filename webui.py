@@ -4,12 +4,12 @@ import time
 import signal
 import argparse
 from typing import Callable
-from scripts.interpolate_engine import InterpolateEngine
+from interpolate_engine import InterpolateEngine
 from webui_utils.simple_log import SimpleLog
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.file_utils import create_directories
-from scripts.create_ui import create_ui
-from scripts.webui_tips import WebuiTips
+from create_ui import create_ui
+from webui_tips import WebuiTips
 
 def main():
     """Run the application"""

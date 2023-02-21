@@ -5,12 +5,12 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, get_files
 from webui_utils.auto_increment import AutoIncrementDirectory
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
-from scripts.interpolate import Interpolate
-from scripts.deep_interpolate import DeepInterpolate
-from scripts.interpolate_series import InterpolateSeries
-from scripts.resequence_files import ResequenceFiles
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
+from interpolate import Interpolate
+from deep_interpolate import DeepInterpolate
+from interpolate_series import InterpolateSeries
+from resequence_files import ResequenceFiles
 
 class ResynthesizeVideo():
     """Encapsulates UI elements and events for the Resynthesize Video feature"""

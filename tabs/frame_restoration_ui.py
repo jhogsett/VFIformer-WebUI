@@ -10,11 +10,11 @@ from webui_utils.ui_utils import create_report
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.simple_utils import restored_frame_fractions, restored_frame_predictions
 from webui_utils.ui_utils import update_info_fr
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
-from scripts.interpolate import Interpolate
-from scripts.interpolation_target import TargetInterpolate
-from scripts.restore_frames import RestoreFrames
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
+from interpolate import Interpolate
+from interpolation_target import TargetInterpolate
+from restore_frames import RestoreFrames
 
 class FrameRestoration():
     """Encapsulates UI elements and events for the Frame Restoration feature"""

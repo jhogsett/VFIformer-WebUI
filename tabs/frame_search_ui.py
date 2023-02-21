@@ -5,10 +5,10 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory
 from webui_utils.auto_increment import AutoIncrementDirectory
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
-from scripts.interpolate import Interpolate
-from scripts.interpolation_target import TargetInterpolate
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
+from interpolate import Interpolate
+from interpolation_target import TargetInterpolate
 
 class FrameSearch():
     """Encapsulates UI elements and events for the Frame Search feature"""
