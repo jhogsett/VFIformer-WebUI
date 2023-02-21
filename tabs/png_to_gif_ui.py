@@ -5,8 +5,8 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, split_filepath
 from webui_utils.video_utils import PNGtoGIF as _PNGtoGIF
-from webui_tips import WebuiTips
-from interpolate_engine import InterpolateEngine
+from scripts.webui_tips import WebuiTips
+from scripts.interpolate_engine import InterpolateEngine
 
 class PNGtoGIF():
     """Encapsulates UI elements and events for the PNG Sequence to GIF feature"""

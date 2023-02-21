@@ -6,7 +6,7 @@ import cv2
 import torch
 import torchvision
 from webui_utils.simple_log import SimpleLog
-from interpolate_engine import InterpolateEngine
+from scripts.interpolate_engine import InterpolateEngine
 
 def main():
     """Use Frame Interpolation from the command line"""
