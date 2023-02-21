@@ -26,11 +26,11 @@ class Resources():
         with gr.Tab(SimpleIcons.GLOBE + "Resources"):
             self.link_item("linkcontainer", "FFmpeg (Free Download)", "Download FFmpeg",
                 "https://ffmpeg.org/download.html")
-            self.link_item("linkcontainer2", "Adobe AI-Based Speech Enhancement (Free)",
-                "Adobe Podcast (Beta) Enhance Speech", "https://podcast.adobe.com/enhance")
-            self.link_item("linkcontainer", "Real-ESRGAN Image/Video Restoration (Github)",
+            self.link_item("linkcontainer2", "Real-ESRGAN Image/Video Restoration (Github)",
                 "Practical Algorithms for General Image/Video Restoration",
                 "https://github.com/xinntao/Real-ESRGAN")
+            self.link_item("linkcontainer", "Adobe AI-Based Speech Enhancement (Free)",
+                "Adobe Podcast (Beta) Enhance Speech", "https://podcast.adobe.com/enhance")
             self.link_item("linkcontainer2", "Coqui TTS (Python)",
                 "Advanced Text-to-Speech generation", "https://pypi.org/project/TTS/")
             self.link_item("linkcontainer", "Motion Array (Royalty-Free Content)",
