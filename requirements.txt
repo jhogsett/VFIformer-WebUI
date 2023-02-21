@@ -7,7 +7,7 @@ Pillow==9.4.0
 PyYAML==6.0
 scikit_image==0.19.3
 scipy==1.10.1
-skimage==0.0
+scikit-image==0.19.3
 tensorboardX==2.6
 timm==0.6.12
 torch==1.13.1
