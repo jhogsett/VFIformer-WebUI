@@ -92,6 +92,9 @@ _**Change FPS**_
 The application can be started in any of these ways:
 - `webui.bat`
 - `python webui.py`
+  - _Command line arguments_
+    - `--config_path path` path to alternate configuration file, default `config.yaml`
+    - `--verbose` enables verbose output to the console, default False
 
 # Using Web UI
 
