@@ -7,12 +7,12 @@ from webui_utils.file_utils import create_directory
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.simple_utils import fps_change_details
 from webui_utils.ui_utils import update_info_fc
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
-from scripts.interpolate import Interpolate
-from scripts.interpolation_target import TargetInterpolate
-from scripts.resample_series import ResampleSeries
-from scripts.resequence_files import ResequenceFiles as _ResequenceFiles
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
+from interpolate import Interpolate
+from interpolation_target import TargetInterpolate
+from resample_series import ResampleSeries
+from resequence_files import ResequenceFiles as _ResequenceFiles
 
 class ChangeFPS():
     """Encapsulates UI elements and events for the Change FPS feature"""

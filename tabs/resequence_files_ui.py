@@ -3,9 +3,9 @@ from typing import Callable
 import gradio as gr
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
-from scripts.resequence_files import ResequenceFiles as _ResequenceFiles
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
+from resequence_files import ResequenceFiles as _ResequenceFiles
 
 class ResequenceFiles():
     """Encapsulates UI elements and events for the Resequence Files feature"""

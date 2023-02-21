@@ -5,8 +5,8 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, split_filepath
 from webui_utils.video_utils import PNGtoMP4 as _PNGtoMP4
-from scripts.webui_tips import WebuiTips
-from scripts.interpolate_engine import InterpolateEngine
+from webui_tips import WebuiTips
+from interpolate_engine import InterpolateEngine
 
 class PNGtoMP4():
     """Encapsulates UI elements and events for the PNG Sequence to MP4 feature"""
