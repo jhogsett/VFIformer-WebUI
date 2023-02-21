@@ -1,21 +1,21 @@
 """Create the Gradio UI elements"""
 import gradio as gr
 from webui_utils.simple_icons import SimpleIcons
-from tabs.frame_interpolation import FrameInterpolation
-from tabs.frame_search import FrameSearch
-from tabs.video_inflation import VideoInflation
-from tabs.resynthesize_video import ResynthesizeVideo
-from tabs.frame_restoration import FrameRestoration
-from tabs.video_blender import VideoBlender
-from tabs.mp4_to_png import MP4toPNG
-from tabs.png_to_mp4 import PNGtoMP4
-from tabs.gif_to_png import GIFtoPNG
-from tabs.png_to_gif import PNGtoGIF
-from tabs.resequence_files import ResequenceFiles
-from tabs.change_fps import ChangeFPS
-from tabs.future import Future
-from tabs.options import Options
-from tabs.resources import Resources
+from tabs.frame_interpolation_ui import FrameInterpolation
+from tabs.frame_search_ui import FrameSearch
+from tabs.video_inflation_ui import VideoInflation
+from tabs.resynthesize_video_ui import ResynthesizeVideo
+from tabs.frame_restoration_ui import FrameRestoration
+from tabs.video_blender_ui import VideoBlender
+from tabs.mp4_to_png_ui import MP4toPNG
+from tabs.png_to_mp4_ui import PNGtoMP4
+from tabs.gif_to_png_ui import GIFtoPNG
+from tabs.png_to_gif_ui import PNGtoGIF
+from tabs.resequence_files_ui import ResequenceFiles
+from tabs.change_fps_ui import ChangeFPS
+from tabs.future_ui import Future
+from tabs.options_ui import Options
+from tabs.resources_ui import Resources
 
 def create_ui(config, engine, log_fn, restart_fn):
     """Construct the Gradio Blocks UI"""

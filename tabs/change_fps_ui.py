@@ -1,4 +1,4 @@
-"""Gradio UI and event handlers for Change FPS feature"""
+"""Change FPS feature UI and event handlers"""
 from typing import Callable
 import gradio as gr
 from webui_utils.simple_config import SimpleConfig
@@ -12,7 +12,7 @@ from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
 from resample_series import ResampleSeries
-from resequence_files import ResequenceFiles as _ResequenceFiles
+from resequence_files import ResequenceFiles as ResequenceFiles
 
 class ChangeFPS():
     """Encapsulates UI elements and events for the Change FPS feature"""
@@ -88,7 +88,7 @@ placeholder="Path on this server for the converted PNG frame files, leave blank 
                     starting_fps : int,
                     ending_fps : int,
                     precision : int):
-        """Run the Change FPS process"""
+        """Change FPS convert button handler"""
         if input_path:
             interpolater = Interpolate(self.engine.model, self.log)
             target_interpolater = TargetInterpolate(interpolater, self.log)
@@ -103,5 +103,5 @@ placeholder="Path on this server for the converted PNG frame files, leave blank 
                 ending_fps, precision, f"resampled@{starting_fps}")
 
             self.log(f"auto-resequencing sampled frames at {output_path}")
-            _ResequenceFiles(base_output_path, "png", f"resampled@{ending_fps}fps", 0, 1, -1, True,
+            ResequenceFiles(base_output_path, "png", f"resampled@{ending_fps}fps", 0, 1, -1, True,
                  self.log).resequence()

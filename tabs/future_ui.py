@@ -1,3 +1,4 @@
+"""Future tabs UI and event handlers"""
 from typing import Callable
 import gradio as gr
 from interpolate_engine import InterpolateEngine
@@ -7,6 +8,7 @@ from webui_utils.simple_icons import SimpleIcons
 from webui_tips import WebuiTips
 
 class Future():
+    """Encapsulates UI elements and events for the Future tabs"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
@@ -16,10 +18,11 @@ class Future():
         self.log_fn = log_fn
 
     def log(self, message : str):
+        """Logging"""
         self.log_fn(message)
 
     def render_tab(self):
-        e = {}
+        """Render tab into UI"""
         with gr.Tab(SimpleIcons.WISH_SYMBOL + "GIF to Video"):
             with gr.Row():
                 with gr.Column():
@@ -27,4 +30,3 @@ class Future():
 
         with gr.Tab(SimpleIcons.WISH_SYMBOL + "Upscaling"):
             WebuiTips.upscaling.render()
-        return e
