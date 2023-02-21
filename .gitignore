@@ -133,6 +133,7 @@ output/
 
 # VFIformer core bits
 dataloader/
+models/
 pretrained_models/
 utils/
 
@@ -141,3 +142,4 @@ go.bat
 temp/
 notes.txt
 test_assets/
+models_stub/

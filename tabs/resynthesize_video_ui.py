@@ -54,11 +54,14 @@ class ResynthesizeVideo():
             interpolater = Interpolate(self.engine.model, self.log)
             deep_interpolater = DeepInterpolate(interpolater, self.log)
             series_interpolater = InterpolateSeries(deep_interpolater, self.log)
-            base_output_path = output_path or self.config.directories["output_resynthesis"]
-            create_directory(base_output_path)
-            output_path, _ = AutoIncrementDirectory(base_output_path).next_directory("run")
-            output_basename = "resynthesized_frames"
 
+            if output_path:
+                create_directory(output_path)
+            else:
+                base_output_path = self.config.directories["output_resynthesis"]
+                output_path, _ = AutoIncrementDirectory(base_output_path).next_directory("run")
+
+            output_basename = "resynthesized_frames"
             file_list = get_files(input_path, extension="png")
             self.log(f"beginning series of frame recreations at {output_path}")
             series_interpolater.interpolate_series(file_list, output_path, 1, output_basename,
