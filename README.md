@@ -4,12 +4,12 @@
 
 ![Screenshot_20230217_031421-900w](https://user-images.githubusercontent.com/825994/219824616-7340049a-3bbd-44b1-a2c5-a80b6d2a8195.PNG)
 
-| ![example](https://user-images.githubusercontent.com/825994/217553208-8b482d9a-4567-4af4-918d-a5938f709215.gif) | 
-|:--:| 
+| ![example](https://user-images.githubusercontent.com/825994/217553208-8b482d9a-4567-4af4-918d-a5938f709215.gif) |
+|:--:|
 | Example - Interpolated Frames |
 
-| [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) | 
-|:--:| 
+| [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) |
+|:--:|
 | Example - Video Inflation (YouTube) |
 
 # VFIformer-WebUI Features
@@ -39,7 +39,7 @@ _**Resequence Files**_
 * Renumber for Import into Video Editing Software
 
 _**Change FPS**_
-* Convert any FPS to any other FPS 
+* Convert any FPS to any other FPS
 
 # Set Up For Use
 
@@ -52,7 +52,9 @@ _**Change FPS**_
   - Cuda 11.7
   - NVIDIA RTX 3090
   - Windows 11
-2. Clone this repo in a separate directory and copy all directories/files on top of your *working* VFIformer installation
+2. Clone this repo in a separate directory and copy all* directories/files on top of your *working* VFIformer installation
+- *Important: DO NOT overwrite the VFIformer `models` with the one from this repo
+  - This repo contains a stubbed version of the VFIformer import needed to pass pylint for Github actions
 - This code makes no changes to their original code (but borrows some) and causes no conflicts with it
 - It shouldn't introduce any additional requirements over what VFIformer and Gradio-App needs
 3. If it's set up properly, the following command should write a new file `images/image1.png` using default settings
@@ -76,6 +78,8 @@ _**Change FPS**_
 - `models`
 - `pretrained_models`
 - `utils`
+- Important: be sure to replace the `models` directory in this repo with the one from VFIformer
+  - This repo contains a stubbed version of the VFIformer import needed to pass pylint for Github actions
 4. If it's set up properly, the following command should write a new file `images/image1.png`
 
 `python interpolate.py`
