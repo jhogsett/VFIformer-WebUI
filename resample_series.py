@@ -1,3 +1,4 @@
+"""Change FPS Feature Core Code"""
 import os
 import argparse
 import shutil
@@ -12,16 +13,26 @@ from webui_utils.file_utils import create_directory, get_files
 from webui_utils.simple_utils import restored_frame_searches
 
 def main():
+    """Use the Change FPS feature from the command line"""
     parser = argparse.ArgumentParser(description="Video Frame Interpolation - Upsample Video")
-    parser.add_argument("--model", default="./pretrained_models/pretrained_VFIformer/net_220.pth", type=str)
-    parser.add_argument("--gpu_ids", type=str, default="0", help="gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU")
-    parser.add_argument("--input_path", default="./images", type=str, help="Input path for PNGs to interpolate")
-    parser.add_argument("--original_fps", default=25, type=int, help="Original FPS of PNG frames")
-    parser.add_argument("--resampled_fps", default=30, type=int, help="Resampled FPS of new PNG frames")
-    parser.add_argument("--depth", default=10, type=int, help="How deep the frame splits go to reach the target")
-    parser.add_argument("--output_path", default="./output", type=str, help="Output path for interpolated PNGs")
-    parser.add_argument("--base_filename", default="upsampled_frames", type=str, help="Base filename for interpolated PNGs")
-    parser.add_argument("--verbose", dest="verbose", default=False, action="store_true", help="Show extra details")
+    parser.add_argument("--model", default="./pretrained_models/pretrained_VFIformer/net_220.pth",
+        type=str)
+    parser.add_argument("--gpu_ids", type=str, default="0",
+        help="gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU")
+    parser.add_argument("--input_path", default="./images", type=str,
+        help="Input path for PNGs to interpolate")
+    parser.add_argument("--original_fps", default=25, type=int,
+        help="Original FPS of PNG frames")
+    parser.add_argument("--resampled_fps", default=30, type=int,
+        help="Resampled FPS of new PNG frames")
+    parser.add_argument("--depth", default=10, type=int,
+        help="How deep the frame splits go to reach the target")
+    parser.add_argument("--output_path", default="./output", type=str,
+        help="Output path for interpolated PNGs")
+    parser.add_argument("--base_filename", default="upsampled_frames", type=str,
+        help="Base filename for interpolated PNGs")
+    parser.add_argument("--verbose", dest="verbose", default=False, action="store_true",
+        help="Show extra details")
     args = parser.parse_args()
 
     log = SimpleLog(args.verbose)
@@ -31,9 +42,11 @@ def main():
     target_interpolater = TargetInterpolate(interpolater, log.log)
     series_resampler = ResampleSeries(target_interpolater, log.log)
 
-    series_resampler.resample_series(args.input_path, args.output_path, args.original_fps, args.resampled_fps, args.depth, args.base_filename)
+    series_resampler.resample_series(args.input_path, args.output_path, args.original_fps,
+        args.resampled_fps, args.depth, args.base_filename)
 
 class ResampleSeries():
+    """Enscapsulate logic for the Change FPS feature"""
     def __init__(self,
                 target_interpolater : TargetInterpolate,
                 log_fn : Callable | None):
@@ -41,11 +54,14 @@ class ResampleSeries():
         self.log_fn = log_fn
         self.output_paths = []
 
-    def log(self, message):
-        if self.log_fn:
-            self.log_fn(message)
-
-    def resample_series(self, input_path : str, output_path : str, original_fps : int, resampled_fps : int, depth : int, base_filename : str):
+    def resample_series(self,
+                        input_path : str,
+                        output_path : str,
+                        original_fps : int,
+                        resampled_fps : int,
+                        depth : int,
+                        base_filename : str):
+        "Invoke the Change FPS feature"
         lowest_common_rate = math.lcm(original_fps, resampled_fps)
         expanded_frames = int(lowest_common_rate / original_fps)
         filler_frames = expanded_frames - 1
@@ -59,12 +75,12 @@ class ResampleSeries():
 
         # superset of all files and all possible search times
         superset=[]
-        for n in range(file_count - 1):
-            before_file = file_list[n]
-            after_file = file_list[n + 1]
+        for frame in range(file_count - 1):
+            before_file = file_list[frame]
+            after_file = file_list[frame + 1]
             for search in searches:
                 superset.append({
-                    "frame" : n,
+                    "frame" : frame,
                     "before_file" : before_file,
                     "after_file" : after_file,
                     "search" : search})
@@ -100,6 +116,11 @@ class ResampleSeries():
                                                         progress_label="Search")
         self.output_paths.extend(self.target_interpolater.output_paths)
         self.target_interpolater.output_paths = []
+
+    def log(self, message):
+        """Logging"""
+        if self.log_fn:
+            self.log_fn(message)
 
 if __name__ == '__main__':
     main()

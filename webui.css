@@ -32,19 +32,19 @@
 }
 
 #restartbutton {
-    background: blueviolet;
-    border: blueviolet;
+    background: hsl(250deg 25% 50%);
+    border: hsl(250deg 25% 50%);
 }
 
 #linkcontainer {
-    background: #492900 !important;
+    background: hsl(200deg 100% 13%)  !important;
     display: flex;
     justify-content: left;
     align-items: center;
 }
 
 #linkcontainer2 {
-    background: #5D4300 !important;
+    background: hsl(150deg 100% 11%) !important;
     display: flex;
     justify-content: left;
     align-items: center;
@@ -52,8 +52,7 @@
 
 #linkitem {
     margin: unset;
-    font-size: large;
-    font-weight: bold;
+    font-size: medium;
 }
 
 footer {

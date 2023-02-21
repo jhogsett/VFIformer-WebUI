@@ -1,0 +1,8 @@
+[MASTER]
+
+extension-pkg-whitelist=cv2
+
+[TYPECHECK]
+
+generated-members=numpy.* ,torch.*, cv2.*
+
