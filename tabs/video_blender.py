@@ -239,6 +239,7 @@ class VideoBlender():
         return gr.update(selected=3), input_path
 
     def video_blender_render_preview(self, input_path : str, frame_rate : int):
-        output_filepath, run_index = AutoIncrementFilename(self.config.directories["working"], "mp4").next_filename("video_preview", "mp4")
-        ffmpeg_cmd = PNGtoMP4(input_path, "auto", int(frame_rate), output_filepath, crf=QUALITY_SMALLER_SIZE)
-        return output_filepath
+        if input_path:
+            output_filepath, run_index = AutoIncrementFilename(self.config.directories["working"], "mp4").next_filename("video_preview", "mp4")
+            PNGtoMP4(input_path, "auto", int(frame_rate), output_filepath, crf=QUALITY_SMALLER_SIZE)
+            return output_filepath
