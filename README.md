@@ -1,4 +1,7 @@
 [![Pylint](https://github.com/jhogsett/VFIformer-WebUI/actions/workflows/pylint.yml/badge.svg)](https://github.com/jhogsett/VFIformer-WebUI/actions/workflows/pylint.yml)
+![pybadge](https://img.shields.io/badge/python-3.10.9-blue)
+![ptbadge](https://img.shields.io/badge/torch-3.10-red)
+![nvbadge](https://img.shields.io/badge/cuda-11.7-brightgreen)
 
 # VFIformer-WebUI - AI-Based Movie Restoration
 
