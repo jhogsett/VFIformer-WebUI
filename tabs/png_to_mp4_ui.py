@@ -28,8 +28,8 @@ class PNGtoMP4():
         minimum_crf = self.config.png_to_mp4_settings["minimum_crf"]
         maximum_crf = self.config.png_to_mp4_settings["maximum_crf"]
         default_crf = self.config.png_to_mp4_settings["default_crf"]
-        with gr.Tab(SimpleIcons.CONV_SYMBOL + "PNG Sequence to MP4"):
-            gr.Markdown("Convert a PNG sequence to a MP4")
+        with gr.Tab("PNG Sequence to MP4"):
+            gr.Markdown(SimpleIcons.CONV_SYMBOL + "Convert a PNG sequence to a MP4")
             input_path_text_pm = gr.Text(max_lines=1, label="PNG Files Path",
                 placeholder="Path on this server to the PNG files to be converted")
             output_path_text_pm = gr.Text(max_lines=1, label="MP4 File",

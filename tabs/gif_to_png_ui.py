@@ -24,8 +24,8 @@ class GIFtoPNG():
 
     def render_tab(self):
         """Render tab into UI"""
-        with gr.Tab(SimpleIcons.CONV_SYMBOL + "GIF to PNG Sequence"):
-            gr.Markdown("Convert GIF to a PNG sequence")
+        with gr.Tab("GIF to PNG Sequence"):
+            gr.Markdown(SimpleIcons.CONV_SYMBOL + "Convert GIF to a PNG sequence")
             input_path_text_gp = gr.Text(max_lines=1, label="GIF File",
                 placeholder="Path on this server to the GIF file to be converted")
             output_path_text_gp = gr.Text(max_lines=1, label="PNG Files Path",

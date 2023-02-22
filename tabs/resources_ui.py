@@ -35,6 +35,15 @@ class Resources():
                 "Advanced Text-to-Speech generation", "https://pypi.org/project/TTS/")
             self.link_item("linkcontainer", "Motion Array (Royalty-Free Content)",
                 "The All-in-One Video &amp; Filmmakers Platform", "https://motionarray.com/")
+            self.link_item("linkcontainer2", "",
+                "",
+                "")
+            self.link_item("linkcontainer", "",
+                "",
+                "")
+            self.link_item("linkcontainer2", "",
+                "",
+                "")
 
     def link_item(self, container_id : str, title : str, label : str, url : str):
         """Construct a resource entry row"""

@@ -37,8 +37,8 @@ class ChangeFPS():
         precision = self.config.fps_change_settings["default_precision"]
         lowest_common_rate, filled, sampled, fractions, predictions\
             = fps_change_details(starting_fps, ending_fps, precision)
-        with gr.Tab(SimpleIcons.FILM + "Change FPS"):
-            gr.HTML("Change the frame rate for a set of PNG video frames using frame search",
+        with gr.Tab("Change FPS"):
+            gr.HTML(SimpleIcons.FILM + "Change the frame rate for a set of PNG video frames using frame search",
                 elem_id="tabheading")
             with gr.Row():
                 with gr.Column():

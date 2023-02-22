@@ -23,8 +23,8 @@ class ResequenceFiles():
 
     def render_tab(self):
         """Render tab into UI"""
-        with gr.Tab(SimpleIcons.NUMBERS + "Resequence Files "):
-            gr.HTML("Rename a PNG sequence for import into video editing software",
+        with gr.Tab("Resequence Files "):
+            gr.HTML(SimpleIcons.NUMBERS + "Rename a PNG sequence for import into video editing software",
                 elem_id="tabheading")
             with gr.Row():
                 with gr.Column():

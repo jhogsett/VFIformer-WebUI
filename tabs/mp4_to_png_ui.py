@@ -25,8 +25,8 @@ class MP4toPNG():
     def render_tab(self):
         """Render tab into UI"""
         frame_rate = self.config.mp4_to_png_settings["frame_rate"]
-        with gr.Tab(SimpleIcons.CONV_SYMBOL + "MP4 to PNG Sequence"):
-            gr.Markdown("Convert MP4 to a PNG sequence")
+        with gr.Tab("MP4 to PNG Sequence"):
+            gr.Markdown(SimpleIcons.CONV_SYMBOL + "Convert MP4 to a PNG sequence")
             input_path_text_mp = gr.Text(max_lines=1, label="MP4 File",
                 placeholder="Path on this server to the MP4 file to be converted")
             output_path_text_mp = gr.Text(max_lines=1, label="PNG Files Path",
