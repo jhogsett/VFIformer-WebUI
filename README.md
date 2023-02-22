@@ -87,6 +87,14 @@ _**Change FPS**_
 
 `python interpolate.py`
 
+# Real-ESRGAN Add-On Set Up
+
+1. Get _Real-ESRGAN_ working on your local system
+- See their repo at [https://github.com/xinntao/Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)
+2. Clone their repo to its own directory and follow their instructions for local setup
+3. Copy the `realesrgan` directory to your `VFIformer-WebUI` directory
+* The _Real-ESRGAN 4x+_ model (65MB) will automatically download on first use
+
 # Starting Web UI Application
 
 The application can be started in any of these ways:
