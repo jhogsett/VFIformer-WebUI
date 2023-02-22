@@ -66,6 +66,7 @@ class SimpleIcons:
     SWEAT = "💦"
     GEMSTONE = "💎"
     LABCOAT = "🥼"
+    INCREASING = "📈"
 
     # shared symbol definitions
     TIPS_SYMBOL = INFO

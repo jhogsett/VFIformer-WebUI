@@ -139,6 +139,7 @@ utils/
 
 # RealESRGAN core bits
 realesrgan/
+weights/
 
 # junk
 go.bat
