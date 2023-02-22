@@ -139,10 +139,10 @@ utils/
 
 # RealESRGAN core bits
 realesrgan/
+weights/
 
 # junk
 go.bat
 temp/
 notes.txt
 test_assets/
-models_stub/

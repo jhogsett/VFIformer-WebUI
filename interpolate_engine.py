@@ -4,7 +4,7 @@ from torch.nn.parallel import DistributedDataParallel
 import torch
 from torch import nn
 from torch.backends import cudnn
-from models.modules import define_G
+from models.modules import define_G # pylint: disable=import-error
 from webui_utils.simple_utils import FauxArgs
 
 class InterpolateEngine:

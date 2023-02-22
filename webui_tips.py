@@ -44,4 +44,4 @@ class WebuiTips:
     resequence_files = gr.Markdown(load_markdown(tips_path, "resequence_files"))
     change_fps = gr.Markdown(load_markdown(tips_path, "change_fps"))
     gif_to_mp4 = gr.Markdown(load_markdown(tips_path, "gif_to_mp4"))
-    upscaling = gr.Markdown(load_markdown(tips_path, "upscaling"))
+    upscale_frames = gr.Markdown(load_markdown(tips_path, "upscale_frames"))

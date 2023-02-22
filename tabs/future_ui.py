@@ -23,10 +23,7 @@ class Future():
 
     def render_tab(self):
         """Render tab into UI"""
-        with gr.Tab(SimpleIcons.WISH_SYMBOL + "GIF to Video"):
+        with gr.Tab("GIF to Video"):
             with gr.Row():
                 with gr.Column():
                     WebuiTips.gif_to_mp4.render()
-
-        with gr.Tab(SimpleIcons.WISH_SYMBOL + "Upscaling"):
-            WebuiTips.upscaling.render()
