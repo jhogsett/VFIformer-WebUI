@@ -37,14 +37,14 @@
 }
 
 #linkcontainer {
-    background: hsl(200deg 100% 13%)  !important;
+    background: hsl(200deg 100% 10%)  !important;
     display: flex;
     justify-content: left;
     align-items: center;
 }
 
 #linkcontainer2 {
-    background: hsl(150deg 100% 11%) !important;
+    background: hsl(150deg 100% 8%) !important;
     display: flex;
     justify-content: left;
     align-items: center;
