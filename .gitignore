@@ -137,6 +137,9 @@ models/
 pretrained_models/
 utils/
 
+# RealESRGAN core bits
+realesrgan/
+
 # junk
 go.bat
 temp/
