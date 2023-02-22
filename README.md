@@ -56,8 +56,6 @@ _**Change FPS**_
   - NVIDIA RTX 3090
   - Windows 11
 2. Clone this repo in a separate directory and copy all* directories/files on top of your *working* VFIformer installation
-- *Important: DO NOT overwrite the VFIformer `models` with the one from this repo
-  - This repo contains a stubbed version of the VFIformer import needed to pass pylint for Github actions
 - This code makes no changes to their original code (but borrows some) and causes no conflicts with it
 - It shouldn't introduce any additional requirements over what VFIformer and Gradio-App needs
 3. If it's set up properly, the following command should write a new file `images/image1.png` using default settings
@@ -81,8 +79,6 @@ _**Change FPS**_
 - `models`
 - `pretrained_models`
 - `utils`
-- Important: be sure to replace the `models` directory in this repo with the one from VFIformer
-  - This repo contains a stubbed version of the VFIformer import needed to pass pylint for Github actions
 4. If it's set up properly, the following command should write a new file `images/image1.png`
 
 `python interpolate.py`
