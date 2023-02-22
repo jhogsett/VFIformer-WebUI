@@ -7,13 +7,13 @@
 
 ![Screenshot_20230217_031421-900w](https://user-images.githubusercontent.com/825994/219824616-7340049a-3bbd-44b1-a2c5-a80b6d2a8195.PNG)
 
-| ![example](https://user-images.githubusercontent.com/825994/217553208-8b482d9a-4567-4af4-918d-a5938f709215.gif) |
-|:--:|
 | Example - Interpolated Frames |
-
-| [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) |
 |:--:|
+| ![example](https://user-images.githubusercontent.com/825994/217553208-8b482d9a-4567-4af4-918d-a5938f709215.gif) |
+
 | Example - Video Inflation (YouTube) |
+|:--:|
+| [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) |
 
 # VFIformer-WebUI Features
 
