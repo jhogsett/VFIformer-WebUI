@@ -17,6 +17,7 @@ from tabs.future_ui import Future
 from tabs.options_ui import Options
 from tabs.resources_ui import Resources
 from tabs.upscale_frames_ui import UpscaleFrames
+from tabs.gif_to_mp4_ui import GIFtoMP4
 
 def create_ui(config, engine, log_fn, restart_fn):
     """Construct the Gradio Blocks UI"""
@@ -31,6 +32,7 @@ def create_ui(config, engine, log_fn, restart_fn):
         ResynthesizeVideo(config, engine, log_fn).render_tab()
         FrameRestoration(config, engine, log_fn).render_tab()
         VideoBlender(config, engine, log_fn).render_tab()
+        GIFtoMP4(config, engine, log_fn).render_tab()
         with gr.Tab(SimpleIcons.WRENCH + "Tools"):
             with gr.Tab("File Conversion"):
                 gr.HTML(SimpleIcons.FOLDER + "Tools for common video file conversion tasks (ffmpeg.exe must be in path)",
@@ -42,7 +44,6 @@ def create_ui(config, engine, log_fn, restart_fn):
             ResequenceFiles(config, engine, log_fn).render_tab()
             ChangeFPS(config, engine, log_fn).render_tab()
             UpscaleFrames(config, engine, log_fn).render_tab()
-            Future(config, engine, log_fn).render_tab()
             Options(config, engine, log_fn, restart_fn).render_tab()
             Resources(config, engine, log_fn, restart_fn).render_tab()
         sep = '  •  '
