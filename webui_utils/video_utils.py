@@ -106,7 +106,7 @@ def GIFtoPNG(input_path : str, # pylint: disable=invalid-name
         frame_count = mp4_frame_count(input_path)
     else:
         # assume an arbitrarily high frame count to ensure a wide index
-        frame_count = 100_000
+        frame_count = 1_000_000
 
     num_width = len(str(frame_count))
     filename_pattern = f"{base_filename}%0{num_width}d.png"

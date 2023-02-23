@@ -8,7 +8,7 @@ from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, get_files, split_filepath
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.video_utils import GIFtoPNG, PNGtoMP4
-# from webui_tips import WebuiTips
+from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
@@ -45,15 +45,15 @@ class GIFtoMP4():
             with gr.Row():
                 with gr.Column():
                     with gr.Row():
-                        input_path_text = gr.Text(max_lines=1, label="GIF File (MP4 works too)",
-                            placeholder="Path on this server to the GIF or MP4 file to be converted")
+                        input_path_text = gr.Text(max_lines=1, label="GIF File (MP4 and others work too)",
+                        placeholder="Path on this server to the GIF or MP4 file to be converted")
                     with gr.Row():
                         upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
                             label="GIF Frame Size Upscale Factor")
                         inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=1.0,
                             label="GIF Frame Rate Upscale Factor")
                         order_input = gr.Radio(value="Rate, then Size (may be faster)",
-                            choices=["Rate, then Size (may be faster)", "Size, then Rate (may be smoother)"],
+                choices=["Rate, then Size (may be faster)", "Size, then Rate (may be smoother)"],
                             label="Frame Processing Order")
                     with gr.Row():
                         output_path_text = gr.Text(max_lines=1, label="MP4 File",
@@ -65,9 +65,8 @@ class GIFtoMP4():
                             step=1, value=default_crf, label="Quality (lower=better)")
             gr.Markdown("*Progress can be tracked in the console*")
             convert_button = gr.Button("Convert " + SimpleIcons.SLOW_SYMBOL, variant="primary")
-            # with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
-            #     WebuiTips.change_fps.render()
-            # keep working bits
+            with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
+                WebuiTips.gif_to_mp4.render()
         convert_button.click(self.convert, inputs=[input_path_text, output_path_text,
             upscale_input, inflation_input, order_input, input_frame_rate, quality_slider])
 
