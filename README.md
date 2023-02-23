@@ -159,12 +159,7 @@ The core feature have command-line equivalents
 [Wiki - App Configuration](https://github.com/jhogsett/VFIformer-WebUI/wiki/App-Configuration)
 
 # Future Ideas
-- incorporate Real-ESRGAN for frame restoration and upscaling
-  - https://github.com/xinntao/Real-ESRGAN
-- add a GIF-to-MP4 feature to recover the original video from an animated GIF
-  - uses Real-ESRGAN to denoise the GIF frames and upscale them
-  - uses VFIformer to fill in missing frames
-  - saved as a MP4 files or PNG sequence
+
 - add Audio tools
 
 # My Public Uses of VFIformer
