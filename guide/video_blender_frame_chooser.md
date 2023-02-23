@@ -8,7 +8,7 @@ The green buttons copy files!
 
 ## How To Use
 - Click the _Next Frame >_ and _< Prev Frame_ buttons to step through the video one frame at a time
-    - Tip: After clicking a button, SPACEBAR can be pressed to click repeatedly
+    - Tip: Click in the Frame Number box, then press and hold the Up or Down keyboard keys to advance frames quickly
 - Click the green _Use Path N Frame | Next >_ buttons to copy a frame from either path to the project path, then step to the next frame
 - Input a _Frame Number_ and click _Go_, or press ENTER, to move to that frame
 - Click the _100 >_ and _< 100_ buttons to move forward or back 100 frames

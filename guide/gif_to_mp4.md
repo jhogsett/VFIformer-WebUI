@@ -26,7 +26,7 @@ Two third-party packages are required to use this feature:
     - Choose a value to set the FPS increase for the video
     - The default is 4, the range is from 1 to 8
 1. Choose a _Frame Processing Order_
-    - _Rate, then Size_ is faster overall
+    - _Rate, then Size_ is faster overall, and requires less VRAM
         - Smaller images are faster to interpolate
     - _Size, then Rate_ is slower, but may produce higher quality
         - VFIformer may work better with original content at its native rate
