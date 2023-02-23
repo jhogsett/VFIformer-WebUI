@@ -171,8 +171,11 @@ YouTube
 
 # Acknowledgements
 
-Thanks! to the VFIformer folks for their amazing AI Tool
+Thanks! to the VFIformer folks for their amazing AI frame interpolation tool
 - https://github.com/dvlab-research/VFIformer
+
+Thans! to the Real-ESRGAN folks for their wonderful frame restoration/upscaling tool
+- https://github.com/xinntao/Real-ESRGAN
 
 Thanks! to the stable-diffusion-webui folks for their great UI, amazing tool, and for inspiring me to learn Gradio
 - https://github.com/AUTOMATIC1111/stable-diffusion-webui
