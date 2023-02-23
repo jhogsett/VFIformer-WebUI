@@ -44,6 +44,9 @@ _**Resequence Files**_
 _**Change FPS**_
 * Convert any FPS to any other FPS
 
+_**GIF to MP4**_
+* Convert Animated GIF to Mp4 in one click
+
 # Set Up For Use
 
 1. Get VFIformer working on your local system
