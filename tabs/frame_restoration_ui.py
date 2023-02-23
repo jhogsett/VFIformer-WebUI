@@ -15,20 +15,15 @@ from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
+from tabs.tab_base import TabBase
 
-class FrameRestoration():
+class FrameRestoration(TabBase):
     """Encapsulates UI elements and events for the Frame Restoration feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        "Logging"
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""

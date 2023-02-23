@@ -11,20 +11,15 @@ from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from deep_interpolate import DeepInterpolate
 from interpolate_series import InterpolateSeries
+from tabs.tab_base import TabBase
 
-class VideoInflation():
+class VideoInflation(TabBase):
     """Encapsulates UI elements and events for the Video Inflation feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""

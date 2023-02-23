@@ -13,20 +13,15 @@ from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
 from resample_series import ResampleSeries
 from resequence_files import ResequenceFiles as _ResequenceFiles
+from tabs.tab_base import TabBase
 
-class ChangeFPS():
+class ChangeFPS(TabBase):
     """Encapsulates UI elements and events for the Change FPS feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""

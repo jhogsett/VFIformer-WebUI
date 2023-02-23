@@ -13,7 +13,6 @@ from tabs.gif_to_png_ui import GIFtoPNG
 from tabs.png_to_gif_ui import PNGtoGIF
 from tabs.resequence_files_ui import ResequenceFiles
 from tabs.change_fps_ui import ChangeFPS
-from tabs.future_ui import Future
 from tabs.options_ui import Options
 from tabs.resources_ui import Resources
 from tabs.upscale_frames_ui import UpscaleFrames
@@ -35,7 +34,8 @@ def create_ui(config, engine, log_fn, restart_fn):
         GIFtoMP4(config, engine, log_fn).render_tab()
         with gr.Tab(SimpleIcons.WRENCH + "Tools"):
             with gr.Tab("File Conversion"):
-                gr.HTML(SimpleIcons.FOLDER + "Tools for common video file conversion tasks (ffmpeg.exe must be in path)",
+                gr.HTML(SimpleIcons.FOLDER +
+                    "Tools for common video file conversion tasks (ffmpeg.exe must be in path)",
                     elem_id="tabheading")
                 MP4toPNG(config, engine, log_fn).render_tab()
                 PNGtoMP4(config, engine, log_fn).render_tab()
@@ -45,7 +45,7 @@ def create_ui(config, engine, log_fn, restart_fn):
             ChangeFPS(config, engine, log_fn).render_tab()
             UpscaleFrames(config, engine, log_fn).render_tab()
             Options(config, engine, log_fn, restart_fn).render_tab()
-            Resources(config, engine, log_fn, restart_fn).render_tab()
+            Resources(config, engine, log_fn).render_tab()
         sep = '  •  '
         _js = ('<a href="/" ' +
             'onclick="javascript:gradioApp()' +

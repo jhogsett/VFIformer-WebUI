@@ -4,22 +4,15 @@ import gradio as gr
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from interpolate_engine import InterpolateEngine
+from tabs.tab_base import TabBase
 
-class Resources():
+class Resources(TabBase):
     """Encapsulates UI elements and events for the Resources page"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
-                    log_fn : Callable,
-                    restart_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-        self.restart_fn = restart_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+                    log_fn : Callable):
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render page into UI"""
