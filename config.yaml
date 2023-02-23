@@ -55,7 +55,7 @@ realesrgan_settings:
   model_name: "RealESRGAN_x4plus"
   fp32: True
 user_interface:
-  tips_path: "./tips"
+  tips_path: "./guide"
   theme: "default"
   css_file: "webui.css"
   log_file: None # "./webui.log"

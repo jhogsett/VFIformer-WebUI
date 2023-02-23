@@ -4,7 +4,7 @@ import gradio as gr
 
 class WebuiTips:
     """Encapsulate logic to turn .md docs into Gradio markdown"""
-    tips_path = "./tips"
+    tips_path = "./guide"
 
     @classmethod
     def set_tips_path(cls, tips_path : str):
