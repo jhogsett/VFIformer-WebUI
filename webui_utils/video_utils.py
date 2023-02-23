@@ -26,10 +26,11 @@ def PNGtoMP4(input_path : str, # pylint: disable=invalid-name
     """Encapsulate logic for the PNG Sequence to MP4 feature"""
     # if filename_pattern is "auto" it uses the filename of the first found file
     # and the count of file to determine the pattern, .png as the file type
-    # ffmpeg -i BALLOON%03d.png -c:v libx264 -r 30 -pix_fmt yuv420p frames.mp4
-    if filename_pattern == "auto":
-        filename_pattern = determine_pattern(input_path)
-    ffcmd = FFmpeg(inputs= {os.path.join(input_path, filename_pattern) : None},
+    # ffmpeg -framerate 60 -i .\upscaled_frames%05d.png -c:v libx264 -r 60  -pix_fmt yuv420p
+    #   -crf 28 test.mp4    if filename_pattern == "auto":
+    filename_pattern = determine_pattern(input_path)
+    ffcmd = FFmpeg(
+        inputs= {os.path.join(input_path, filename_pattern) : f"-framerate {frame_rate}"},
         outputs={output_filepath : f"-c:v libx264 -r {frame_rate} -pix_fmt yuv420p -crf {crf}"},
         global_options="-y")
     cmd = ffcmd.cmd
