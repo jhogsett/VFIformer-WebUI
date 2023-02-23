@@ -1,7 +1,7 @@
 """Functions for dealing with video using FFmpeg"""
 import os
 import glob
-from ffmpy import FFmpeg
+from ffmpy import FFmpeg, FFprobe
 from .image_utils import gif_frame_count
 from .file_utils import split_filepath
 
@@ -98,8 +98,16 @@ def GIFtoPNG(input_path : str, # pylint: disable=invalid-name
             start_number : int = 0):
     """Encapsulates logic for the GIF to PNG Sequence feature"""
     # ffmpeg -y -i images\example.gif -start_number 0 gifframes_%09d.png
-    _, base_filename, _ = split_filepath(input_path)
-    frame_count = gif_frame_count(input_path)
+    _, base_filename, extension = split_filepath(input_path)
+
+    if extension.lower() is ".gif":
+        frame_count = gif_frame_count(input_path)
+    elif extension.lower() is ".mp4":
+        frame_count = mp4_frame_count(input_path)
+    else:
+        # assume an arbitrarily high frame count to ensure a wide index
+        frame_count = 100_000
+
     num_width = len(str(frame_count))
     filename_pattern = f"{base_filename}%0{num_width}d.png"
     ffcmd = FFmpeg(inputs= {input_path : None},
@@ -108,3 +116,9 @@ def GIFtoPNG(input_path : str, # pylint: disable=invalid-name
     cmd = ffcmd.cmd
     ffcmd.run()
     return cmd
+
+def mp4_frame_count(input_path : str) -> int:
+    """Using FFprobe to determine MP4 frame count"""
+    # ffprobe -v error -select_streams v:0 -count_frames -show_entries stream=nb_read_frames -print_format default=nokey=1:noprint_wrappers=1 Big_Buck_Bunny_1080_10s_20MB.mp4
+    ff = FFprobe(inputs= {input_path : "-count_frames -show_entries stream=nb_read_frames -print_format default=nokey=1:noprint_wrappers=1"})
+    return ff.run()

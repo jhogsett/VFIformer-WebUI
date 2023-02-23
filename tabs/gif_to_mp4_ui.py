@@ -45,16 +45,16 @@ class GIFtoMP4():
             with gr.Row():
                 with gr.Column():
                     with gr.Row():
-                        input_path_text = gr.Text(max_lines=1, label="GIF File",
-                            placeholder="Path on this server to the GIF file to be converted")
+                        input_path_text = gr.Text(max_lines=1, label="GIF File (MP4 works too)",
+                            placeholder="Path on this server to the GIF or MP4 file to be converted")
                     with gr.Row():
                         upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
                             label="GIF Frame Size Upscale Factor")
                         inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=1.0,
                             label="GIF Frame Rate Upscale Factor")
-                        order_input = gr.Radio(value="Size first then Rate",
-                            choices=["Size first then Rate", "Rate first then size"],
-                            label="Processing Order")
+                        order_input = gr.Radio(value="Rate, then Size (may be faster)",
+                            choices=["Rate, then Size (faster)", "Size, then Rate (may be smoother)"],
+                            label="Frame Processing Order")
                     with gr.Row():
                         output_path_text = gr.Text(max_lines=1, label="MP4 File",
                             placeholder="Path on this server for the converted MP4 file")
@@ -84,7 +84,7 @@ class GIFtoMP4():
             working_path, run_index = AutoIncrementDirectory(
                 self.config.directories["output_gif_to_mp4"]).next_directory("run")
             precision = self.config.gif_to_mp4_settings["resampling_precision"]
-            size_first = True if order == "Size first then Rate" else False
+            size_first = True if order[0] == "S" else False
 
             frames_path = os.path.join(working_path, "gif_to_png")
             create_directory(frames_path)
