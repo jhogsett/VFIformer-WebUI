@@ -72,7 +72,7 @@ class TargetInterpolate():
         """Invoke the Frame Search feature"""
         self.init_frame_register()
         self.reset_split_manager(num_splits)
-        self.init_progress(num_splits, progress_label)
+        self.init_progress(num_splits, num_splits, progress_label)
 
         output_filepath_prefix = os.path.join(output_path, base_filename)
         self._set_up_outer_frames(before_filepath, after_filepath, output_filepath_prefix)
@@ -202,9 +202,13 @@ class TargetInterpolate():
         """Return a sorted list of the currently registered found frame files"""
         return sorted(self.frame_register)
 
-    def init_progress(self, _max, description):
+    def init_progress(self, num_splits, _max, description):
         """Start managing progress bar for a new found of searches"""
-        self.progress = tqdm(range(_max), desc=description)
+        if num_splits < 2:
+            self.progress = None
+        else:
+            self.progress = tqdm(range(_max), desc=description)
+        # self.progress = tqdm(range(_max), desc=description)
 
     def step_progress(self):
         """Advance the progress bar"""
