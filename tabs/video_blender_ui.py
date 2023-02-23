@@ -15,23 +15,18 @@ from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
 from restore_frames import RestoreFrames
 from video_blender import VideoBlenderState, VideoBlenderProjects
+from tabs.tab_base import TabBase
 
-class VideoBlender():
+class VideoBlender(TabBase):
     """Encapsulates UI elements and events for the Video Blender eature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
+        TabBase.__init__(self, config, engine, log_fn)
         self.video_blender_state = None
         self.video_blender_projects = VideoBlenderProjects(self.config.
             blender_settings["projects_file"])
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
 
     def render_tab(self):
         """Render tab into UI"""

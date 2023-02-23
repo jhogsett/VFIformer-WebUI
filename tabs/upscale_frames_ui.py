@@ -8,19 +8,15 @@ from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.ui_utils import update_splits_info
 from webui_tips import WebuiTips
 from upscale_series import UpscaleSeries
+from tabs.tab_base import TabBase
 
-class UpscaleFrames():
+class UpscaleFrames(TabBase):
     """Encapsulates UI elements and events for the Upscale Frames feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : any,
                     log_fn : Callable):
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""

@@ -17,20 +17,15 @@ from interpolate_series import InterpolateSeries
 from resample_series import ResampleSeries
 from resequence_files import ResequenceFiles as _ResequenceFiles
 from upscale_series import UpscaleSeries
+from tabs.tab_base import TabBase
 
-class GIFtoMP4():
+class GIFtoMP4(TabBase):
     """Encapsulates UI elements and events for the GIF to MP4 feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""
@@ -85,25 +80,25 @@ class GIFtoMP4():
             precision = self.config.gif_to_mp4_settings["resampling_precision"]
             size_first = True if order[0] == "S" else False
 
-            frames_path = os.path.join(working_path, "gif_to_png")
+            frames_path = os.path.join(working_path, "1-gif_to_png")
             create_directory(frames_path)
             self.convert_gif_to_png_frames(input_filepath, frames_path)
 
             if size_first:
-                upscaled_path = os.path.join(working_path, "png_to_upscaled")
+                upscaled_path = os.path.join(working_path, "2-png_to_upscaled")
                 create_directory(upscaled_path)
                 self.upscale_png_frames_to_path(frames_path, upscaled_path, upscaling)
 
-                inflated_path = os.path.join(working_path, "upscaled_to_inflated")
+                inflated_path = os.path.join(working_path, "3-upscaled_to_inflated")
                 create_directory(inflated_path)
                 self.inflate_png_frames_to_path(upscaled_path, inflated_path, inflation, precision)
                 frames_path = inflated_path
             else:
-                inflated_path = os.path.join(working_path, "png_to_inflated")
+                inflated_path = os.path.join(working_path, "2-png_to_inflated")
                 create_directory(inflated_path)
                 self.inflate_png_frames_to_path(frames_path, inflated_path, inflation, precision)
 
-                upscaled_path = os.path.join(working_path, "inflated_to_upscaled")
+                upscaled_path = os.path.join(working_path, "3-inflated_to_upscaled")
                 create_directory(upscaled_path)
                 self.upscale_png_frames_to_path(inflated_path, upscaled_path, upscaling)
                 frames_path = upscaled_path

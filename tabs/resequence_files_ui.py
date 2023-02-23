@@ -6,20 +6,15 @@ from webui_utils.simple_icons import SimpleIcons
 from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
 from resequence_files import ResequenceFiles as _ResequenceFiles
+from tabs.tab_base import TabBase
 
-class ResequenceFiles():
+class ResequenceFiles(TabBase):
     """Encapsulates UI elements and events for the Resequence Files feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""

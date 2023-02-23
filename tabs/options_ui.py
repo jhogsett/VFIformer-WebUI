@@ -4,22 +4,17 @@ import gradio as gr
 from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from interpolate_engine import InterpolateEngine
+from tabs.tab_base import TabBase
 
-class Options():
+class Options(TabBase):
     """Encapsulates UI elements and events for the MP4 to PNG Sequence feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable,
                     restart_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
+        TabBase.__init__(self, config, engine, log_fn)
         self.restart_fn = restart_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
 
     def render_tab(self):
         """Render tab into UI"""

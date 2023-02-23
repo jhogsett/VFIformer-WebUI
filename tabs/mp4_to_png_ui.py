@@ -7,20 +7,15 @@ from webui_utils.file_utils import create_directory
 from webui_utils.video_utils import MP4toPNG as _MP4toPNG
 from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
+from tabs.tab_base import TabBase
 
-class MP4toPNG():
+class MP4toPNG(TabBase):
     """Encapsulates UI elements and events for the MP4 to PNG Sequence feature"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
                     log_fn : Callable):
-        self.engine = engine
-        self.config = config
-        self.log_fn = log_fn
-
-    def log(self, message : str):
-        """Logging"""
-        self.log_fn(message)
+        TabBase.__init__(self, config, engine, log_fn)
 
     def render_tab(self):
         """Render tab into UI"""
