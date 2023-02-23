@@ -15,7 +15,7 @@ def determine_pattern(input_path : str):
     first_file = files[0]
     file_count = len(files)
     num_width = len(str(file_count))
-    name_part, ext_part = os.path.splitext(first_file)
+    _, name_part, ext_part = split_filepath(first_file)
     return f"{name_part[:-num_width]}%0{num_width}d{ext_part}"
 
 def PNGtoMP4(input_path : str, # pylint: disable=invalid-name
