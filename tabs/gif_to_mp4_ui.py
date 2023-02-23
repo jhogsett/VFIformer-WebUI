@@ -53,7 +53,7 @@ class GIFtoMP4():
                         inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=1.0,
                             label="GIF Frame Rate Upscale Factor")
                         order_input = gr.Radio(value="Rate, then Size (may be faster)",
-                            choices=["Rate, then Size (faster)", "Size, then Rate (may be smoother)"],
+                            choices=["Rate, then Size (may be faster)", "Size, then Rate (may be smoother)"],
                             label="Frame Processing Order")
                     with gr.Row():
                         output_path_text = gr.Text(max_lines=1, label="MP4 File",
