@@ -48,7 +48,7 @@ class GIFtoMP4(TabBase):
                     with gr.Row():
                         upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
                             label="GIF Frame Size Upscale Factor")
-                        inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=1.0,
+                        inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=16.0, step=1.0,
                             label="GIF Frame Rate Upscale Factor")
                         order_input = gr.Radio(value="Rate, then Size (may be faster)",
                 choices=["Rate, then Size (may be faster)", "Size, then Rate (may be smoother)"],
@@ -57,7 +57,7 @@ class GIFtoMP4(TabBase):
                         output_path_text = gr.Text(max_lines=1, label="MP4 File",
                             placeholder="Path on this server for the converted MP4 file")
                     with gr.Row():
-                        input_frame_rate = gr.Slider(minimum=1, maximum=60, value=frame_rate,
+                        input_frame_rate = gr.Slider(minimum=1, maximum=240, value=frame_rate,
                             step=1, label="MP4 Frame Rate")
                         quality_slider = gr.Slider(minimum=minimum_crf, maximum=maximum_crf,
                             step=1, value=default_crf, label="Quality (lower=better)")
