@@ -100,3 +100,7 @@ def sortable_float_index(float_value : float,
     _format = "f" if fixed_width else "g"
     format_str = "{:0." + str(mantissa_width) + _format + "}"
     return format_str.format(float_value)
+
+def is_power_of_two(var):
+    """True for 1, 2, 4, 8 etc"""
+    return (var & (var-1) == 0) and var != 0

@@ -3,14 +3,16 @@ import os
 import argparse
 import shutil
 import math
+from fractions import Fraction
 from typing import Callable
 from tqdm import tqdm
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
+from deep_interpolate import DeepInterpolate
 from webui_utils.simple_log import SimpleLog
 from webui_utils.file_utils import create_directory, get_files
-from webui_utils.simple_utils import restored_frame_searches
+from webui_utils.simple_utils import restored_frame_searches, is_power_of_two
 
 def main():
     """Use the Change FPS feature from the command line"""
@@ -40,7 +42,9 @@ def main():
     engine = InterpolateEngine(args.model, args.gpu_ids)
     interpolater = Interpolate(engine.model, log.log)
     target_interpolater = TargetInterpolate(interpolater, log.log)
-    series_resampler = ResampleSeries(target_interpolater, log.log)
+    deep_interpolater = DeepInterpolate(interpolater, log.log)
+    # series_interpolater = InterpolateSeries(deep_interpolater, log.log)
+    series_resampler = ResampleSeries(target_interpolater, deep_interpolater, log.log)
 
     series_resampler.resample_series(args.input_path, args.output_path, args.original_fps,
         args.resampled_fps, args.depth, args.base_filename)
@@ -49,8 +53,10 @@ class ResampleSeries():
     """Enscapsulate logic for the Change FPS feature"""
     def __init__(self,
                 target_interpolater : TargetInterpolate,
+                deep_interpolater : DeepInterpolate,
                 log_fn : Callable | None):
         self.target_interpolater = target_interpolater
+        self.deep_interpolater = deep_interpolater
         self.log_fn = log_fn
         self.output_paths = []
 
@@ -66,10 +72,14 @@ class ResampleSeries():
         expanded_frames = int(lowest_common_rate / original_fps)
         filler_frames = expanded_frames - 1
 
+        use_target_interpolation = not is_power_of_two(expanded_frames)
+        technique = "frame search" if use_target_interpolation else "video inflation"
+        self.log(f"resampling technique: {technique}")
+
         # set of needed frame times including original frames
         searches = [0.0] + restored_frame_searches(filler_frames)
 
-        # PNG files found int he input path
+        # PNG files found in the input path
         file_list = sorted(get_files(input_path, "png"))
         file_count = len(file_list)
 
@@ -98,6 +108,10 @@ class ResampleSeries():
             search = sample["search"]
             frame_number = str(frame).zfill(num_width)
 
+            div, den = Fraction(search).as_integer_ratio()
+            num_splits = int(math.log2(den))
+            search_pos = div
+
             if search == 0.0:
                 filename = f"{base_filename}[{frame_number}]@0.0.png"
                 output_filepath = os.path.join(output_path, filename)
@@ -105,15 +119,28 @@ class ResampleSeries():
                 shutil.copy(before_file, output_filepath)
             else:
                 filename = f"{base_filename}[{frame_number}]"
-                self.log(f"searching {before_file} for frame time {search}")
-                self.target_interpolater.split_frames(before_file,
+                self.log(f"searching {before_file} & {after_file} for frame time {search}")
+                if use_target_interpolation:
+                    self.target_interpolater.split_frames(before_file,
+                                                            after_file,
+                                                            depth,
+                                                            min_target=search,
+                                                            max_target=search,
+                                                            output_path=output_path,
+                                                            base_filename=filename,
+                                                            progress_label="Search")
+                else:
+                    filename = f"{base_filename}[{frame_number}]@{search}-"
+                    self.log(f"interpolating {before_file} & {after_file} for frame position " +
+                        f"{search_pos} with {num_splits} splits")
+                    self.deep_interpolater.split_frames(before_file,
                                                         after_file,
-                                                        depth,
-                                                        min_target=search,
-                                                        max_target=search,
+                                                        num_splits,
                                                         output_path=output_path,
                                                         base_filename=filename,
-                                                        progress_label="Search")
+                                                        progress_label="Interpolate",
+                                                        search=search_pos)
+
         self.output_paths.extend(self.target_interpolater.output_paths)
         self.target_interpolater.output_paths = []
 

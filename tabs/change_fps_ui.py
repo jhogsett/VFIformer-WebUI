@@ -11,6 +11,7 @@ from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
 from interpolation_target import TargetInterpolate
+from deep_interpolate import DeepInterpolate
 from resample_series import ResampleSeries
 from resequence_files import ResequenceFiles as _ResequenceFiles
 from tabs.tab_base import TabBase
@@ -87,7 +88,8 @@ placeholder="Path on this server for the converted PNG frame files, leave blank 
         if input_path:
             interpolater = Interpolate(self.engine.model, self.log)
             target_interpolater = TargetInterpolate(interpolater, self.log)
-            series_resampler = ResampleSeries(target_interpolater, self.log)
+            deep_interpolater = DeepInterpolate(interpolater, self.log)
+            series_resampler = ResampleSeries(target_interpolater, deep_interpolater, self.log)
             if output_path:
                 base_output_path = output_path
                 create_directory(base_output_path)

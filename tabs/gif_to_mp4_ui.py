@@ -8,6 +8,7 @@ from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, get_files, split_filepath
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.video_utils import GIFtoPNG, PNGtoMP4
+from webui_utils.simple_utils import is_power_of_two
 from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
@@ -171,7 +172,7 @@ class GIFtoMP4(TabBase):
         if inflate_factor < 2:
             self.log("using no-op inflation")
             self.inflate_using_noop(input_path, output_path)
-        elif inflate_factor in [2, 4, 8, 16]:
+        elif is_power_of_two(inflate_factor):
             self.log("using series interpolation inflation")
             self.inflate_using_series_interpolation(input_path, output_path, inflate_factor)
         else:

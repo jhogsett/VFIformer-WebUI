@@ -59,7 +59,8 @@ class DeepInterpolate():
                     base_filename,
                     progress_label="Frame",
                     continued=False,
-                    resynthesis=False):
+                    resynthesis=False,
+                    search : int | None=None):
         """Invoke the Frame Interpolation feature"""
         self.init_frame_register()
         self.reset_split_manager(num_splits)
@@ -69,7 +70,7 @@ class DeepInterpolate():
         self._set_up_outer_frames(before_filepath, after_filepath, output_filepath_prefix)
 
         self._recursive_split_frames(0.0, 1.0, output_filepath_prefix)
-        self._integerize_filenames(output_path, base_filename, continued, resynthesis)
+        self._integerize_filenames(output_path, base_filename, continued, resynthesis, search)
         self.close_progress()
 
     def _set_up_outer_frames(self,
@@ -113,7 +114,7 @@ class DeepInterpolate():
             self._recursive_split_frames(mid_index, last_index, filepath_prefix)
             self.exit_split()
 
-    def _integerize_filenames(self, output_path, base_name, continued, resynthesis):
+    def _integerize_filenames(self, output_path, base_name, continued, resynthesis, search):
         """Keep the interpolated frame files with an index number for sorting"""
         file_prefix = os.path.join(output_path, base_name)
         frame_files = self.sorted_registered_frames()
@@ -123,7 +124,11 @@ class DeepInterpolate():
         self.output_paths = []
 
         for file in frame_files:
-            if resynthesis and (index == 0 or index == num_files - 1):
+            if search and index != search:
+                # if a frame search, keep only the registered frame at the search position
+                os.remove(file)
+                self.log("search - removed uneeded " + file)
+            elif resynthesis and (index == 0 or index == num_files - 1):
                 # if a resynthesis process, keep only the interpolated frames
                 os.remove(file)
                 self.log("resynthesis - removed uneeded " + file)
