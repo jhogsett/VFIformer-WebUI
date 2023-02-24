@@ -185,6 +185,11 @@ class VideoBlender(TabBase):
             outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
                 output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
                 show_progress=False)
+        input_text_frame_vb.change(self.video_blender_goto_frame,
+            inputs=[input_text_frame_vb],
+            outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
+                output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
+                show_progress=False)
         use_path_1_button_vb.click(self.video_blender_use_path1,
             inputs=[input_text_frame_vb],
             outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,

@@ -40,7 +40,8 @@ class GIFtoMP4(TabBase):
             with gr.Row():
                 with gr.Column():
                     with gr.Row():
-                        input_path_text = gr.Text(max_lines=1, label="GIF File (MP4 and others work too)",
+                        input_path_text = gr.Text(max_lines=1,
+                            label="GIF File (MP4 and others work too)",
                         placeholder="Path on this server to the GIF or MP4 file to be converted")
                     with gr.Row():
                         upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
