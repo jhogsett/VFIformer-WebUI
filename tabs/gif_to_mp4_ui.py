@@ -1,5 +1,6 @@
 """Change FPS feature UI and event handlers"""
 import os
+import math
 import shutil
 from typing import Callable
 import gradio as gr
@@ -8,6 +9,7 @@ from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, get_files, split_filepath
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.video_utils import GIFtoPNG, PNGtoMP4
+from webui_utils.simple_utils import is_power_of_two
 from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
@@ -155,7 +157,7 @@ class GIFtoMP4(TabBase):
         series_interpolater = InterpolateSeries(deep_interpolater, self.log)
 
         file_list = get_files(input_path)
-        splits = {2:1, 4:2, 8:3, 16:4}.get(inflate_factor) or 1
+        splits = int(math.log2(inflate_factor))
         series_interpolater.interpolate_series(file_list, output_path, splits,
             f"inflatedX{inflate_factor}")
 
@@ -171,7 +173,7 @@ class GIFtoMP4(TabBase):
         if inflate_factor < 2:
             self.log("using no-op inflation")
             self.inflate_using_noop(input_path, output_path)
-        elif inflate_factor in [2, 4, 8, 16]:
+        elif is_power_of_two(inflate_factor):
             self.log("using series interpolation inflation")
             self.inflate_using_series_interpolation(input_path, output_path, inflate_factor)
         else:

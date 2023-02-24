@@ -5,7 +5,7 @@ from webui_utils.simple_config import SimpleConfig
 from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory
 from webui_utils.auto_increment import AutoIncrementDirectory
-from webui_utils.simple_utils import fps_change_details
+from webui_utils.simple_utils import fps_change_details, is_power_of_two, power_of_two_precision
 from webui_utils.ui_utils import update_info_fc
 from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
@@ -94,6 +94,17 @@ placeholder="Path on this server for the converted PNG frame files, leave blank 
             else:
                 base_output_path, _ = AutoIncrementDirectory(
                     self.config.directories["output_fps_change"]).next_directory("run")
+
+            # when the fill-factor is a power of two, override the user value for precision
+            # because the computed value will always be the most efficient
+            _, filled, _, _, _ = fps_change_details(starting_fps, ending_fps, precision)
+            expansion = filled + 1
+            if is_power_of_two(expansion):
+                new_precision = power_of_two_precision(expansion)
+                self.log(
+                f"overriding user precision {precision} with efficient precision {new_precision}")
+                precision = new_precision
+
             series_resampler.resample_series(input_path, base_output_path, starting_fps,
                 ending_fps, precision, f"resampled@{starting_fps}")
 
