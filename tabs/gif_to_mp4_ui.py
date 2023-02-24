@@ -55,7 +55,8 @@ class GIFtoMP4(TabBase):
                             label="Frame Processing Order")
                     with gr.Row():
                         output_path_text = gr.Text(max_lines=1, label="MP4 File",
-                            placeholder="Path on this server for the converted MP4 file")
+                            placeholder="Path on this server for the converted MP4 file, " +
+                                "leave blank for an MP4 in the same location")
                     with gr.Row():
                         input_frame_rate = gr.Slider(minimum=1, maximum=240, value=frame_rate,
                             step=1, label="MP4 Frame Rate")
@@ -77,7 +78,7 @@ class GIFtoMP4(TabBase):
                 frame_rate : int,
                 quality : int):
         """Convert button handler"""
-        if input_filepath and output_filepath:
+        if input_filepath:
             working_path, run_index = AutoIncrementDirectory(
                 self.config.directories["output_gif_to_mp4"]).next_directory("run")
             precision = self.config.gif_to_mp4_settings["resampling_precision"]
@@ -105,6 +106,11 @@ class GIFtoMP4(TabBase):
                 create_directory(upscaled_path)
                 self.upscale_png_frames_to_path(inflated_path, upscaled_path, upscaling)
                 frames_path = upscaled_path
+
+            if not output_filepath:
+                path, filename, _ = split_filepath(input_filepath)
+                filename = f"{filename}-up{upscaling}-in{inflation}.mp4"
+                output_filepath = os.path.join(path, filename)
 
             self.convert_png_frames_to_mp4(frames_path, output_filepath, frame_rate, quality)
 

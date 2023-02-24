@@ -31,6 +31,8 @@ Two third-party packages are required to use this feature:
     - _Size, then Rate_ is slower, but may produce higher quality
         - VFIformer may work better with original content at its native rate
 1. Set _MP4 File_ to a path and filename on this server for the converted MP4 file
+    - Leave blank to use a default .mp4 filename in the same location
+    - It will use the original name an include conversion details
 1. Choose the video _MP4 Frame Rate_
 1. Set _Quality_ to the required video quality
     - The range is 17-28 (17 is near-lossless)
