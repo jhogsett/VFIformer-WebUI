@@ -33,7 +33,8 @@ class ChangeFPS(TabBase):
         lowest_common_rate, filled, sampled, fractions, predictions\
             = fps_change_details(starting_fps, ending_fps, precision)
         with gr.Tab("Change FPS"):
-            gr.HTML(SimpleIcons.FILM + "Change the frame rate for a set of PNG video frames using frame search",
+            gr.HTML(SimpleIcons.FILM +
+                "Change the frame rate for a set of PNG video frames using frame search",
                 elem_id="tabheading")
             with gr.Row():
                 with gr.Column():
@@ -41,7 +42,8 @@ class ChangeFPS(TabBase):
                         input_path_text_fc = gr.Text(max_lines=1, label="Input Path",
                         placeholder="Path on this server to the PNG frame files to be converted")
                         output_path_text_fc = gr.Text(max_lines=1, label="Output Path",
-placeholder="Path on this server for the converted PNG frame files, leave blank to use default")
+                            placeholder="Path on this server for the converted frame files, " +
+                                "leave blank to use default path")
                     with gr.Row():
                         starting_fps_fc = gr.Slider(value=starting_fps, minimum=1, maximum=max_fps,
                             step=1, label="Starting FPS")

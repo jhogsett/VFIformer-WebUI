@@ -33,7 +33,7 @@ class ResynthesizeVideo(TabBase):
                         placeholder="Path on this server to the frame PNG files",
                         label="Input Path")
                     output_path_text_rv = gr.Text(max_lines=1,
-                    placeholder="Where to place the generated frames, leave blank to use default",
+                placeholder="Where to place the generated frames, leave blank to use default path",
                         label="Output Path")
             gr.Markdown("*Progress can be tracked in the console*")
             resynthesize_button_rv = gr.Button("Resynthesize Video " + SimpleIcons.SLOW_SYMBOL,
