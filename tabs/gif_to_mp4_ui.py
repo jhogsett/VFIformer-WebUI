@@ -1,5 +1,6 @@
 """Change FPS feature UI and event handlers"""
 import os
+import math
 import shutil
 from typing import Callable
 import gradio as gr
@@ -8,6 +9,7 @@ from webui_utils.simple_icons import SimpleIcons
 from webui_utils.file_utils import create_directory, get_files, split_filepath
 from webui_utils.auto_increment import AutoIncrementDirectory
 from webui_utils.video_utils import GIFtoPNG, PNGtoMP4
+from webui_utils.simple_utils import is_power_of_two
 from webui_tips import WebuiTips
 from interpolate_engine import InterpolateEngine
 from interpolate import Interpolate
@@ -46,16 +48,17 @@ class GIFtoMP4(TabBase):
                     with gr.Row():
                         upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
                             label="GIF Frame Size Upscale Factor")
-                        inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=1.0,
+                        inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=16.0, step=1.0,
                             label="GIF Frame Rate Upscale Factor")
                         order_input = gr.Radio(value="Rate, then Size (may be faster)",
                 choices=["Rate, then Size (may be faster)", "Size, then Rate (may be smoother)"],
                             label="Frame Processing Order")
                     with gr.Row():
                         output_path_text = gr.Text(max_lines=1, label="MP4 File",
-                            placeholder="Path on this server for the converted MP4 file")
+                            placeholder="Path on this server for the converted MP4 file, " +
+                                "leave blank for an MP4 in the same location")
                     with gr.Row():
-                        input_frame_rate = gr.Slider(minimum=1, maximum=60, value=frame_rate,
+                        input_frame_rate = gr.Slider(minimum=1, maximum=240, value=frame_rate,
                             step=1, label="MP4 Frame Rate")
                         quality_slider = gr.Slider(minimum=minimum_crf, maximum=maximum_crf,
                             step=1, value=default_crf, label="Quality (lower=better)")
@@ -75,7 +78,7 @@ class GIFtoMP4(TabBase):
                 frame_rate : int,
                 quality : int):
         """Convert button handler"""
-        if input_filepath and output_filepath:
+        if input_filepath:
             working_path, run_index = AutoIncrementDirectory(
                 self.config.directories["output_gif_to_mp4"]).next_directory("run")
             precision = self.config.gif_to_mp4_settings["resampling_precision"]
@@ -103,6 +106,11 @@ class GIFtoMP4(TabBase):
                 create_directory(upscaled_path)
                 self.upscale_png_frames_to_path(inflated_path, upscaled_path, upscaling)
                 frames_path = upscaled_path
+
+            if not output_filepath:
+                path, filename, _ = split_filepath(input_filepath)
+                filename = f"{filename}-up{upscaling}-in{inflation}.mp4"
+                output_filepath = os.path.join(path, filename)
 
             self.convert_png_frames_to_mp4(frames_path, output_filepath, frame_rate, quality)
 
@@ -155,7 +163,7 @@ class GIFtoMP4(TabBase):
         series_interpolater = InterpolateSeries(deep_interpolater, self.log)
 
         file_list = get_files(input_path)
-        splits = {2:1, 4:2, 8:3, 16:4}.get(inflate_factor) or 1
+        splits = int(math.log2(inflate_factor))
         series_interpolater.interpolate_series(file_list, output_path, splits,
             f"inflatedX{inflate_factor}")
 
@@ -171,7 +179,7 @@ class GIFtoMP4(TabBase):
         if inflate_factor < 2:
             self.log("using no-op inflation")
             self.inflate_using_noop(input_path, output_path)
-        elif inflate_factor in [2, 4, 8, 16]:
+        elif is_power_of_two(inflate_factor):
             self.log("using series interpolation inflation")
             self.inflate_using_series_interpolation(input_path, output_path, inflate_factor)
         else:

@@ -118,9 +118,9 @@ class TargetInterpolate():
             self.register_frame(mid_filepath)
             self.step_progress()
 
-            # no more work if the current first-last range is entirely within the target range
-            if float_range_in_range(first_index, last_index, min_target, max_target):
-                self.log("skipping, current split range " + f"{first_index},{last_index}"
+            # no more work if the mid point entirely within the target range
+            if float_range_in_range(mid_index, mid_index, min_target, max_target):
+                self.log("skipping, current split range " + f"{mid_index}"
                     + " is inside target range " + f"{min_target},{max_target}")
             else:
                 # recurse into the half that gets closer to the target range
