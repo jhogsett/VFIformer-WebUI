@@ -33,7 +33,7 @@ class VideoInflation(TabBase):
                         placeholder="Path on this server to the frame PNG files",
                         label="Input Path")
                     output_path_text_vi = gr.Text(max_lines=1,
-                    placeholder="Where to place the generated frames, leave blank to use default",
+                placeholder="Where to place the generated frames, leave blank to use default path",
                         label="Output Path")
                     with gr.Row():
                         splits_input_vi = gr.Slider(value=1, minimum=1, maximum=10, step=1,

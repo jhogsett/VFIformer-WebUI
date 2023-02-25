@@ -26,10 +26,10 @@ class UpscaleFrames(TabBase):
             with gr.Row():
                 with gr.Column():
                     input_path_text = gr.Text(max_lines=1,
-                        placeholder="Path on this server to the frame PNG files",
+        placeholder="Path on this server to the frame PNG files (also upscales JPG and GIF files)",
                         label="Input Path")
                     output_path_text = gr.Text(max_lines=1,
-                    placeholder="Where to place the upscaled frames, leave blank to use default",
+                placeholder="Where to place the upscaled frames, leave blank to use default path",
                         label="Output Path")
                     with gr.Row():
                         scale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
@@ -53,6 +53,7 @@ class UpscaleFrames(TabBase):
                 base_output_path = self.config.directories["output_upscaling"]
                 output_path, _ = AutoIncrementDirectory(base_output_path).next_directory("run")
             output_basename = "upscaled_frames"
-            file_list = get_files(input_path, extension="png")
-            self.log(f"beginning series of upscaling at {output_path}")
+            image_extensions = self.config.upscale_settings["file_types"]
+            file_list = get_files(input_path, image_extensions)
+            self.log(f"beginning series of upscaling of {image_extensions} files at {output_path}")
             upscaler.upscale_series(file_list, output_path, upscale_factor, output_basename)

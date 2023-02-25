@@ -8,7 +8,6 @@ The green buttons copy files!
 
 ## How To Use
 - Click the _Next Frame >_ and _< Prev Frame_ buttons to step through the video one frame at a time
-    - Tip: Click in the Frame Number box, then press and hold the Up or Down keyboard keys to advance frames quickly
 - Click the green _Use Path N Frame | Next >_ buttons to copy a frame from either path to the project path, then step to the next frame
 - Input a _Frame Number_ and click _Go_, or press ENTER, to move to that frame
 - Click the _100 >_ and _< 100_ buttons to move forward or back 100 frames
@@ -17,3 +16,14 @@ The green buttons copy files!
     - You wil be taken to the _Frame Fixer_ tab
     - The _Last clean frame BEFORE damaged ones_ box will be pre-filled with the current frame number
 - Click _Preview Video_ to watch a preview video of the current project
+
+## High-Speed Navigation
+The _Frame Number_ box can be used to quickly navigate through frames
+- **FAST**
+    - Click to place the text caret
+    - Press and Hold the **&uarr;** **&darr;** keyboard keys to navigate at the repeat rate
+    - _Tip: Adjust your keyboard settings to set keyboard_ **repeat rate** _to the_ **max** _and_ **repeat delay** _to the_ **min**
+- **FASTEST**
+    - Use the embedded **&varr;** control buttons
+    - Click and Hold the control buttons to navigate at the fastest possible rate
+    - _Tip: Both buttons can be used while holding the mouse button_
