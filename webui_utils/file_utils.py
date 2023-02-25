@@ -13,15 +13,26 @@ def create_directories(dirs : dict):
     for key in dirs.keys():
         create_directory(dirs[key])
 
-def get_files(path : str, extension : str = "*") -> list:
-    """Get a list of files in the path per the extension"""
-    path = os.path.join(path, "*." + extension)
+def _get_files(path : str):
     entries = glob.glob(path)
     files = []
     for entry in entries:
         if not os.path.isdir(entry):
             files.append(entry)
     return files
+
+def get_files(path : str, extension : list | str | None=None) -> list:
+    """Get a list of files in the path per the extension"""
+    if isinstance(extension, (str, type(None))):
+        extension = "*" if extension == None else extension
+        return _get_files(os.path.join(path, "*." + extension))
+    elif isinstance(extension, list):
+        files = []
+        for ext in extension:
+            files += _get_files(os.path.join(path, "*." + ext))
+        return files
+    else:
+        raise ValueError("'extension' must be a string, a list of strings, or 'None'")
 
 def get_directories(path : str) -> list:
     """Get a list of directories in the path"""
