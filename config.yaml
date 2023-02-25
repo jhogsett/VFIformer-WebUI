@@ -59,6 +59,8 @@ upscale_settings:
   - "png"
   - "jpg"
   - "gif"
+logviewer_settings:
+  max_lines: 25
 user_interface:
   tips_path: "./guide"
   theme: "default"

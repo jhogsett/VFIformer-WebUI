@@ -1,4 +1,4 @@
-"""GIF to PNG Sequence feature UI and event handlers"""
+"""Options feature UI and event handlers"""
 from typing import Callable
 import gradio as gr
 from webui_utils.simple_config import SimpleConfig
@@ -7,7 +7,7 @@ from interpolate_engine import InterpolateEngine
 from tabs.tab_base import TabBase
 
 class Options(TabBase):
-    """Encapsulates UI elements and events for the MP4 to PNG Sequence feature"""
+    """Encapsulates UI elements and events for application options"""
     def __init__(self,
                     config : SimpleConfig,
                     engine : InterpolateEngine,
