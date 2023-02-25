@@ -73,6 +73,7 @@ class SimpleIcons:
     PACKAGE = "📦"
     ROBOT = "🤖"
     ROCKET = "🚀"
+    SCROLL = "📜"
     SOAP = "🧼"
     STILL = "⚗️"
     SWEAT = "💦"

@@ -11,3 +11,7 @@ class SimpleLog:
         self.messages.append(message)
         if self.verbose:
             print(message)
+
+    def reset(self):
+        self.messages = []
+        self.log("log messages cleared")

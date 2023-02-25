@@ -22,15 +22,15 @@ def main():
     log = SimpleLog(args.verbose)
     config = SimpleConfig(args.config_path).config_obj()
     create_directories(config.directories)
-    WebUI(config, log.log).start()
+    WebUI(config, log).start()
 
 class WebUI:
     """Top-Level application logic"""
     def __init__(self,
                     config : SimpleConfig,
-                    log_fn : Callable):
+                    log : SimpleLog):
         self.config = config
-        self.log_fn = log_fn
+        self.log = log
         self.restart = False
         self.prevent_inbrowser = False
 
@@ -41,7 +41,7 @@ class WebUI:
         while True:
             print("\nStarting VFIformer-WebUI")
             print("Models are loaded on the first interpolation")
-            app = create_ui(self.config, engine, self.log_fn, self.restart_app)
+            app = create_ui(self.config, engine, self.log, self.restart_app)
             app.launch(inbrowser = self.config.auto_launch_browser and not self.prevent_inbrowser,
                         server_name = self.config.server_name,
                         server_port = self.config.server_port,
