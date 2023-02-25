@@ -44,7 +44,7 @@ class VideoBlenderProjects:
         """Save project information to CSV file"""
         project_names = self.get_project_names()
         row_array = [self.projects[project_name] for project_name in project_names]
-        with open(self.csvfile_path, 'w', encoding="UTF-8") as csvfile:
+        with open(self.csvfile_path, 'w', encoding="UTF-8", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = self.FIELDS)
             writer.writeheader()
             writer.writerows(row_array)
