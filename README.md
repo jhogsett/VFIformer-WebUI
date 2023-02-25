@@ -30,7 +30,7 @@ _**Resynthesize Video**_
 * Create a Complete Set of Replacement Frames
 
 _**Frame Restoration**_
-* Restore Adjacent Missing / Damaged
+* Restore Adjacent Missing / Damaged Frames
 
 _**Video Blender**_
 * Project-Based Movie Restoration
