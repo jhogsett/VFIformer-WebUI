@@ -185,9 +185,9 @@ class VideoBlender(TabBase):
             outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
                 output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
                 show_progress=False)
-        input_text_frame_vb.change(self.video_blender_goto_frame,
+        input_text_frame_vb.change(self.video_blender_goto_frame2,
             inputs=[input_text_frame_vb],
-            outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
+            outputs=[output_img_path1_vb, output_prev_frame_vb,
                 output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
                 show_progress=False)
         use_path_1_button_vb.click(self.video_blender_use_path1,
@@ -264,6 +264,14 @@ class VideoBlender(TabBase):
         frame = int(frame)
         frame = 0 if frame < 0 else frame
         return frame, *self.video_blender_state.goto_frame(frame)
+
+    def video_blender_goto_frame2(self, frame : str):
+        """Frame count change handler"""
+        frame = int(frame)
+        frame = 0 if frame < 0 else frame
+        # frames = self.video_blender_state.goto_frame(frame)
+        # return frames[0], frames[1], frames[2], frames[3], frames[4]
+        return tuple(self.video_blender_state.goto_frame(frame))
 
     def video_blender_skip_next(self, frame : str):
         """Skip Next button handler"""
