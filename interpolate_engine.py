@@ -37,9 +37,9 @@ class InterpolateEngine:
 
     def init_model(self, model, gpu_id_array):
         """VFIformer code from demo.py"""
-        device = torch.device('cuda' if len(gpu_id_array) != 0 else 'cpu')
+        device = "cpu" # torch.device('cuda' if len(gpu_id_array) != 0 else 'cpu')
         args = FauxArgs(model = model,
-                    gpu_ids = gpu_id_array,
+                    gpu_ids = [],
                     device = device,
                     # needed in VFIformer downstream code
                     crop_size = 192,

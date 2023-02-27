@@ -64,10 +64,12 @@ class Interpolate:
         else:
             pad_t, pad_d, pad_l, pad_r = 0, 0, 0, 0
 
-        img0 = torch.from_numpy(img0.astype('float32') / 255.).float().permute(2, 0, 1).cuda()\
-            .unsqueeze(0)
-        img1 = torch.from_numpy(img1.astype('float32') / 255.).float().permute(2, 0, 1).cuda()\
-            .unsqueeze(0)
+        # img0 = torch.from_numpy(img0.astype('float32') / 255.).float().permute(2, 0, 1).cuda()\
+        #     .unsqueeze(0)
+        # img1 = torch.from_numpy(img1.astype('float32') / 255.).float().permute(2, 0, 1).cuda()\
+        #     .unsqueeze(0)
+        img0 = torch.from_numpy(img0.astype('float32') / 255.).float().permute(2, 0, 1).unsqueeze(0)
+        img1 = torch.from_numpy(img1.astype('float32') / 255.).float().permute(2, 0, 1).unsqueeze(0)
 
         with torch.no_grad():
             output, _ = self.model(img0, img1, None)

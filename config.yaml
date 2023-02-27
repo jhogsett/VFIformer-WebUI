@@ -10,7 +10,7 @@ directories:
   output_upscaling: "./output/upscaling"
   output_gif_to_mp4: "./output/gif_to_mp4"
 model: "./pretrained_models/pretrained_VFIformer/net_220.pth"
-gpu_ids: "0"
+gpu_ids: "-1"
 auto_launch_browser: True
 server_port: 7862
 server_name: "0.0.0.0"
