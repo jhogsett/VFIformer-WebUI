@@ -88,11 +88,19 @@ _**GIF to MP4**_
 
 # Real-ESRGAN Add-On Set Up
 
+The GIF to MP4 feature uses _Real-ESRGAN_ to clean and optionally upscale frames
+
 1. Get _Real-ESRGAN_ working on your local system
 - See their repo at [https://github.com/xinntao/Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)
 2. Clone their repo to its own directory and follow their instructions for local setup
 3. Copy the `realesrgan` directory to your `VFIformer-WebUI` directory
 * The _Real-ESRGAN 4x+_ model (65MB) will automatically download on first use
+
+# FFmpeg Set Up
+
+A few features rely on FFmpeg being available on the system path
+
+[Download FFmpeg](https://ffmpeg.org/download.html)
 
 # Starting Web UI Application
 
