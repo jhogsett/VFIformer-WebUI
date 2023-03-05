@@ -39,16 +39,19 @@ def _get_types(extension : str | list | None) -> list:
 
 def get_files(path : str, extension : list | str | None=None) -> list:
     """Get a list of files in the path per the extension(s)"""
-    if isinstance(extension, (list, str, type(None))):
-        files = []
-        extensions, bad_extensions = _get_types(extension)
-        if bad_extensions:
-            raise ValueError("extension list items must be a strings")
-        for ext in extensions:
-            files += _get_files(os.path.join(path, "*." + ext))
-        return files #list(set(files))
+    if isinstance(path, str):
+        if isinstance(extension, (list, str, type(None))):
+            files = []
+            extensions, bad_extensions = _get_types(extension)
+            if bad_extensions:
+                raise ValueError("extension list items must be a strings")
+            for ext in extensions:
+                files += _get_files(os.path.join(path, "*." + ext))
+            return list(set(files))
+        else:
+            raise ValueError("'extension' must be a string, a list of strings, or 'None'")
     else:
-        raise ValueError("'extension' must be a string, a list of strings, or 'None'")
+        raise ValueError("'path' must be a string")
 
 def get_directories(path : str) -> list:
     """Get a list of directories in the path"""
