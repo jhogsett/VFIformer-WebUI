@@ -76,6 +76,9 @@ def locate_frame_file(png_files_path : str, frame_number : int):
 
 def split_filepath(filepath : str):
     """Split a filepath into path, filename, extension"""
-    path, filename = os.path.split(filepath)
-    filename, ext = os.path.splitext(filename)
-    return path, filename, ext
+    if isinstance(filepath, str):
+        path, filename = os.path.split(filepath)
+        filename, ext = os.path.splitext(filename)
+        return path, filename, ext
+    else:
+        raise ValueError("'filepath' must be a string")

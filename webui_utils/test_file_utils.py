@@ -45,3 +45,27 @@ def test_get_files(capsys):
         nondupe_result = file_utils.get_files(FIXTURE_PATH, nondupe)
         dupe_result = file_utils.get_files(FIXTURE_PATH, dupe)
         assert len(dupe_result) == len(nondupe_result)
+
+GOOD_PATH_SPLITS = [
+    ("path1/path2/filename.extension", ("path1/path2", "filename", ".extension")),
+    ("/filename.extension", ("/", "filename", ".extension")),
+    ("/filename", ("/", "filename", "")),
+    ("filename", ("", "filename", "")),
+    (".filename", ("", ".filename", "")),
+    (".", ("", ".", "")),
+    ("", ("", "", ""))]
+
+BAD_PATH_SPLITS = [
+    (None, (None, None, None)),
+    (1, (None, None, None)),
+    (2.0, (None, None, None)),
+    ({3:3}, (None, None, None)),
+    ([4], (None, None, None))]
+
+def test_split_filepath():
+    for split_str, split_list in BAD_PATH_SPLITS:
+        with pytest.raises(ValueError, match="'filepath' must be a string"):
+            file_utils.split_filepath(split_str) == split_list
+
+    for split_str, split_list in GOOD_PATH_SPLITS:
+        assert file_utils.split_filepath(split_str) == split_list
