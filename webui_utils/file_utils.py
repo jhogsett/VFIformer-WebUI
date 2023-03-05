@@ -21,16 +21,32 @@ def _get_files(path : str):
             files.append(entry)
     return files
 
-def get_files(path : str, extension : list | str | None=None) -> list:
-    """Get a list of files in the path per the extension"""
-    if isinstance(extension, (str, type(None))):
-        extension = "*" if extension == None else extension
-        return _get_files(os.path.join(path, "*." + extension))
+def _get_types(extension : str | list | None) -> list:
+    extensions = []
+    if isinstance(extension, type(None)):
+        extensions.append("*")
+    elif isinstance(extension, str):
+        extensions += extension.split(",")
     elif isinstance(extension, list):
+        extensions += extension
+    result, unused = [], []
+    for ext in extensions:
+        if isinstance(ext, str):
+            result.append(ext.strip(" ."))
+        else:
+            unused.append(ext)
+    return list(set(result)), unused
+
+def get_files(path : str, extension : list | str | None=None) -> list:
+    """Get a list of files in the path per the extension(s)"""
+    if isinstance(extension, (list, str, type(None))):
         files = []
-        for ext in extension:
+        extensions, bad_extensions = _get_types(extension)
+        if bad_extensions:
+            raise ValueError("extension list items must be a strings")
+        for ext in extensions:
             files += _get_files(os.path.join(path, "*." + ext))
-        return files
+        return files #list(set(files))
     else:
         raise ValueError("'extension' must be a string, a list of strings, or 'None'")
 
