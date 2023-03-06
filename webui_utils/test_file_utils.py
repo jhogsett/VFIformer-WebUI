@@ -251,8 +251,8 @@ def test_get_directories():
             file_utils.get_directories(path)
 
 GOOD_CREATE_ZIP_ARGS = [
-    (FIXTURE_FILES, os.path.join(FIXTURE_PATH, "test.zip"), 2_000_000),
-    ([FIXTURE_FILES[0]], os.path.join(FIXTURE_PATH, "test.zip"), 200_000)]
+    (FIXTURE_FILES, os.path.join(FIXTURE_PATH, "test.zip"), 1_000_000, 3_000_000),
+    ([FIXTURE_FILES[0]], os.path.join(FIXTURE_PATH, "test.zip"), 100_000, 300_000)]
 
 BAD_CREATE_ZIP_ARGS = [
     (None, None, "'files' must be a list"),
@@ -265,18 +265,39 @@ BAD_CREATE_ZIP_ARGS = [
 ]
 
 def test_create_zip():
-    for file_list, zip_file, min_size in GOOD_CREATE_ZIP_ARGS:
+    for file_list, zip_file, min_size, max_size in GOOD_CREATE_ZIP_ARGS:
         file_utils.create_zip(file_list, zip_file)
         assert os.path.exists(zip_file)
-        assert os.path.getsize(zip_file) > min_size
+        assert max_size > os.path.getsize(zip_file) > min_size
         os.remove(zip_file)
 
     for file_list, zip_file, match_text in BAD_CREATE_ZIP_ARGS:
         with pytest.raises(ValueError, match=match_text):
             file_utils.create_zip(file_list, zip_file)
 
+GOOD_LOCATE_FRAME_FILE_ARGS = [
+    ((FIXTURE_PATH, 0), FIXTURE_FILES[0]),
+    ((FIXTURE_PATH, 1), FIXTURE_FILES[1]),
+    ((FIXTURE_PATH, 1.0), FIXTURE_FILES[1]),
+    ((FIXTURE_PATH, 2), FIXTURE_FILES[2]),
+    ((FIXTURE_PATH, 100), None),
+    ((FIXTURE_PATH, -1), None),
+]
+
+BAD_LOCATE_FRAME_FILE_ARGS = [
+    ((None, None), "'png_files_path' must be a string"),
+    (("", None), "'png_files_path' must be a legal path"),
+    ((os.path.join(FIXTURE_PATH, ".."), None), "'png_files_path' must be a legal path"),
+    ((FIXTURE_PATH, None), "'frame_number' must be an int or float"),
+]
+
 def test_locate_frame_file():
-    pass
+    for good_args, result in GOOD_LOCATE_FRAME_FILE_ARGS:
+        assert result == file_utils.locate_frame_file(*good_args)
+
+    for bad_args, match_text in BAD_LOCATE_FRAME_FILE_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            file_utils.locate_frame_file(*bad_args)
 
 GOOD_PATH_SPLITS = [
     ("path1/path2/filename.extension", ("path1/path2", "filename", ".extension")),
