@@ -59,6 +59,7 @@ upscale_settings:
   - "png"
   - "jpg"
   - "gif"
+  - "bmp"
 logviewer_settings:
   max_lines: 25
 user_interface:

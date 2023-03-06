@@ -21,18 +21,37 @@ def _get_files(path : str):
             files.append(entry)
     return files
 
-def get_files(path : str, extension : list | str | None=None) -> list:
-    """Get a list of files in the path per the extension"""
-    if isinstance(extension, (str, type(None))):
-        extension = "*" if extension == None else extension
-        return _get_files(os.path.join(path, "*." + extension))
+def _get_types(extension : str | list | None) -> list:
+    extensions = []
+    if isinstance(extension, type(None)):
+        extensions.append("*")
+    elif isinstance(extension, str):
+        extensions += extension.split(",")
     elif isinstance(extension, list):
-        files = []
-        for ext in extension:
-            files += _get_files(os.path.join(path, "*." + ext))
-        return files
+        extensions += extension
+    result, unused = [], []
+    for ext in extensions:
+        if isinstance(ext, str):
+            result.append(ext.strip(" ."))
+        else:
+            unused.append(ext)
+    return list(set(result)), unused
+
+def get_files(path : str, extension : list | str | None=None) -> list:
+    """Get a list of files in the path per the extension(s)"""
+    if isinstance(path, str):
+        if isinstance(extension, (list, str, type(None))):
+            files = []
+            extensions, bad_extensions = _get_types(extension)
+            if bad_extensions:
+                raise ValueError("extension list items must be a strings")
+            for ext in extensions:
+                files += _get_files(os.path.join(path, "*." + ext))
+            return list(set(files))
+        else:
+            raise ValueError("'extension' must be a string, a list of strings, or 'None'")
     else:
-        raise ValueError("'extension' must be a string, a list of strings, or 'None'")
+        raise ValueError("'path' must be a string")
 
 def get_directories(path : str) -> list:
     """Get a list of directories in the path"""
@@ -57,6 +76,74 @@ def locate_frame_file(png_files_path : str, frame_number : int):
 
 def split_filepath(filepath : str):
     """Split a filepath into path, filename, extension"""
-    path, filename = os.path.split(filepath)
-    filename, ext = os.path.splitext(filename)
-    return path, filename, ext
+    if isinstance(filepath, str):
+        path, filename = os.path.split(filepath)
+        filename, ext = os.path.splitext(filename)
+        return path, filename, ext
+    else:
+        raise ValueError("'filepath' must be a string")
+
+def build_filename(base_file_ext : str | None, file_part : str | None, ext_part : str | None):
+    """Build a new filename from a base with optional replacements for name and type"""
+    if isinstance(base_file_ext, (str, type(None))):
+        if base_file_ext:
+            base_file, base_ext = os.path.splitext(base_file_ext)
+        else:
+            base_file, base_ext = "", ""
+    else:
+        raise ValueError("'base_file_ext' must be a string or None")
+    if isinstance(file_part, (str, type(None))):
+        if file_part != None:
+            filename = file_part
+        else:
+            filename = base_file
+    else:
+        raise ValueError("'file_part' must be a string or None")
+    if isinstance(ext_part, (str, type(None))):
+        if ext_part != None:
+            extension = ext_part
+        else:
+            extension = base_ext
+    else:
+        raise ValueError("'ext_part' must be a string or None")
+    extension = extension.strip(".")
+    if extension:
+        extension = "." + extension
+    return f"{filename}{extension}" #if filename and extension else ""
+
+# extension can be None if it is included with the filename argument
+def build_indexed_filename(filename : str, extension : str | None, index : int | float, max_index : int | float):
+    """Build a new filename including an integer index from a base filename + extension"""
+    if not isinstance(filename, str):
+        raise ValueError("'filename' must be a string")
+    if isinstance(extension, (str, type(None))):
+        if extension == None:
+            filename, extension = os.path.splitext(filename)
+        extension = extension.strip(".")
+        if extension:
+            extension = "." + extension
+    else:
+        raise ValueError("'extension' must be a string or None")
+    if isinstance(index, (int, float)):
+        index = int(index)
+        if index < 0:
+            raise ValueError("'index' value must be >= 0")
+    else:
+        raise ValueError("'index' must be an int or float")
+    if isinstance(max_index, (int, float)):
+        max_index = int(max_index)
+        if max_index < 1:
+            raise ValueError("'max_index' value must be >= 1")
+        if max_index < index:
+            raise ValueError("'max_index' value must be >= 'index'")
+    else:
+        raise ValueError("'max_index' must be an int or float")
+    num_width = len(str(max_index))
+    return f"{filename}{str(index).zfill(num_width)}{extension}"
+
+def build_series_filename(base_filename : str | None, output_type : str | None, index : int | float, max_index : int | float, input_filename : str | None):
+    """Build an output filename for a series operation, given a base filename, output type,
+       index, index range and optional overriding original filename"""
+    if base_filename:
+        base_filename = build_indexed_filename(base_filename, None, index, max_index)
+    return build_filename(input_filename, base_filename, output_type)
