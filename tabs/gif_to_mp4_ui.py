@@ -132,7 +132,7 @@ class GIFtoMP4(TabBase):
         upscaler = UpscaleSeries(model_name, gpu_ips, fp32, self.log)
         output_basename = "upscaled_frames"
         file_list = get_files(input_path, extension="png")
-        upscaler.upscale_series(file_list, output_path, upscale_factor, output_basename)
+        upscaler.upscale_series(file_list, output_path, upscale_factor, output_basename, "png")
 
     def inflate_using_noop(self,
                             input_path : str,

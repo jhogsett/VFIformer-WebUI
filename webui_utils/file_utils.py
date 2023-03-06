@@ -82,3 +82,68 @@ def split_filepath(filepath : str):
         return path, filename, ext
     else:
         raise ValueError("'filepath' must be a string")
+
+def build_filename(base_file_ext : str | None, file_part : str | None, ext_part : str | None):
+    """Build a new filename from a base with optional replacements for name and type"""
+    if isinstance(base_file_ext, (str, type(None))):
+        if base_file_ext:
+            base_file, base_ext = os.path.splitext(base_file_ext)
+        else:
+            base_file, base_ext = "", ""
+    else:
+        raise ValueError("'base_file_ext' must be a string or None")
+    if isinstance(file_part, (str, type(None))):
+        if file_part != None:
+            filename = file_part
+        else:
+            filename = base_file
+    else:
+        raise ValueError("'file_part' must be a string or None")
+    if isinstance(ext_part, (str, type(None))):
+        if ext_part != None:
+            extension = ext_part
+        else:
+            extension = base_ext
+    else:
+        raise ValueError("'ext_part' must be a string or None")
+    extension = extension.strip(".")
+    if extension:
+        extension = "." + extension
+    return f"{filename}{extension}" #if filename and extension else ""
+
+# extension can be None if it is included with the filename argument
+def build_indexed_filename(filename : str, extension : str | None, index : int | float, max_index : int | float):
+    """Build a new filename including an integer index from a base filename + extension"""
+    if not isinstance(filename, str):
+        raise ValueError("'filename' must be a string")
+    if isinstance(extension, (str, type(None))):
+        if extension == None:
+            filename, extension = os.path.splitext(filename)
+        extension = extension.strip(".")
+        if extension:
+            extension = "." + extension
+    else:
+        raise ValueError("'extension' must be a string or None")
+    if isinstance(index, (int, float)):
+        index = int(index)
+        if index < 0:
+            raise ValueError("'index' value must be >= 0")
+    else:
+        raise ValueError("'index' must be an int or float")
+    if isinstance(max_index, (int, float)):
+        max_index = int(max_index)
+        if max_index < 1:
+            raise ValueError("'max_index' value must be >= 1")
+        if max_index < index:
+            raise ValueError("'max_index' value must be >= 'index'")
+    else:
+        raise ValueError("'max_index' must be an int or float")
+    num_width = len(str(max_index))
+    return f"{filename}{str(index).zfill(num_width)}{extension}"
+
+def build_series_filename(base_filename : str | None, output_type : str | None, index : int | float, max_index : int | float, input_filename : str | None):
+    """Build an output filename for a series operation, given a base filename, output type,
+       index, index range and optional overriding original filename"""
+    if base_filename:
+        base_filename = build_indexed_filename(base_filename, None, index, max_index)
+    return build_filename(input_filename, base_filename, output_type)

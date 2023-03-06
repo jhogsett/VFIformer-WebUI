@@ -10,7 +10,8 @@ from realesrgan import RealESRGANer # pylint: disable=import-error
 from realesrgan.archs.srvgg_arch import SRVGGNetCompact # pylint: disable=import-error
 from tqdm import tqdm
 from webui_utils.simple_log import SimpleLog
-from webui_utils.file_utils import create_directory, get_files
+from webui_utils.file_utils import create_directory, get_files, build_filename,\
+    build_indexed_filename, build_series_filename, split_filepath
 
 def main():
     """Use Upscale Frames from the command line"""
@@ -19,26 +20,32 @@ def main():
         help="Name of Real-ESRGAN model")
     parser.add_argument("--gpu_ids", type=str, default="0",
         help="gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU")
-    parser.add_argument("--input_path", default="./images", type=str,
-        help="Input path for PNGs to upscale")
-    parser.add_argument("--output_path", default="./output", type=str,
-        help="Output path for upscaled PNGs")
-    parser.add_argument("--outscale", type=float, default=4.0,
-        help="The final upsampling scale of the image 1.0-8.0")
-    parser.add_argument("--base_filename", default="upscaled_frames", type=str,
-        help="Base filename for upsampled PNGs")
     parser.add_argument(
         "--fp32", action="store_true",
         help="Use fp32 precision during inference. Default: fp16 (half precision).")
+    parser.add_argument("--input_path", default="./images", type=str,
+        help="Input path for images to upscale")
+    parser.add_argument("--input_types", default="png", type=str,
+        help="Comma-seperated list of input image file types")
+    parser.add_argument("--output_path", default=None, type=str,
+        help="Output path for upscaled PNGs. Default: use input path")
+    parser.add_argument("--output_type", default=None, type=str,
+        help="Output image file type. Default: use input type)")
+    parser.add_argument("--base_filename", default=None, type=str,
+        help="Base filename for upsampled images. Default use input name)")
+    parser.add_argument("--outscale", type=float, default=4.0,
+        help="The final upsampling scale of the image 1.0-8.0")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true",
         help="Show extra details")
     args = parser.parse_args()
-
     log = SimpleLog(args.verbose)
-    create_directory(args.output_path)
-    file_list = get_files(args.input_path, extension="png")
+
+    output_path = args.output_path or args.input_path
+    create_directory(output_path)
+    file_list = get_files(args.input_path, extension=args.input_types)
     upscaler = UpscaleSeries(args.model_name, args.gpu_ids, args.fp32, log.log)
-    upscaler.upscale_series(file_list, args.outout_path, args.outscale, args.base_filename)
+    upscaler.upscale_series(file_list, args.output_path, args.outscale, args.base_filename,
+                            args.output_type)
 
 class UpscaleSeries():
     """Encapsulates logic for the Upscale Frames feature"""
@@ -52,17 +59,22 @@ class UpscaleSeries():
 
     def upscale_series(self,
                         file_list : list,
-                        output_path : str,
+                        output_path : str | None,
                         outscale : float,
-                        base_filename):
+                        base_filename : str | None,
+                        output_type : str | None):
         """Invoke the Upscale Frames feature"""
         file_list = sorted(file_list)
-        count = len(file_list)
-        num_width = len(str(count))
+        file_count = len(file_list)
         pbar_desc = "Frame"
 
         for index, filepath in enumerate(tqdm(file_list, desc=pbar_desc, position=0)):
-            output_filename = f"{base_filename}{str(index).zfill(num_width)}.png"
+            input_path, input_filename, input_type = split_filepath(filepath)
+            outscale_str = str(outscale).replace(".", "-")
+            input_filename = f"{input_filename}[X{outscale_str}]{input_type}"
+            output_filename = build_series_filename(base_filename, output_type, index, file_count,
+                                                    input_filename)
+            output_path = output_path or input_path
             output_filepath = os.path.join(output_path, output_filename)
             self.log(f"upscaling by {outscale} {filepath} to {output_filepath}")
             self.upscale_image(filepath, output_filepath, outscale)
