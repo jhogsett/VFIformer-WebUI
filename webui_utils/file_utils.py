@@ -9,7 +9,6 @@ def is_safe_path(path : str):
     return len(norm_path) > 0 and path == norm_path
 
 def create_directory(_dir):
-    print("~" * 100)
     """Create a directory if it does not already exist"""
     if isinstance(_dir, str):
         if is_safe_path(_dir):
@@ -67,19 +66,40 @@ def get_files(path : str, extension : list | str | None=None) -> list:
 
 def get_directories(path : str) -> list:
     """Get a list of directories in the path"""
-    entries = os.listdir(path)
-    directories = []
-    for entry in entries:
-        fullpath = os.path.join(path, entry)
-        if os.path.isdir(fullpath):
-            directories.append(entry)
-    return directories
+    if isinstance(path, str):
+        if is_safe_path(path):
+            entries = os.listdir(path)
+            directories = []
+            for entry in entries:
+                fullpath = os.path.join(path, entry)
+                if os.path.isdir(fullpath):
+                    directories.append(entry)
+            return directories
+        else:
+            raise ValueError("'path' must be a legal path")
+    else:
+        raise ValueError("'path' must be a string")
 
 def create_zip(files : list, filepath : str):
     """Create a zip file from a list of files"""
-    with ZipFile(filepath, "w") as zip_obj:
+    if isinstance(files, list):
         for file in files:
-            zip_obj.write(file, arcname=os.path.basename(file))
+            if not isinstance(file, str):
+                raise ValueError("'files' members must be strings")
+            elif not os.path.exists(file):
+                raise ValueError(f"file '{file}' does not exist")
+        if not isinstance(filepath, str):
+            raise ValueError("'filepath' must be a string")
+        else:
+            if not is_safe_path(filepath):
+                raise ValueError("'filepath' must be a legal path")
+            if len(filepath) < 1:
+                raise ValueError("'filepath' must be a non-empty string")
+        with ZipFile(filepath, "w") as zip_obj:
+            for file in files:
+                zip_obj.write(file, arcname=os.path.basename(file))
+    else:
+        raise ValueError("'files' must be a list")
 
 def locate_frame_file(png_files_path : str, frame_number : int):
     """Given a path return the file found at that sorted position"""
