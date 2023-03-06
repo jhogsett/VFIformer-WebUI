@@ -1,5 +1,5 @@
 import os
-import pytest
+import pytest # pylint: disable=import-error
 from . import file_utils
 
 FIXTURE_PATH = "./images"
