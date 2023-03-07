@@ -15,6 +15,10 @@
 |:--:|
 | [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) |
 
+| Example - Original GIF | Example - GIF to MP4 (frame size X2, frame rate X4) |
+|:--:|:--:|
+| ![http_t0 tagstat com_image03_0_21c475648484948484881505552](https://user-images.githubusercontent.com/825994/220933026-3fe6bf25-8be7-490e-a90b-85a151e6b156.gif) | https://user-images.githubusercontent.com/825994/220932548-d40b54b5-811b-4637-8adc-6bf26fdcc52b.mp4 |
+
 # VFIformer-WebUI Features
 
 _**Frame Interpolation**_
