@@ -21,17 +21,17 @@
 
 | 🎥 VFIformer-WebUI Features | &nbsp; |
 |:--|:--|
-| **➗ Frame Interpolation** | Restore Missing Frames, Reveal Hidden Motion |
-| **🔎 Frame Search** | Synthesize Between Frames At Precise Times |
-| **🎈 Video Inflation** | Create Super Slow-Motion |
-| **💕 Resynthesize Video** | Create a Complete Set of Replacement Frames |
-| **🪄 Frame Restoration** | Restore Adjacent Missing / Damaged Frames |
-| **🔬 Video Blender** | Project-Based Movie Restoration |
-| **📁 File Conversion** | Convert between PNG Sequences and Videos |
-| **🔢 Resequence Files** | Renumber for Import into Video Editing Software |
-| **🎞️ Change FPS** | Convert any FPS to any other FPS |
-| **💎 GIF to MP4** | Convert Animated GIF to Mp4 in one click |
-| **📈 Upscale Frames** | Use _Real-ESRGAN_ to Enlarge and Clean Frames |
+| **➗ Frame Interpolation** | _Restore Missing Frames, Reveal Hidden Motion_ |
+| **🔎 Frame Search** | _Synthesize_ Between _Frames At Precise Times_ |
+| **🎈 Video Inflation** | _Create Super Slow-Motion_ |
+| **💕 Resynthesize Video** | _Create a Complete Set of Replacement Frames_ |
+| **🪄 Frame Restoration** | _Restore Adjacent Missing / Damaged Frames_ |
+| **🔬 Video Blender** | _Project-Based Movie Restoration_ |
+| **📁 File Conversion** | _Convert between PNG Sequences and Videos_ |
+| **🔢 Resequence Files** | _Renumber for Import into Video Editing Software_ |
+| **🎞️ Change FPS** | _Convert any FPS to any other FPS_ |
+| **💎 GIF to MP4** | _Convert Animated GIF to Mp4 in one click_ |
+| **📈 Upscale Frames** | _Use_ Real-ESRGAN _to Enlarge and Clean Frames_ |
 
 # Set Up For Use
 
