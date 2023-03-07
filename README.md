@@ -15,44 +15,23 @@
 |:--:|
 | [Demo of 32X Video Inflation with marked original frames](https://youtu.be/rOiALIN805w) |
 
-| Example - Original GIF | Example - GIF to MP4 (frame size X2, frame rate X4) |
+| Example - GIF to MP4 (frame size X2, frame rate X4) | Example - Original GIF | 
 |:--:|:--:|
-| ![http_t0 tagstat com_image03_0_21c475648484948484881505552](https://user-images.githubusercontent.com/825994/220933026-3fe6bf25-8be7-490e-a90b-85a151e6b156.gif) | https://user-images.githubusercontent.com/825994/220932548-d40b54b5-811b-4637-8adc-6bf26fdcc52b.mp4 |
+| https://user-images.githubusercontent.com/825994/220932548-d40b54b5-811b-4637-8adc-6bf26fdcc52b.mp4 | ![http_t0 tagstat com_image03_0_21c475648484948484881505552](https://user-images.githubusercontent.com/825994/220933026-3fe6bf25-8be7-490e-a90b-85a151e6b156.gif) |
 
-# VFIformer-WebUI Features
-
-_**➗Frame Interpolation**_
-* Restore Missing Frames, Reveal Hidden Motion
-
-_**🔎Frame Search**_
-* Synthesize Between Frames At Precise Times
-
-_**🎈Video Inflation**_
-* Create Super Slow-Motion
-
-_**💕Resynthesize Video**_
-* Create a Complete Set of Replacement Frames
-
-_**🪄Frame Restoration**_
-* Restore Adjacent Missing / Damaged Frames
-
-_**🔬Video Blender**_
-* Project-Based Movie Restoration
-
-_**📁File Conversion**_
-* Convert between PNG Sequences and Videos
-
-_**🔢Resequence Files**_
-* Renumber for Import into Video Editing Software
-
-_**🎞️Change FPS**_
-* Convert any FPS to any other FPS
-
-_**💎GIF to MP4**_
-* Convert Animated GIF to Mp4 in one click
-
-_**📈Upscale Frames**_
-* Use _Real-ESRGAN_ to Enlarge and Clean Frames
+| VFIformer-WebUI Features | &nbsp; |
+|:--|:--|
+| **➗ Frame Interpolation** | Restore Missing Frames, Reveal Hidden Motion |
+| **🔎 Frame Search** | Synthesize Between Frames At Precise Times |
+| **🎈 Video Inflation** | Create Super Slow-Motion |
+| **💕 Resynthesize Video** | Create a Complete Set of Replacement Frames |
+| **🪄 Frame Restoration** | Restore Adjacent Missing / Damaged Frames |
+| **🔬 Video Blender** | Project-Based Movie Restoration |
+| **📁 File Conversion** | Convert between PNG Sequences and Videos |
+| **🔢 Resequence Files** | Renumber for Import into Video Editing Software |
+| **🎞️ Change FPS** | Convert any FPS to any other FPS |
+| **💎 GIF to MP4** | Convert Animated GIF to Mp4 in one click |
+| **📈 Upscale Frames** | Use _Real-ESRGAN_ to Enlarge and Clean Frames |
 
 # Set Up For Use
 
