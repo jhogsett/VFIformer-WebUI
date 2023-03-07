@@ -21,37 +21,37 @@
 
 # VFIformer-WebUI Features
 
-_**Frame Interpolation**_
+_**➗Frame Interpolation**_
 * Restore Missing Frames, Reveal Hidden Motion
 
-_**Frame Search**_
+_**🔎Frame Search**_
 * Synthesize Between Frames At Precise Times
 
-_**Video Inflation**_
+_**🎈Video Inflation**_
 * Create Super Slow-Motion
 
-_**Resynthesize Video**_
+_**💕Resynthesize Video**_
 * Create a Complete Set of Replacement Frames
 
-_**Frame Restoration**_
+_**🪄Frame Restoration**_
 * Restore Adjacent Missing / Damaged Frames
 
-_**Video Blender**_
+_**🔬Video Blender**_
 * Project-Based Movie Restoration
 
-_**File Conversion**_
+_**📁File Conversion**_
 * Convert between PNG Sequences and Videos
 
-_**Resequence Files**_
+_**🔢Resequence Files**_
 * Renumber for Import into Video Editing Software
 
-_**Change FPS**_
+_**🎞️Change FPS**_
 * Convert any FPS to any other FPS
 
-_**GIF to MP4**_
+_**💎GIF to MP4**_
 * Convert Animated GIF to Mp4 in one click
 
-_**Upscale Frames**_
+_**📈Upscale Frames**_
 * Use _Real-ESRGAN_ to Enlarge and Clean Frames
 
 # Set Up For Use
