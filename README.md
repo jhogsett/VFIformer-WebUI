@@ -5,7 +5,7 @@
 
 # VFIformer-WebUI - AI-Based Movie Restoration
 
-![Screenshot_20230217_031421-900w](https://user-images.githubusercontent.com/825994/219824616-7340049a-3bbd-44b1-a2c5-a80b6d2a8195.PNG)
+![Screenshot 2023-03-06 154321](https://user-images.githubusercontent.com/825994/223291544-8f75dcc2-a14e-4d46-8d44-c40c4c2abe4b.png)
 
 | Example - Interpolated Frames |
 |:--:|
