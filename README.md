@@ -120,6 +120,8 @@ The application can be started in any of these ways:
 
 # Using Web UI
 
+[Wiki - Quick Start Guide](https://github.com/jhogsett/VFIformer-WebUI/wiki/Quick-Start-Guide)
+
 ## Frame Interpolation
 
 1. Drag and drop, or click to upload _Before Frame_ and _After Frame_ PNG files
