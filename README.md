@@ -122,48 +122,6 @@ The application can be started in any of these ways:
 
 [Wiki - Quick Start Guide](https://github.com/jhogsett/VFIformer-WebUI/wiki/Quick-Start-Guide)
 
-## Frame Interpolation
-
-1. Drag and drop, or click to upload _Before Frame_ and _After Frame_ PNG files
-1. Set _Split Count_ to choose the number of new _Between Frames_
-    - Each _split_ doubles the frame count
-1. Click _Interpolate_
-1. The _Animated Preview_ panel will show a GIF of the original and newly created frames
-1. The _Download_ box gives access to
-    - Animated GIF
-    - ZIP of original and interpolated frames
-    - TXT report
-
-## Frame Search
-
-1. Drag and drop, or click to upload _Before Frame_ and _After Frame_ PNG files
-1. Choose a _Lower Bound_ and _Upper Bound_ for the search
-    - The values must be between 0.0 and 1.0
-1. Set _Search Precision_ per the desired timing accuracy
-    - Low is faster but can lead to a poorly-timed frame
-    - High produces near-perfect results but takes longer
-1. Click _Search_
-1. The _Found Frame_ panel will show the new frame
-1. The _Download_ box gives access to
-    - The found frame PNG file
-
-## Video Inflation
-
-1. Set _Input Path_ to a directory on this server to the PNG files to be inflated
-1. Set _Output Path_ to a directory on this server for the inflated PNG files
-    - Output Path can be left blank to use the default folder
-    - The default folder is set by the `config.directories.output_inflation` setting
-1. Set _Split Count_ for the number of new _between_ frames
-    - The count of interpolated frames is computed by this formula:
-        - F=2**S-1, where
-        - F is the count of interpolated frames
-        - S is the split count
-1. Click _Inflate Video_
-1. _Frame Interpolation_ is done between each pair of frames
-    - New frames are created according to the split count
-    - The original and new frames are copied to the output path
-1. When complete, the output path will contain a new set of frames
-
 ## All Features
 
 [Wiki - Home](https://github.com/jhogsett/VFIformer-WebUI/wiki)
