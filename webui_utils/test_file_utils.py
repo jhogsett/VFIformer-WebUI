@@ -1,11 +1,177 @@
 import os
+import shutil
 import pytest # pylint: disable=import-error
 from . import file_utils
 
-FIXTURE_PATH = "./images"
+FIXTURE_PATH = os.path.join(os.path.abspath("test_fixtures"))
+FIXTURE_PATH_BAD = os.path.join(FIXTURE_PATH, "bad")
+FIXTURE_PATH_ALT = os.path.join(FIXTURE_PATH, "alt")
 FIXTURE_EXTENSION = "png"
 FIXTURE_FILES = [os.path.join(FIXTURE_PATH, file) for file in
                  ["image0.png", "image1.png", "image2.png", "screenshot.png"]]
+
+GOOD_IS_SAFE_PATH_ARGS = [
+    ((FIXTURE_PATH), True),
+    ((FIXTURE_PATH_BAD), True),
+    ((os.path.join(FIXTURE_PATH, "a")), True),
+    (("a"), True),
+    (("a/a"), True),
+    (("a\\a"), True),
+    ((""), False),
+    (("."), False),
+    ((".."), False),
+    (("/"), False),
+    (("\\"), False),
+    (("/."), False),
+    (("\\."), False),
+    (("/.."), False),
+    (("\\.."), False),
+    (("./"), False),
+    ((".\\"), False),
+    (("../"), False),
+    (("..\\"), False),
+    (("../a"), False),
+    (("..\\a"), False),
+    (("a/."), False),
+    (("a/.."), False),
+    (("a\\."), False),
+    (("a\\.."), False),
+    (("../.."), False),
+    (("..\\.."), False),
+    (("a/../b"), False),
+    (("a\\..\\b"), False)]
+
+def test_is_safe_path():
+    for good_args, result in GOOD_IS_SAFE_PATH_ARGS:
+        assert result == file_utils.is_safe_path(good_args)
+
+def _clean_path(path : str | None):
+    """Remove directories created under FIXTURE_PATH"""
+    cleaned = False
+    if path:
+        path = path.replace("/", os.sep).replace("\\", os.sep)
+        if path[:len(FIXTURE_PATH)] == FIXTURE_PATH:
+            if file_utils.is_safe_path(path):
+                remainder_path = path[len(FIXTURE_PATH):]
+                if remainder_path:
+                    root_dir = remainder_path.strip(os.sep).split(os.sep)[0]
+                    root_path = os.path.join(FIXTURE_PATH, root_dir)
+                    if os.path.exists(root_path):
+                        shutil.rmtree(root_path, ignore_errors=False)
+                        cleaned = True
+            else:
+                raise ValueError(f"attempt to clean unsafe path {path}")
+        else:
+            raise ValueError(f"unable to clean path {path}")
+    return cleaned
+
+BAD_CLEAN_PATH_ARGS = [
+    (".", r"unable to clean path.*"),
+    ("..", r"unable to clean path.*"),
+    ("\\", r"unable to clean path.*"),
+    ("/", r"unable to clean path.*"),
+    (os.path.join(FIXTURE_PATH, "."), r"attempt to clean unsafe path.*"),
+    (os.path.join(FIXTURE_PATH, ".."), r"attempt to clean unsafe path.*"),
+    (os.path.join(FIXTURE_PATH, "../dir"), r"attempt to clean unsafe path.*"),
+    (os.path.join(FIXTURE_PATH, "dir/../dir"), r"attempt to clean unsafe path.*"),
+    (os.path.join(FIXTURE_PATH, "..\\dir"), r"attempt to clean unsafe path.*"),
+    (os.path.join(FIXTURE_PATH, "dir\\..\\dir"), r"attempt to clean unsafe path.*"),
+]
+
+GOOD_CLEAN_PATH_ARGS = [
+    (FIXTURE_PATH, False),
+    (None, False),
+    ("", False),
+    (FIXTURE_PATH_BAD, True),
+    (os.path.join(FIXTURE_PATH, "testdir"), True),
+    (os.path.join(FIXTURE_PATH, "testdir/subdir"), True),
+    (os.path.join(FIXTURE_PATH, "testdir\\subdir"), True),
+    (os.path.join(FIXTURE_PATH, "testdir/dir/dir/dir"), True),
+]
+
+def test__clean_path():
+    for bad_args, match_text in BAD_CLEAN_PATH_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            _clean_path(bad_args)
+
+    for path, should_clean in GOOD_CLEAN_PATH_ARGS:
+        if should_clean:
+            assert not os.path.exists(path)
+            os.makedirs(path)
+        assert should_clean == _clean_path(path)
+        if should_clean:
+            remainder_path = path[len(FIXTURE_PATH):]
+            root_dir = remainder_path.strip(os.sep).split(os.sep)[0]
+            assert len(root_dir) > 0
+            root_path = os.path.join(FIXTURE_PATH, root_dir)
+            assert not os.path.exists(root_path)
+
+GOOD_CREATE_DIRECTORY_ARGS = [
+    (os.path.join(FIXTURE_PATH, "testdir")),
+    (os.path.join(FIXTURE_PATH, "testdir/subdir")),
+    (os.path.join(FIXTURE_PATH, "testdir/dir/dir/dir"))]
+
+BAD_CREATE_DIRECTORY_ARGS = [
+    (None, "'_dir' must be a string"),
+    (1, "'_dir' must be a string"),
+    (2.0, "'_dir' must be a string"),
+    ({3:3}, "'_dir' must be a string"),
+    ([4], "'_dir' must be a string"),
+    (os.path.join(FIXTURE_PATH, "."), "'_dir' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, ".."), "'_dir' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "../.."), "'_dir' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "testdir/."), "'_dir' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "../testdir"), "'_dir' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "../../testdir"), "'_dir' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "testdir/../somedir"), "'_dir' must be a legal path")]
+
+def test_create_directory():
+    for _dir in GOOD_CREATE_DIRECTORY_ARGS:
+        assert not os.path.exists(_dir)
+        file_utils.create_directory(_dir)
+        assert os.path.exists(_dir)
+        _clean_path(_dir)
+
+    for _dir, match_text in BAD_CREATE_DIRECTORY_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            file_utils.create_directory(_dir)
+
+GOOD_CREATE_DIRECTORIES_ARGS = [
+    ({"dir1" : os.path.join(FIXTURE_PATH, "testdir1"),
+      "dir2" : os.path.join(FIXTURE_PATH, "testdir2/subdir"),
+      "dir3" : os.path.join(FIXTURE_PATH, "testdir3/dir/dir/dir")}),
+    ({"dir1" : os.path.join(FIXTURE_PATH, "testdir")}),
+    ({})]
+
+BAD_CREATE_DIRECTORIES_ARGS = [
+    ({"dir1" : os.path.join(FIXTURE_PATH_BAD, "../testdir1"),
+      "dir2" : os.path.join(FIXTURE_PATH_BAD, "testdir2/subdir"),
+      "dir3" : os.path.join(FIXTURE_PATH_BAD, "testdir3/dir/dir/dir")}, "'_dir' must be a legal path"),
+    ({"dir1" : os.path.join(FIXTURE_PATH_BAD, "testdir1"),
+      "dir2" : os.path.join(FIXTURE_PATH_BAD, "../testdir2/subdir"),
+      "dir3" : os.path.join(FIXTURE_PATH_BAD, "testdir3/dir/dir/dir")}, "'_dir' must be a legal path"),
+    ({"dir1" : os.path.join(FIXTURE_PATH_BAD, "testdir1"),
+      "dir2" : os.path.join(FIXTURE_PATH_BAD, "testdir2/subdir"),
+      "dir3" : os.path.join(FIXTURE_PATH_BAD, "../testdir3/dir/dir/dir")}, "'_dir' must be a legal path"),
+    ({"dir1" : os.path.join(FIXTURE_PATH_BAD, "../testdir1"),
+      "dir2" : os.path.join(FIXTURE_PATH_BAD, "../testdir2/subdir"),
+      "dir3" : os.path.join(FIXTURE_PATH_BAD, "../testdir3/dir/dir/dir")}, "'_dir' must be a legal path")]
+
+def test_create_directories(capsys):
+    for good_args in GOOD_CREATE_DIRECTORIES_ARGS:
+        for name, path in good_args.items():
+            if path:
+                assert not os.path.exists(path)
+        file_utils.create_directories(good_args)
+        for name, path in good_args.items():
+            if path:
+                assert os.path.exists(path)
+                _clean_path(path)
+
+    for bad_args, match_text in BAD_CREATE_DIRECTORIES_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            file_utils.create_directories(bad_args)
+        _clean_path(FIXTURE_PATH_BAD)
 
 BAD_PATH_ARGS = [None, 1, 2.0, {3:3}, [4]]
 GOOD_PATH_ARGS = [FIXTURE_PATH]
@@ -45,6 +211,93 @@ def test_get_files(capsys):
         nondupe_result = file_utils.get_files(FIXTURE_PATH, nondupe)
         dupe_result = file_utils.get_files(FIXTURE_PATH, dupe)
         assert len(dupe_result) == len(nondupe_result)
+
+SETUP_GET_DIRECTORIES = {
+    "dir1" : os.path.join(FIXTURE_PATH_ALT, "testdir1"),
+    "dir2" : os.path.join(FIXTURE_PATH_ALT, "testdir2/subdir"),
+    "dir3" : os.path.join(FIXTURE_PATH_ALT, "testdir3/dir/dir/dir")}
+
+GOOD_GET_DIRECTORIES_ARGS = [
+    (FIXTURE_PATH, 1),
+    (FIXTURE_PATH_ALT, 3),
+    (os.path.join(FIXTURE_PATH_ALT, "testdir1"), 0),
+    (os.path.join(FIXTURE_PATH_ALT, "testdir2"), 1),
+    (os.path.join(FIXTURE_PATH_ALT, "testdir3"), 1),
+    (os.path.join(FIXTURE_PATH_ALT, "testdir3/dir"), 1),
+    (os.path.join(FIXTURE_PATH_ALT, "testdir3/dir/dir"), 1),
+    (os.path.join(FIXTURE_PATH_ALT, "testdir3/dir/dir/dir"), 0)]
+
+BAD_GET_DIRECTORIES_ARGS = [
+    (None, "'path' must be a string"),
+    (1, "'path' must be a string"),
+    (2.0, "'path' must be a string"),
+    ({3:3}, "'path' must be a string"),
+    ([4], "'path' must be a string"),
+    (os.path.join(FIXTURE_PATH, ".."), "'path' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "../.."), "'path' must be a legal path"),
+    (os.path.join(FIXTURE_PATH, "test/../test"), "'path' must be a legal path"),
+]
+
+def test_get_directories():
+    assert len(file_utils.get_directories(FIXTURE_PATH)) == 0
+    file_utils.create_directories(SETUP_GET_DIRECTORIES)
+    for path, count in GOOD_GET_DIRECTORIES_ARGS:
+        assert count == len(file_utils.get_directories(path))
+    _clean_path(FIXTURE_PATH_ALT)
+    assert len(file_utils.get_directories(FIXTURE_PATH)) == 0
+
+    for path, match_text in BAD_GET_DIRECTORIES_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            file_utils.get_directories(path)
+
+GOOD_CREATE_ZIP_ARGS = [
+    (FIXTURE_FILES, os.path.join(FIXTURE_PATH, "test.zip"), 1_000_000, 3_000_000),
+    ([FIXTURE_FILES[0]], os.path.join(FIXTURE_PATH, "test.zip"), 100_000, 300_000)]
+
+BAD_CREATE_ZIP_ARGS = [
+    (None, None, "'files' must be a list"),
+    ([None], None, "'files' members must be strings"),
+    ([""], None, "file '' does not exist"),
+    ([os.path.join(FIXTURE_PATH, "a")], "", "file .* does not exist"),
+    ([FIXTURE_FILES[0]], None, "'filepath' must be a string"),
+    ([FIXTURE_FILES[0]], "", "'filepath' must be a legal path"),
+    ([FIXTURE_FILES[0]], "..", "'filepath' must be a legal path"),
+]
+
+def test_create_zip():
+    for file_list, zip_file, min_size, max_size in GOOD_CREATE_ZIP_ARGS:
+        file_utils.create_zip(file_list, zip_file)
+        assert os.path.exists(zip_file)
+        assert max_size > os.path.getsize(zip_file) > min_size
+        os.remove(zip_file)
+
+    for file_list, zip_file, match_text in BAD_CREATE_ZIP_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            file_utils.create_zip(file_list, zip_file)
+
+GOOD_LOCATE_FRAME_FILE_ARGS = [
+    ((FIXTURE_PATH, 0), FIXTURE_FILES[0]),
+    ((FIXTURE_PATH, 1), FIXTURE_FILES[1]),
+    ((FIXTURE_PATH, 1.0), FIXTURE_FILES[1]),
+    ((FIXTURE_PATH, 2), FIXTURE_FILES[2]),
+    ((FIXTURE_PATH, 100), None),
+    ((FIXTURE_PATH, -1), None),
+]
+
+BAD_LOCATE_FRAME_FILE_ARGS = [
+    ((None, None), "'png_files_path' must be a string"),
+    (("", None), "'png_files_path' must be a legal path"),
+    ((os.path.join(FIXTURE_PATH, ".."), None), "'png_files_path' must be a legal path"),
+    ((FIXTURE_PATH, None), "'frame_number' must be an int or float"),
+]
+
+def test_locate_frame_file():
+    for good_args, result in GOOD_LOCATE_FRAME_FILE_ARGS:
+        assert result == file_utils.locate_frame_file(*good_args)
+
+    for bad_args, match_text in BAD_LOCATE_FRAME_FILE_ARGS:
+        with pytest.raises(ValueError, match=match_text):
+            file_utils.locate_frame_file(*bad_args)
 
 GOOD_PATH_SPLITS = [
     ("path1/path2/filename.extension", ("path1/path2", "filename", ".extension")),

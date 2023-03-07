@@ -38,4 +38,4 @@ Frame Search _finds_ frames at precise times through a binary search process
 
 **Example** Deep Search for 2/3:
 - Search Precision is 60, search range is 0.66666666666666666666 to 0.66666666666666666668
-- The frame produced at 0.666666666666666518636930049979127943515777587890625 is returned
+- The frame produced at 0.66666666666666662965923251249478198587894439697265625 is returned
