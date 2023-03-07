@@ -44,9 +44,9 @@
   - Cuda 11.7
   - NVIDIA RTX 3090
   - Windows 11
-2. Clone this repo in a separate directory and copy all* directories/files on top of your *working* VFIformer installation
+2. Clone this repo in a separate directory and copy all directories/files on top of your *working* VFIformer installation
 - This code makes no changes to their original code (but borrows some) and causes no conflicts with it
-- It shouldn't introduce any additional requirements over what VFIformer and Gradio-App needs
+- It shouldn't introduce any additional requirements over what VFIformer, Gradio-App and Real-ESRGAN need
 3. If it's set up properly, the following command should write a new file `images/image1.png` using default settings
 
 `python interpolate.py`
@@ -74,7 +74,7 @@
 
 # Real-ESRGAN Add-On Set Up
 
-The GIF to MP4 feature uses _Real-ESRGAN_ to clean and optionally upscale frames
+The _GIF to MP4_ feature uses _Real-ESRGAN_ to clean and upscale frames
 
 1. Get _Real-ESRGAN_ working on your local system
 - See their repo at [https://github.com/xinntao/Real-ESRGAN](https://github.com/xinntao/Real-ESRGAN)
