@@ -51,6 +51,9 @@ _**Change FPS**_
 _**GIF to MP4**_
 * Convert Animated GIF to Mp4 in one click
 
+_**Upscale Frames**_
+* Use _Real-ESRGAN_ to Enlarge and Clean Frames
+
 # Set Up For Use
 
 1. Get VFIformer working on your local system
