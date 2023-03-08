@@ -58,6 +58,7 @@ upscale_settings:
   file_types:
   - "png"
   - "jpg"
+  - "jpeg"
   - "gif"
   - "bmp"
 logviewer_settings:
