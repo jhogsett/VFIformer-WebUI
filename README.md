@@ -19,19 +19,19 @@
 |:--:|:--:|
 | https://user-images.githubusercontent.com/825994/220932548-d40b54b5-811b-4637-8adc-6bf26fdcc52b.mp4 | ![http_t0 tagstat com_image03_0_21c475648484948484881505552](https://user-images.githubusercontent.com/825994/220933026-3fe6bf25-8be7-490e-a90b-85a151e6b156.gif) |
 
-| 🎥 VFIformer-WebUI Features | &nbsp; | &nbsp; |
-|:--|:--|:--|
-| **➗ Frame Interpolation** | _Restore Missing Frames, Reveal Hidden Motion_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Frame-Interpolation) |
-| **🔎 Frame Search** | _Synthesize_ Between _Frames At Precise Times_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Frame-Search) |
-| **🎈 Video Inflation** | _Create Super Slow-Motion_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Video-Inflation) |
-| **💕 Resynthesize Video** | _Create a Complete Set of Replacement Frames_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Resynthesize-Video) |
-| **🪄 Frame Restoration** | _Restore Adjacent Missing / Damaged Frames_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Frame-Restoration) |
-| **🔬 Video Blender** | _Project-Based Movie Restoration_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Video-Blender) |
-| **📁 File Conversion** | _Convert between PNG Sequences and Videos_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Tools) |
-| **🔢 Resequence Files** | _Renumber for Import into Video Editing Software_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Resequence-Files) |
-| **🎞️ Change FPS** | _Convert any FPS to any other FPS_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Change-FPS) |
-| **💎 GIF to MP4** | _Convert Animated GIF to Mp4 in one click_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/GIF-to-MP4) |
-| **📈 Upscale Frames** | _Use_ Real-ESRGAN _to Enlarge and Clean Frames_ | [wiki](https://github.com/jhogsett/VFIformer-WebUI/wiki/Upscale-Frames) |
+| 🎥 VFIformer-WebUI Features | &nbsp; |
+|:--|:--|
+| **➗ [Frame Interpolation](https://github.com/jhogsett/VFIformer-WebUI/wiki/Frame-Interpolation)** | _Restore Missing Frames, Reveal Hidden Motion_ |
+| **🔎 [Frame Search](https://github.com/jhogsett/VFIformer-WebUI/wiki/Frame-Search)** | _Synthesize_ Between _Frames At Precise Times_ |
+| **🎈 [Video Inflation](https://github.com/jhogsett/VFIformer-WebUI/wiki/Video-Inflation)** | _Create Super Slow-Motion_ |
+| **💕 [Resynthesize Video](https://github.com/jhogsett/VFIformer-WebUI/wiki/Resynthesize-Video)** | _Create a Complete Set of Replacement Frames_ |
+| **🪄 [Frame Restoration](https://github.com/jhogsett/VFIformer-WebUI/wiki/Frame-Restoration)** | _Restore Adjacent Missing / Damaged Frames_ |
+| **🔬 [Video Blender](https://github.com/jhogsett/VFIformer-WebUI/wiki/Video-Blender)** | _Project-Based Movie Restoration_ |
+| **📁 [File Conversion](https://github.com/jhogsett/VFIformer-WebUI/wiki/Tools)** | _Convert between PNG Sequences and Videos_ |
+| **🔢 [Resequence Files](https://github.com/jhogsett/VFIformer-WebUI/wiki/Resequence-Files)** | _Renumber for Import into Video Editing Software_ |
+| **🎞️ [Change FPS](https://github.com/jhogsett/VFIformer-WebUI/wiki/Change-FPS)** | _Convert any FPS to any other FPS_ |
+| **💎 [GIF to MP4](https://github.com/jhogsett/VFIformer-WebUI/wiki/GIF-to-MP4)** | _Convert Animated GIF to Mp4 in one click_ |
+| **📈 [Upscale Frames](https://github.com/jhogsett/VFIformer-WebUI/wiki/Upscale-Frames)** | _Use_ Real-ESRGAN _to Enlarge and Clean Frames_ |
 
 # Set Up For Use
 
