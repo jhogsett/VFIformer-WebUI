@@ -1,8 +1,7 @@
 import os
-import shutil
 import pytest # pylint: disable=import-error
 from .file_utils import *
-from .test_defs import *
+from .test_shared import *
 
 GOOD_IS_SAFE_PATH_ARGS = [
     (FIXTURE_PATH, True),
@@ -51,67 +50,6 @@ def test_is_safe_path():
         with pytest.raises(ValueError, match=match_text):
             is_safe_path(bad_args)
 
-def _clean_path(path : str | None):
-    """Remove directories created under FIXTURE_PATH"""
-    cleaned = False
-    if path:
-        path = path.replace("/", os.sep).replace("\\", os.sep)
-        if path[:len(FIXTURE_PATH)] == FIXTURE_PATH:
-            if is_safe_path(path):
-                remainder_path = path[len(FIXTURE_PATH):]
-                if remainder_path:
-                    root_dir = remainder_path.strip(os.sep).split(os.sep)[0]
-                    root_path = os.path.join(FIXTURE_PATH, root_dir)
-                    if os.path.exists(root_path):
-                        shutil.rmtree(root_path, ignore_errors=False)
-                        cleaned = True
-            else:
-                raise ValueError(f"attempt to clean unsafe path {path}")
-        else:
-            raise ValueError(f"unable to clean path {path}")
-    return cleaned
-
-BAD_CLEAN_PATH_ARGS = [
-    (".", r"unable to clean path.*"),
-    ("..", r"unable to clean path.*"),
-    ("\\", r"unable to clean path.*"),
-    ("/", r"unable to clean path.*"),
-    (os.path.join(FIXTURE_PATH, "."), r"attempt to clean unsafe path.*"),
-    (os.path.join(FIXTURE_PATH, ".."), r"attempt to clean unsafe path.*"),
-    (os.path.join(FIXTURE_PATH, "../dir"), r"attempt to clean unsafe path.*"),
-    (os.path.join(FIXTURE_PATH, "dir/../dir"), r"attempt to clean unsafe path.*"),
-    (os.path.join(FIXTURE_PATH, "..\\dir"), r"attempt to clean unsafe path.*"),
-    (os.path.join(FIXTURE_PATH, "dir\\..\\dir"), r"attempt to clean unsafe path.*"),
-]
-
-GOOD_CLEAN_PATH_ARGS = [
-    (FIXTURE_PATH, False),
-    (None, False),
-    ("", False),
-    (FIXTURE_PATH_BAD, True),
-    (os.path.join(FIXTURE_PATH, "testdir"), True),
-    (os.path.join(FIXTURE_PATH, "testdir/subdir"), True),
-    (os.path.join(FIXTURE_PATH, "testdir\\subdir"), True),
-    (os.path.join(FIXTURE_PATH, "testdir/dir/dir/dir"), True),
-]
-
-def test__clean_path():
-    for bad_args, match_text in BAD_CLEAN_PATH_ARGS:
-        with pytest.raises(ValueError, match=match_text):
-            _clean_path(bad_args)
-
-    for path, should_clean in GOOD_CLEAN_PATH_ARGS:
-        if should_clean:
-            assert not os.path.exists(path)
-            os.makedirs(path)
-        assert should_clean == _clean_path(path)
-        if should_clean:
-            remainder_path = path[len(FIXTURE_PATH):]
-            root_dir = remainder_path.strip(os.sep).split(os.sep)[0]
-            assert len(root_dir) > 0
-            root_path = os.path.join(FIXTURE_PATH, root_dir)
-            assert not os.path.exists(root_path)
-
 GOOD_CREATE_DIRECTORY_ARGS = [
     (os.path.join(FIXTURE_PATH, "testdir")),
     (os.path.join(FIXTURE_PATH, "testdir/subdir")),
@@ -136,7 +74,7 @@ def test_create_directory():
         assert not os.path.exists(_dir)
         create_directory(_dir)
         assert os.path.exists(_dir)
-        _clean_path(_dir)
+        clean_fixture_path(_dir)
 
     for _dir, match_text in BAD_CREATE_DIRECTORY_ARGS:
         with pytest.raises(ValueError, match=match_text):
@@ -172,12 +110,12 @@ def test_create_directories(capsys):
         for name, path in good_args.items():
             if path:
                 assert os.path.exists(path)
-                _clean_path(path)
+                clean_fixture_path(path)
 
     for bad_args, match_text in BAD_CREATE_DIRECTORIES_ARGS:
         with pytest.raises(ValueError, match=match_text):
             create_directories(bad_args)
-        _clean_path(FIXTURE_PATH_BAD)
+        clean_fixture_path(FIXTURE_PATH_BAD)
 
 BAD_PATH_ARGS = [None, 1, 2.0, {3:3}, [4]]
 GOOD_PATH_ARGS = [FIXTURE_PATH]
@@ -249,7 +187,7 @@ def test_get_directories():
     create_directories(SETUP_GET_DIRECTORIES)
     for path, count in GOOD_GET_DIRECTORIES_ARGS:
         assert count == len(get_directories(path))
-    _clean_path(FIXTURE_PATH_ALT)
+    clean_fixture_path(FIXTURE_PATH_ALT)
     assert len(get_directories(FIXTURE_PATH)) == 0
 
     for path, match_text in BAD_GET_DIRECTORIES_ARGS:

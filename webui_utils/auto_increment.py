@@ -27,14 +27,22 @@ class AutoIncrementDirectory():
     """Encapsulates logic to create new unique sequentially-numbered directories"""
     def __init__(self, path : str):
         self.path = path
+        if not is_safe_path(path):
+            raise ValueError("'path' must be a legal path")
         self.running_dir_count = len(get_directories(path))
 
     def next_directory(self, basename : str, auto_create=True) -> tuple[str, int]:
-        """Compute the next directory and optionally created it"""
-        dirname = os.path.join(self.path, f"{basename}{self.running_dir_count}")
-        if auto_create:
-            if not os.path.exists(dirname):
-                os.makedirs(dirname)
-        this_index = self.running_dir_count
-        self.running_dir_count += 1
-        return dirname, this_index
+        """Compute the next directory and optionally create it"""
+        if isinstance(basename, str):
+            if basename:
+                dirname = os.path.join(self.path, f"{basename}{self.running_dir_count}")
+                if auto_create:
+                    if not os.path.exists(dirname):
+                        os.makedirs(dirname)
+                this_index = self.running_dir_count
+                self.running_dir_count += 1
+                return dirname, this_index
+            else:
+                raise ValueError("'basename' must be a non-empty string")
+        else:
+            raise ValueError("'basename' must be a string")
