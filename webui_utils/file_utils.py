@@ -3,10 +3,15 @@ import os
 import glob
 from zipfile import ZipFile
 
-def is_safe_path(path : str):
-    path = path.replace("/", os.sep).replace("\\", os.sep)
-    norm_path = os.path.normpath(os.sep + path).lstrip(os.sep)
-    return len(norm_path) > 0 and path == norm_path
+def is_safe_path(path : str | None):
+    if isinstance(path, (str, type(None))):
+        if path == None:
+            return False
+        path = path.replace("/", os.sep).replace("\\", os.sep)
+        norm_path = os.path.normpath(os.sep + path).lstrip(os.sep)
+        return len(norm_path) > 0 and path == norm_path
+    else:
+        raise ValueError("'path' must be a string or None")
 
 def create_directory(_dir):
     """Create a directory if it does not already exist"""

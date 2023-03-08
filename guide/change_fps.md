@@ -19,7 +19,7 @@
 1. A _Super-Sampling Set_ of frames is computed at the higher common frame rate
     - If needed, _Filler Frames_ will be interpolated to inflate the original video's frame rate to the super-sample rate
         - The fill count shows in the `Filled Frames per Input Frame` box
-    - If needed. the super-sample set is _Sampled_ to achieve the final frame rate
+    - If needed, the super-sample set is _Sampled_ to achieve the final frame rate
         - The sample rate shows in the `Output Frames Sample Rate` box
 1. Set _Precision_ to the depth of search needed for accuracy
       - High precision yields precise frame timing, but takes a long time
