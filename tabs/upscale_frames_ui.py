@@ -34,19 +34,26 @@ class UpscaleFrames(TabBase):
                     with gr.Row():
                         scale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
                             label="Frame Upscale Factor")
+                        use_tiling = gr.Radio(label="Use Tiling", choices=["No (Best Quality)", "Yes (If Low VRAM)"], value="No (Best Quality)")
             upscale_button = gr.Button("Upscale Frames", variant="primary")
             with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.upscale_frames.render()
         upscale_button.click(self.upscale_frames,
-            inputs=[input_path_text, output_path_text, scale_input])
+            inputs=[input_path_text, output_path_text, scale_input, use_tiling])
 
-    def upscale_frames(self, input_path : str, output_path : str | None, upscale_factor : float):
+    def upscale_frames(self, input_path : str, output_path : str | None, upscale_factor : float, use_tiling : str):
         """Upscale Frames button handler"""
         if input_path:
             model_name = self.config.realesrgan_settings["model_name"]
             gpu_ips = self.config.gpu_ids
             fp32 = self.config.realesrgan_settings["fp32"]
-            upscaler = UpscaleSeries(model_name, gpu_ips, fp32, self.log)
+            if use_tiling[0] == "Y":
+                tiling = self.config.realesrgan_settings["tiling"]
+                tile_pad = self.config.realesrgan_settings["tile_pad"]
+            else:
+                tiling = 0
+                tile_pad = 0
+            upscaler = UpscaleSeries(model_name, gpu_ips, fp32, tiling, tile_pad, self.log)
 
             if output_path:
                 create_directory(output_path)

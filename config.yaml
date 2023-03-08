@@ -54,10 +54,13 @@ gif_to_mp4_settings:
 realesrgan_settings:
   model_name: "RealESRGAN_x4plus"
   fp32: True
+  tiling: 256
+  tile_pad: 10
 upscale_settings:
   file_types:
   - "png"
   - "jpg"
+  - "jpeg"
   - "gif"
   - "bmp"
 logviewer_settings:
