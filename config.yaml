@@ -51,6 +51,7 @@ fps_change_settings:
   max_precision: 60
 gif_to_mp4_settings:
   resampling_precision: 10
+  use_tiling: False
 realesrgan_settings:
   model_name: "RealESRGAN_x4plus"
   fp32: True
