@@ -30,7 +30,7 @@
 | **📁 [File Conversion](https://github.com/jhogsett/VFIformer-WebUI/wiki/Tools)** | _Convert between PNG Sequences and Videos_ |
 | **🔢 [Resequence Files](https://github.com/jhogsett/VFIformer-WebUI/wiki/Resequence-Files)** | _Renumber for Import into Video Editing Software_ |
 | **🎞️ [Change FPS](https://github.com/jhogsett/VFIformer-WebUI/wiki/Change-FPS)** | _Convert any FPS to any other FPS_ |
-| **💎 [GIF to MP4](https://github.com/jhogsett/VFIformer-WebUI/wiki/GIF-to-MP4)** | _Convert Animated GIF to Mp4 in one click_ |
+| **💎 [GIF to MP4](https://github.com/jhogsett/VFIformer-WebUI/wiki/GIF-to-MP4)** | _Convert Animated GIF to MP4 in one click_ |
 | **📈 [Upscale Frames](https://github.com/jhogsett/VFIformer-WebUI/wiki/Upscale-Frames)** | _Use_ Real-ESRGAN _to Enlarge and Clean Frames_ |
 
 # Set Up For Use
