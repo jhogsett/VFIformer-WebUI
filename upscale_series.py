@@ -17,24 +17,28 @@ def main():
     """Use Upscale Frames from the command line"""
     parser = argparse.ArgumentParser(description="Video Frame Upscaling (Real-ESRGAN)")
     parser.add_argument("--model_name", default="RealESRGAN_x4plus", type=str,
-        help="Name of Real-ESRGAN model")
+        help="Name of Real-ESRGAN model. Default: RealESRGAN_x4plus")
     parser.add_argument("--gpu_ids", type=str, default="0",
-        help="gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU")
+        help="gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU. Default: 0 (use first GPU)")
     parser.add_argument(
         "--fp32", action="store_true",
         help="Use fp32 precision during inference. Default: fp16 (half precision).")
     parser.add_argument("--input_path", default="./images", type=str,
-        help="Input path for images to upscale")
-    parser.add_argument("--input_types", default="png", type=str,
-        help="Comma-seperated list of input image file types")
+        help="Input path for images to upscale. Default: ./images")
+    parser.add_argument("--input_types", default="png,jpg,jpeg,gif,bmp", type=str,
+        help="Comma-seperated list of input image file types. Default: png,jpg,jpeg,gif,bmp")
     parser.add_argument("--output_path", default=None, type=str,
-        help="Output path for upscaled PNGs. Default: use input path")
+        help="Output path for upscaled PNGs. Default: save to input path")
     parser.add_argument("--output_type", default=None, type=str,
-        help="Output image file type. Default: use input type)")
+        help="Output image file type. Default: save same as input type)")
     parser.add_argument("--base_filename", default=None, type=str,
-        help="Base filename for upsampled images. Default use input name)")
+        help="Base filename for upsampled images. Default: based on input name)")
     parser.add_argument("--outscale", type=float, default=4.0,
-        help="The final upsampling scale of the image 1.0-8.0")
+        help="The final upsampling scale of the image 1.0-8.0. Default: 4.0")
+    parser.add_argument("--tiling", type=int, default=0,
+        help="If tiling > 0, upscale in blocks. Default: 0 (upscale entire image at once)")
+    parser.add_argument("--tile_pad", type=int, default=8,
+        help="If tiling, overlap among blocks to lessen seams. Default: 8 pixels")
     parser.add_argument("--verbose", dest="verbose", default=False, action="store_true",
         help="Show extra details")
     args = parser.parse_args()
@@ -43,8 +47,16 @@ def main():
     output_path = args.output_path or args.input_path
     create_directory(output_path)
     file_list = get_files(args.input_path, extension=args.input_types)
-    upscaler = UpscaleSeries(args.model_name, args.gpu_ids, args.fp32, log.log)
-    upscaler.upscale_series(file_list, args.output_path, args.outscale, args.base_filename,
+    upscaler = UpscaleSeries(args.model_name,
+                             args.gpu_ids,
+                             args.fp32,
+                             args.tiling,
+                             args.tile_pad,
+                             log.log)
+    upscaler.upscale_series(file_list,
+                            args.output_path,
+                            args.outscale,
+                            args.base_filename,
                             args.output_type)
 
 class UpscaleSeries():
@@ -53,9 +65,12 @@ class UpscaleSeries():
                 model_name : str,
                 gpu_ids : str | None,
                 fp32 : bool,
+                tiling : int,
+                tile_pad : int,
                 log_fn : Callable | None):
-        self.upscaler =  self.load_upscaler(model_name, gpu_ids, fp32)
+        self.upscaler =  self.load_upscaler(model_name, gpu_ids, fp32, tiling, tile_pad)
         self.log_fn = log_fn
+        self.tiling = tiling
 
     def upscale_series(self,
                         file_list : list,
@@ -71,7 +86,8 @@ class UpscaleSeries():
         for index, filepath in enumerate(tqdm(file_list, desc=pbar_desc, position=0)):
             input_path, input_filename, input_type = split_filepath(filepath)
             outscale_str = str(outscale).replace(".", "-")
-            input_filename = f"{input_filename}[X{outscale_str}]{input_type}"
+            tiling_str = f"T{self.tiling}" if self.tiling > 0 else ""
+            input_filename = f"{input_filename}[X{outscale_str}{tiling_str}]{input_type}"
             output_filename = build_series_filename(base_filename, output_type, index, file_count,
                                                     input_filename)
             output_path = output_path or input_path
@@ -90,7 +106,12 @@ class UpscaleSeries():
         except RuntimeError as error:
             print('Real-ESRGAN Error', error)
 
-    def load_upscaler(self, model_name : str, gpu_ids : str | None, fp32 : bool):
+    def load_upscaler(self,
+                      model_name : str,
+                      gpu_ids : str | None,
+                      fp32 : bool,
+                      tiling : int,
+                      tile_pad : int):
         """determine models according to model names"""
         model_name = model_name.split('.')[0]
         if model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
@@ -140,16 +161,14 @@ class UpscaleSeries():
                     model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
 
         # defaults in place of unoffered options
-        dni_weight = 0.5
-        tile = 0
-        tile_pad = 10
+        dni_weight = 0.5 # this applies to one specific model: realesr-general-x4v3
         pre_pad = 0
         return RealESRGANer(
             scale=netscale,
             model_path=model_path,
             dni_weight=dni_weight,
             model=model,
-            tile=tile,
+            tile=tiling,
             tile_pad=tile_pad,
             pre_pad=pre_pad,
             half=not fp32,

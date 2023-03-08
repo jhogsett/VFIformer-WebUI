@@ -129,7 +129,13 @@ class GIFtoMP4(TabBase):
         model_name = self.config.realesrgan_settings["model_name"]
         gpu_ips = self.config.gpu_ids
         fp32 = self.config.realesrgan_settings["fp32"]
-        upscaler = UpscaleSeries(model_name, gpu_ips, fp32, self.log)
+        if self.config.gif_to_mp4_settings["use_tiling"]:
+            tiling = self.config.realesrgan_settings["tiling"]
+            tile_pad = self.config.realesrgan_settings["tile_pad"]
+        else:
+            tiling = 0
+            tile_pad = 0
+        upscaler = UpscaleSeries(model_name, gpu_ips, fp32, tiling, tile_pad, self.log)
         output_basename = "upscaled_frames"
         file_list = get_files(input_path, extension="png")
         upscaler.upscale_series(file_list, output_path, upscale_factor, output_basename, "png")

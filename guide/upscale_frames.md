@@ -23,6 +23,13 @@ Real-ESRGAN must be installed locally to use
     - The factor can be set between 1.0 and 8.0 in 0.05 steps
     - Real-ESRGAN will perform upscaling when _factor_ is > 1.0
         - _Tip: It will remove dirt and noise even when not upscaling_
+1. Choose whether or not to use _Tiling_
+    - Select _No_ for the best quality.
+        - Entire images will be upscaled at once
+    - Select _Yes_ if upscaling large images, or running into low VRAM conditions
+        - Images will be upscaled in blocks then stiched together
+        - Tiling _Size_ and _Padding_ (in pixels) are set using the config settings:
+            - `realesrgan_settings:tiling` and `realesrgan_settings:tile_pad`
 1. Click _Upscale Frames_
 1. _Real-ESRGAN_ is used on each frame in the input path
     - Frames are cleaned up, and enlarged if necessary
