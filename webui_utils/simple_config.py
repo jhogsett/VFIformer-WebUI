@@ -12,7 +12,7 @@ class SimpleConfig:
 
     def init(self, path : str):
         """Load the config"""
-        with open(path, encoding="UTF-8") as file:
+        with open(path, encoding="utf-8") as file:
             self.config = yaml.load(file, Loader=yaml.FullLoader)
 
     def get(self, key : str):

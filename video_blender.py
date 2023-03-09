@@ -34,7 +34,7 @@ class VideoBlenderProjects:
     def read_projects(self):
         """Load project information from CSV file"""
         if os.path.isfile(self.csvfile_path):
-            reader = csv.DictReader(open(self.csvfile_path, encoding="UTF-8"))
+            reader = csv.DictReader(open(self.csvfile_path, encoding="utf-8"))
             entries = list(reader)
             for entry in entries:
                 project_name = entry["project_name"]
@@ -44,7 +44,7 @@ class VideoBlenderProjects:
         """Save project information to CSV file"""
         project_names = self.get_project_names()
         row_array = [self.projects[project_name] for project_name in project_names]
-        with open(self.csvfile_path, 'w', encoding="UTF-8", newline="") as csvfile:
+        with open(self.csvfile_path, 'w', encoding="utf-8", newline="") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames = self.FIELDS)
             writer.writeheader()
             writer.writerows(row_array)

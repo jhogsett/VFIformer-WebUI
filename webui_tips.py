@@ -16,7 +16,7 @@ class WebuiTips:
         """Load a .md file and return it"""
         filepath = os.path.join(path, name + ".md")
         markdown = ""
-        with open(filepath, encoding="UTF-8") as file:
+        with open(filepath, encoding="utf-8") as file:
             markdown = file.read()
         return markdown
 
