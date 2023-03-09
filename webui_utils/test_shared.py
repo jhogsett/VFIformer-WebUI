@@ -7,9 +7,10 @@ FIXTURE_PATH = os.path.join(os.path.abspath("test_fixtures"))
 FIXTURE_PATH_BAD = os.path.join(FIXTURE_PATH, "bad")
 FIXTURE_PATH_ALT = os.path.join(FIXTURE_PATH, "alt")
 FIXTURE_EXTENSION = "png"
-FIXTURE_PNG_FILES = [os.path.join(FIXTURE_PATH, file) for file in
-                 ["image0.png", "image1.png", "image2.png", "screenshot.png"]]
-FIXTURE_FILES = FIXTURE_PNG_FILES + ["example.gif"]
+FIXTURE_PNG_LIST = [os.path.join(FIXTURE_PATH, file)
+                    for file in ["image0.png", "image1.png", "image2.png"]]
+FIXTURE_GIF_LIST = [os.path.join(FIXTURE_PATH, "example.gif")]
+FIXTURE_FILES = FIXTURE_PNG_LIST + ["example.gif"]
 
 def clean_fixture_path(path : str | None):
     """Remove directories created under FIXTURE_PATH"""
@@ -31,7 +32,7 @@ def clean_fixture_path(path : str | None):
             raise ValueError(f"unable to clean path {path}")
     return cleaned
 
-BADclean_fixture_path_ARGS = [
+BAD_clean_fixture_path_ARGS = [
     (".", r"unable to clean path.*"),
     ("..", r"unable to clean path.*"),
     ("\\", r"unable to clean path.*"),
@@ -44,7 +45,7 @@ BADclean_fixture_path_ARGS = [
     (os.path.join(FIXTURE_PATH, "dir\\..\\dir"), r"attempt to clean unsafe path.*"),
 ]
 
-GOODclean_fixture_path_ARGS = [
+GOOD_clean_fixture_path_ARGS = [
     (FIXTURE_PATH, False),
     (None, False),
     ("", False),
@@ -56,11 +57,11 @@ GOODclean_fixture_path_ARGS = [
 ]
 
 def test_clean_fixture_path():
-    for bad_args, match_text in BADclean_fixture_path_ARGS:
+    for bad_args, match_text in BAD_clean_fixture_path_ARGS:
         with pytest.raises(ValueError, match=match_text):
             clean_fixture_path(bad_args)
 
-    for path, should_clean in GOODclean_fixture_path_ARGS:
+    for path, should_clean in GOOD_clean_fixture_path_ARGS:
         if should_clean:
             assert not os.path.exists(path)
             os.makedirs(path)

@@ -4,11 +4,12 @@ from .file_utils import get_files, get_directories, create_directory
 from .auto_increment import *
 
 GOOD_AIF_EXAMPLES = [
-    ((FIXTURE_PATH, "*"), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file5.txt"), 5)),
-    ((FIXTURE_PATH, None), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file5.txt"), 5)),
-    ((FIXTURE_PATH, FIXTURE_EXTENSION), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file4.txt"), 4)),
+    ((FIXTURE_PATH, "*"), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file4.txt"), 4)),
+    ((FIXTURE_PATH, None), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file4.txt"), 4)),
+    ((FIXTURE_PATH, FIXTURE_EXTENSION), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file3.txt"), 3)),
     ((FIXTURE_PATH, "doesnotexist"), ("file", "txt"), (os.path.join(FIXTURE_PATH, "file0.txt"), 0)),
-    ((FIXTURE_PATH_ALT, FIXTURE_EXTENSION), ("file", "txt"), (os.path.join(FIXTURE_PATH_ALT, "file0.txt"), 0))]
+    ((FIXTURE_PATH_ALT, FIXTURE_EXTENSION), ("file", "txt"), (os.path.join(FIXTURE_PATH_ALT, "file0.txt"), 0))
+]
 
 BAD_AIF_EXAMPLES = [
     ((1, "*"), (None, None), False, "'path' must be a string"),

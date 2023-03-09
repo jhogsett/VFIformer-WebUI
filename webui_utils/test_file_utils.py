@@ -148,7 +148,7 @@ def test_get_files(capsys):
 
     # should get a predicted set of files including the prepended path
     result = get_files(FIXTURE_PATH, FIXTURE_EXTENSION)
-    assert set(result) == set(FIXTURE_PNG_FILES)
+    assert set(result) == set(FIXTURE_PNG_LIST)
 
     # should not get overlapping results
     for nondupe, dupe in DUPLICATE_EXTENSION_ARGS:
@@ -195,35 +195,37 @@ def test_get_directories():
             get_directories(path)
 
 GOOD_CREATE_ZIP_ARGS = [
-    (FIXTURE_PNG_FILES, os.path.join(FIXTURE_PATH, "test.zip"), 1_000_000, 3_000_000),
-    ([FIXTURE_PNG_FILES[0]], os.path.join(FIXTURE_PATH, "test.zip"), 100_000, 300_000)]
+    (FIXTURE_PNG_LIST, os.path.join(FIXTURE_PATH, "test.zip"), 600_000, 800_000),
+    ([FIXTURE_PNG_LIST[0]], os.path.join(FIXTURE_PATH, "test.zip"), 100_000, 300_000)]
 
 BAD_CREATE_ZIP_ARGS = [
     (None, None, "'files' must be a list"),
     ([None], None, "'files' members must be strings"),
     ([""], None, "file '' does not exist"),
     ([os.path.join(FIXTURE_PATH, "a")], "", "file .* does not exist"),
-    ([FIXTURE_PNG_FILES[0]], None, "'filepath' must be a string"),
-    ([FIXTURE_PNG_FILES[0]], "", "'filepath' must be a legal path"),
-    ([FIXTURE_PNG_FILES[0]], "..", "'filepath' must be a legal path"),
+    ([FIXTURE_PNG_LIST[0]], None, "'filepath' must be a string"),
+    ([FIXTURE_PNG_LIST[0]], "", "'filepath' must be a legal path"),
+    ([FIXTURE_PNG_LIST[0]], "..", "'filepath' must be a legal path"),
 ]
 
 def test_create_zip():
     for file_list, zip_file, min_size, max_size in GOOD_CREATE_ZIP_ARGS:
         create_zip(file_list, zip_file)
-        assert os.path.exists(zip_file)
-        assert max_size > os.path.getsize(zip_file) > min_size
+        zip_existed = os.path.exists(zip_file)
+        zip_size_ok = max_size > os.path.getsize(zip_file) > min_size
         os.remove(zip_file)
+        assert zip_existed
+        assert zip_size_ok
 
     for file_list, zip_file, match_text in BAD_CREATE_ZIP_ARGS:
         with pytest.raises(ValueError, match=match_text):
             create_zip(file_list, zip_file)
 
 GOOD_LOCATE_FRAME_FILE_ARGS = [
-    ((FIXTURE_PATH, 0), FIXTURE_PNG_FILES[0]),
-    ((FIXTURE_PATH, 1), FIXTURE_PNG_FILES[1]),
-    ((FIXTURE_PATH, 1.0), FIXTURE_PNG_FILES[1]),
-    ((FIXTURE_PATH, 2), FIXTURE_PNG_FILES[2]),
+    ((FIXTURE_PATH, 0), FIXTURE_PNG_LIST[0]),
+    ((FIXTURE_PATH, 1), FIXTURE_PNG_LIST[1]),
+    ((FIXTURE_PATH, 1.0), FIXTURE_PNG_LIST[1]),
+    ((FIXTURE_PATH, 2), FIXTURE_PNG_LIST[2]),
     ((FIXTURE_PATH, 100), None),
     ((FIXTURE_PATH, -1), None),
 ]

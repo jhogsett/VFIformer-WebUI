@@ -2,6 +2,7 @@
 
 class SimpleIcons:
     """Icons for use in web output from https://emojiguide.org/"""
+    # some of these are composite characters
     NOTEBOOK = "📒"
     DOCUMENT = "📄"
     PROPERTIES = "📝"
@@ -83,5 +84,41 @@ class SimpleIcons:
     TIPS_SYMBOL = INFO
     SLOW_SYMBOL = WATCH
     PROP_SYMBOL = PROPERTIES
-    WISH_SYMBOL = FINGERS_CROSSED
     CONV_SYMBOL = STILL
+
+    SYMBOLS = [
+        CONV_SYMBOL,
+        PROP_SYMBOL,
+        SLOW_SYMBOL,
+        TIPS_SYMBOL,
+    ]
+
+    APP_ICONS = [
+        BALLOON,
+        CONTROLS,
+        COPYRIGHT,
+        DIVIDE,
+        FILM,
+        FOLDER,
+        GEAR,
+        GEMSTONE,
+        GLOBE,
+        HAMMER,
+        INCREASING,
+        INFO,
+        MAGIC_WAND,
+        MAGNIFIER,
+        MICROSCOPE,
+        MOVIE,
+        NOTEBOOK,
+        NUMBERS,
+        PROPERTIES,
+        ROCKET,
+        SCROLL,
+        STILL,
+        TELEVISION,
+        TWO_HEARTS,
+        WARNING,
+        WATCH,
+        WRENCH,
+]
