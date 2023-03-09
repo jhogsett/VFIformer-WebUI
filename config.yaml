@@ -52,6 +52,16 @@ fps_change_settings:
 gif_to_mp4_settings:
   resampling_precision: 10
   use_tiling: False
+  file_types:
+  - "gif"
+  - "mp4"
+  - "mpg"
+  - "mpeg"
+  - "mov"
+  - "wmv"
+  - "avi"
+  - "m4v"
+  - "webm"
 realesrgan_settings:
   model_name: "RealESRGAN_x4plus"
   fp32: True
