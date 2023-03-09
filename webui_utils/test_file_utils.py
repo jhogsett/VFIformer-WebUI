@@ -195,7 +195,7 @@ def test_get_directories():
             get_directories(path)
 
 GOOD_CREATE_ZIP_ARGS = [
-    (FIXTURE_PNG_FILES, os.path.join(FIXTURE_PATH, "test.zip"), 1_000_000, 3_000_000),
+    (FIXTURE_PNG_FILES, os.path.join(FIXTURE_PATH, "test.zip"), 600_000, 800_000),
     ([FIXTURE_PNG_FILES[0]], os.path.join(FIXTURE_PATH, "test.zip"), 100_000, 300_000)]
 
 BAD_CREATE_ZIP_ARGS = [
@@ -211,9 +211,11 @@ BAD_CREATE_ZIP_ARGS = [
 def test_create_zip():
     for file_list, zip_file, min_size, max_size in GOOD_CREATE_ZIP_ARGS:
         create_zip(file_list, zip_file)
-        assert os.path.exists(zip_file)
-        assert max_size > os.path.getsize(zip_file) > min_size
+        zip_existed = os.path.exists(zip_file)
+        zip_size_ok = max_size > os.path.getsize(zip_file) > min_size
         os.remove(zip_file)
+        assert zip_existed
+        assert zip_size_ok
 
     for file_list, zip_file, match_text in BAD_CREATE_ZIP_ARGS:
         with pytest.raises(ValueError, match=match_text):

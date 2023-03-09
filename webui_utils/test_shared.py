@@ -8,7 +8,7 @@ FIXTURE_PATH_BAD = os.path.join(FIXTURE_PATH, "bad")
 FIXTURE_PATH_ALT = os.path.join(FIXTURE_PATH, "alt")
 FIXTURE_EXTENSION = "png"
 FIXTURE_PNG_FILES = [os.path.join(FIXTURE_PATH, file) for file in
-                 ["image0.png", "image1.png", "image2.png", "screenshot.png"]]
+                 ["image0.png", "image1.png", "image2.png"]]
 FIXTURE_FILES = FIXTURE_PNG_FILES + ["example.gif"]
 
 def clean_fixture_path(path : str | None):
