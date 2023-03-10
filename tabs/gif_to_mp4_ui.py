@@ -41,35 +41,50 @@ class GIFtoMP4(TabBase):
                 elem_id="tabheading")
             with gr.Row():
                 with gr.Column():
-                    with gr.Row():
+                    upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
+                        label="Input Frame Size Upscale Factor")
+                    inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=16.0, step=1.0,
+                        label="Input Frame Rate Upscale Factor")
+                    order_input = gr.Radio(value="Rate First, then Size (Faster)",
+            choices=["Rate First, then Size (Faster)", "Size First, then Rate (May be smoother)"],
+                        label="Frame Processing Order")
+                with gr.Column():
+                    output_path_text = gr.Text(max_lines=1, label="MP4 File",
+                        placeholder="Path on this server for the converted MP4 file, " +
+                            "leave blank for an MP4 in the same location")
+                    input_frame_rate = gr.Slider(minimum=1, maximum=240, value=frame_rate,
+                        step=1, label="MP4 Frame Rate")
+                    quality_slider = gr.Slider(minimum=minimum_crf, maximum=maximum_crf,
+                        step=1, value=default_crf, label="Quality (lower=better)")
+            with gr.Row():
+                with gr.Tabs():
+                    with gr.Tab(label="Individual File"):
                         input_path_text = gr.Text(max_lines=1,
                             label="GIF File (MP4 and others work too)",
                         placeholder="Path on this server to the GIF or MP4 file to be converted")
-                    with gr.Row():
-                        upscale_input = gr.Slider(value=4.0, minimum=1.0, maximum=8.0, step=0.05,
-                            label="GIF Frame Size Upscale Factor")
-                        inflation_input = gr.Slider(value=4.0, minimum=1.0, maximum=16.0, step=1.0,
-                            label="GIF Frame Rate Upscale Factor")
-                        order_input = gr.Radio(value="Rate, then Size (may be faster)",
-                choices=["Rate, then Size (may be faster)", "Size, then Rate (may be smoother)"],
-                            label="Frame Processing Order")
-                    with gr.Row():
-                        output_path_text = gr.Text(max_lines=1, label="MP4 File",
-                            placeholder="Path on this server for the converted MP4 file, " +
-                                "leave blank for an MP4 in the same location")
-                    with gr.Row():
-                        input_frame_rate = gr.Slider(minimum=1, maximum=240, value=frame_rate,
-                            step=1, label="MP4 Frame Rate")
-                        quality_slider = gr.Slider(minimum=minimum_crf, maximum=maximum_crf,
-                            step=1, value=default_crf, label="Quality (lower=better)")
-            gr.Markdown("*Progress can be tracked in the console*")
-            convert_button = gr.Button("Convert " + SimpleIcons.SLOW_SYMBOL, variant="primary")
+                        gr.Markdown("*Progress can be tracked in the console*")
+                        convert_button = gr.Button("Convert " + SimpleIcons.SLOW_SYMBOL,
+                                                   variant="primary")
+                    with gr.Tab(label="Batch Processing"):
+                        input_path_text_batch = gr.Text(max_lines=1,
+                            label="Path to GIF Files (MP4 and others work too)",
+                placeholder="Path on this server to the set of GIF or MP4 files to be converted")
+                        gr.Markdown("*Progress can be tracked in the console*")
+                        convert_button_batch = gr.Button("Convert Batch " + SimpleIcons.SLOW_SYMBOL,
+                                                         variant="primary")
             with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                 WebuiTips.gif_to_mp4.render()
         convert_button.click(self.convert, inputs=[input_path_text, output_path_text,
             upscale_input, inflation_input, order_input, input_frame_rate, quality_slider])
+        convert_button_batch.click(self.convert_batch, inputs=[input_path_text_batch,
+            output_path_text, upscale_input, inflation_input, order_input, input_frame_rate,
+            quality_slider])
 
-    def convert(self,
+    def convert(self, *args):
+        """Convert button handler"""
+        self._convert(*args)
+
+    def convert_batch(self,
                 input_filepath : str,
                 output_filepath : str,
                 upscaling : float,
@@ -77,7 +92,25 @@ class GIFtoMP4(TabBase):
                 order : str,
                 frame_rate : int,
                 quality : int):
-        """Convert button handler"""
+        """Convert Batch button handler"""
+
+        file_types = ",".join(self.config.gif_to_mp4_settings["file_types"])
+        self.log(f"beginning GIF-to-MP4 batch processing at {input_filepath}")
+        file_list = get_files(input_filepath, file_types)
+        self.log(f"GIF-to-MP4 batch processing found {len(file_list)} files")
+        for filepath in file_list:
+            self._convert(filepath, output_filepath, upscaling, inflation, order, frame_rate,
+                          quality)
+
+    def _convert(self,
+                input_filepath : str,
+                output_filepath : str,
+                upscaling : float,
+                inflation : float,
+                order : str,
+                frame_rate : int,
+                quality : int):
+        """Convert base handler"""
         if input_filepath:
             working_path, run_index = AutoIncrementDirectory(
                 self.config.directories["output_gif_to_mp4"]).next_directory("run")

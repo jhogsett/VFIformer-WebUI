@@ -16,20 +16,18 @@ Two third-party packages are required to use this feature:
 
 ## How it works
 
-1. Set _GIF File_ to a GIF, MP4 or other video file on this server
-    - The feature has been tested with GIF, MP4 and MPG files
-1. Set _GIF Frame Size Upscale Factor_ to choose a _zoom factor_
+1. Set _Input Frame Size Upscale Factor_ to choose a _zoom factor_
     - Choose a value to set the enlargement size of the frame
     - The default is 4.0, with a range of 1.0 to 8.0
     - _Tip: Frames will have noise removed even if set to a 1.0 zoom factor_
-1. Set _GIF Frame Rate Upscale Factor_ to choose an _inflation factor_
+1. Set _Input Frame Rate Upscale Factor_ to choose an _inflation factor_
     - Choose a value to set the FPS increase for the video
     - The default is 4, the range is from 1 to 8
 1. Choose a _Frame Processing Order_
-    - _Rate, then Size_ is faster overall, and requires less VRAM
-        - Smaller images are faster to interpolate
-    - _Size, then Rate_ is slower, but may produce higher quality
-        - VFIformer may work better with original content at its native rate
+    - _Rate First, then Size_ is faster and requires less VRAM
+        - Larger images take longer to interpolate
+    - _Size First, then Rate_ is slower, but may produce higher quality
+        - VFIformer may have an easier time tracking motion flow at the original frame rate
 1. Set _MP4 File_ to a path and filename on this server for the converted MP4 file
     - Leave blank to use a default .mp4 filename in the same location
     - It will use the original name an include conversion details
@@ -39,6 +37,10 @@ Two third-party packages are required to use this feature:
     - Lower numbers = better quality with a higher file size
     - This value is passed to `ffmpeg.exe` as the `-crf` parameter
     - The range of quality values can be changed in `config.yaml`
+1. Choose _Individual File_ or _Batch Processing_
+    - For Individual File, Set _GIF File_ to a GIF, MP4 or other video file on this server
+    - For Batch Processing, Set _Path to GIF Files_ to a directory on this server with GIF, MP4 and other video files
+    - This feature has been tested with _GIF_, _MP4_ and _MPG_ files
 1. Click _Convert_
 1. _GIF to MP4_ is run to create a set of PNG frame files
 1. _Video Inflation_ is run to create filler frames to increase FPS
