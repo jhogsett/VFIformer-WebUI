@@ -11,6 +11,9 @@
 :root {
     --frame-chooser-action: #008542;
     --main-output-highlight: #ee7400;
+    --feature-output-highlight: #72308A;
+    --frame-chooser-action-dim: #004d26;
+    --main-output-highlight-dim: hsl(29, 100%, 30%);
 }
 
 #sideimage {
@@ -26,9 +29,28 @@
     filter: drop-shadow(0px 0px 17px var(--main-output-highlight));
 }
 
+#mainhighlightdim {
+    background: var(--main-output-highlight-dim);
+    border: var(--main-output-highlight-dim);
+}
+
+#highlightoutput {
+    filter: drop-shadow(0px 0px 17px var(--feature-output-highlight));
+}
+
 #actionbutton {
-    background: #008542;
-    border: #008542;
+    background: var(--frame-chooser-action);
+    border: var(--frame-chooser-action);
+}
+
+#actionhighlightdim {
+    background: var(--frame-chooser-action-dim);
+    border: var(--frame-chooser-action-dim);
+}
+
+#highlightbutton {
+    background: var(--feature-output-highlight);
+    border: var(--feature-output-highlight);
 }
 
 #restartbutton {

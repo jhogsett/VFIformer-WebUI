@@ -33,22 +33,26 @@ class VideoBlender(TabBase):
         skip_frames = self.config.blender_settings["skip_frames"]
         frame_rate = self.config.png_to_mp4_settings["frame_rate"]
         with gr.Tab("Video Blender"):
-            gr.HTML(SimpleIcons.MICROSCOPE +
-                "Combine original and replacement frames to manually restore a video",
-                elem_id="tabheading")
+            # gr.HTML(SimpleIcons.MICROSCOPE +
+            #     "Combine original and replacement frames to manually restore a video",
+            #     elem_id="tabheading")
             with gr.Tabs() as tabs_video_blender:
 
                 ### PROJECT SETTINGS
                 with gr.Tab(SimpleIcons.NOTEBOOK + "Project Settings", id=0):
                     with gr.Row():
-                        input_project_name_vb = gr.Textbox(label="Project Name")
-                        projects_dropdown_vb = gr.Dropdown(label=SimpleIcons.PROP_SYMBOL +
-                            " Saved Projects", choices=self.video_blender_projects
-                            .get_project_names())
-                        load_project_button_vb = gr.Button(SimpleIcons.PROP_SYMBOL +
-                            " Load").style(full_width=False)
-                        save_project_button_vb = gr.Button(SimpleIcons.PROP_SYMBOL +
-                            " Save").style(full_width=False)
+                        with gr.Column(scale=2, variant="compact"):
+                            with gr.Row():
+                                input_project_name_vb = gr.Textbox(label="Project Name")
+                        with gr.Column(scale=3, variant="compact", elem_id="mainhighlightdim"):
+                            with gr.Row():
+                                projects_dropdown_vb = gr.Dropdown(label=SimpleIcons.PROP_SYMBOL +
+                                    " Saved Projects", choices=self.video_blender_projects
+                                    .get_project_names())
+                                load_project_button_vb = gr.Button(SimpleIcons.PROP_SYMBOL +
+                                    " Load").style(full_width=False)
+                                save_project_button_vb = gr.Button(SimpleIcons.PROP_SYMBOL +
+                                    " Save").style(full_width=False)
                     with gr.Row():
                         input_project_path_vb = gr.Textbox(label="Project Frames Path",
                             placeholder="Path to frame PNG files for video being restored")
@@ -65,14 +69,14 @@ class VideoBlender(TabBase):
 
                 ### FRAME CHOOSER
                 with gr.Tab(SimpleIcons.CONTROLS + "Frame Chooser", id=1):
-                    with gr.Row():
-                        with gr.Column():
-                            gr.Textbox(visible=False)
-                        with gr.Column():
-                            output_img_path1_vb = gr.Image(label="Original / Path 1 Frame",
-                                interactive=False, type="filepath")
-                        with gr.Column():
-                            gr.Textbox(visible=False)
+                    # with gr.Row():
+                    #     gr.Column()
+                    #         #gr.Textbox(visible=False)
+                    #     with gr.Column():
+                    #         output_img_path1_vb = gr.Image(label="Original / Path 1 Frame",
+                    #             interactive=False, type="filepath")
+                    #     gr.Column()
+                    #         #gr.Textbox(visible=False)
                     with gr.Row():
                         with gr.Column():
                             output_prev_frame_vb = gr.Image(label="Previous Frame",
@@ -85,18 +89,36 @@ class VideoBlender(TabBase):
                                 interactive=False, type="filepath", elem_id="sideimage")
                     with gr.Row():
                         with gr.Column():
+                            gr.Row()
+                            with gr.Row(variant="panel", elem_id="highlightbutton"):
+                                fix_frames_count = gr.Number(label="FIX ADJACENT DAMAGED FRAMES: " +
+                                    SimpleIcons.ONE + " Go to the first damaged frame " +
+                                    SimpleIcons.TWO + " Set count of damaged frames " +
+                                    SimpleIcons.THREE + " Click Go To Frame Fixer", value=0,
+                                    precision=0)
+                                with gr.Row():
+                                    fix_frames_last_before = gr.Number(
+                                        label="Last Frame Before Damage", value=0, precision=0)
+                                    fix_frames_first_after = gr.Number(
+                                        label="First Frame After Damage", value=0, precision=0)
+                                fix_frames_button_vb = gr.Button("Go To " + SimpleIcons.HAMMER
+                                                                 + " Frame Fixer")
                             with gr.Row():
-                                go_button_vb = gr.Button("Go").style(full_width=False)
-                                input_text_frame_vb = gr.Number(value=0, precision=0,
-                                    label="Frame Number")
-                            with gr.Row():
-                                prev_xframes_button_vb = gr.Button(f"<< {skip_frames}")
-                                next_xframes_button_vb = gr.Button(f"{skip_frames} >>")
-                            preview_video_vb = gr.Button("Preview Video")
+                                preview_video_vb = gr.Button("Go To "  + SimpleIcons.TELEVISION
+                                                             + " Video Preview")
+
                         with gr.Column():
-                            output_img_path2_vb = gr.Image(label="Repair / Path 2 Frame",
-                                interactive=False, type="filepath")
+                            with gr.Tabs():
+                                with gr.Tab(label="Repair / Path 2 Frame"):
+                                    output_img_path2_vb = gr.Image(interactive=False,
+                                                                   type="filepath")
+                                with gr.Tab(label="Original / Path 1 Frame"):
+                                    output_img_path1_vb = gr.Image(interactive=False,
+                                                                   type="filepath")
+
                         with gr.Column():
+                            # gr.Row()
+                            gr.Row()
                             use_path_1_button_vb = gr.Button("Use Path 1 Frame | Next >",
                                 variant="primary", elem_id="actionbutton")
                             use_path_2_button_vb = gr.Button("Use Path 2 Frame | Next >",
@@ -106,7 +128,11 @@ class VideoBlender(TabBase):
                                     variant="primary")
                                 next_frame_button_vb = gr.Button("Next Frame >",
                                     variant="primary")
-                            fix_frames_button_vb = gr.Button("Fix Frames")
+                            with gr.Row():
+                                prev_xframes_button_vb = gr.Button(f"<< {skip_frames}")
+                                next_xframes_button_vb = gr.Button(f"{skip_frames} >>")
+                            input_text_frame_vb = gr.Number(value=0, precision=0,
+                                label="Frame Number")
 
                     with gr.Accordion(SimpleIcons.TIPS_SYMBOL + " Guide", open=False):
                         WebuiTips.video_blender_frame_chooser.render()
@@ -127,11 +153,11 @@ class VideoBlender(TabBase):
                                     precision=0)
                             with gr.Row():
                                 preview_button_ff = gr.Button(value="Preview Fixed Frames",
-                                    variant="primary")
+                                    variant="primary", elem_id="highlightbutton")
                         with gr.Column():
                             preview_image_ff = gr.Image(type="filepath",
                                 label="Fixed Frames Preview", interactive=False,
-                                elem_id="mainoutput")
+                                elem_id="highlightoutput")
                             fixed_path_ff = gr.Text(label="Path to Restored Frames",
                                 interactive=False)
                             use_fixed_button_ff = gr.Button(value="Apply Fixed Frames",
@@ -142,8 +168,9 @@ class VideoBlender(TabBase):
                 ### VIDEO PREVIEW
                 with gr.Tab(SimpleIcons.TELEVISION + "Video Preview", id=3):
                     with gr.Row():
-                        video_preview_vb = gr.Video(label="Preview", interactive=False,
-                        include_audio=False)
+                        with gr.Column():
+                            video_preview_vb = gr.Video(label="Preview", interactive=False,
+                                include_audio=False)
                     preview_path_vb = gr.Textbox(max_lines=1, label="Path to PNG Sequence",
                         placeholder="Path on this server to the PNG files to be converted")
                     with gr.Row():
@@ -175,11 +202,11 @@ class VideoBlender(TabBase):
             outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
                 output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
                 show_progress=False)
-        go_button_vb.click(self.video_blender_goto_frame,
-            inputs=[input_text_frame_vb],
-            outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
-                output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
-                show_progress=False)
+        # go_button_vb.click(self.video_blender_goto_frame,
+        #     inputs=[input_text_frame_vb],
+        #     outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
+        #         output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb],
+        #         show_progress=False)
         input_text_frame_vb.submit(self.video_blender_goto_frame,
             inputs=[input_text_frame_vb],
             outputs=[input_text_frame_vb, output_img_path1_vb, output_prev_frame_vb,
@@ -211,8 +238,13 @@ class VideoBlender(TabBase):
             output_curr_frame_vb, output_next_frame_vb, output_img_path2_vb], show_progress=False)
         preview_video_vb.click(self.video_blender_preview_video,
             inputs=input_project_path_vb, outputs=[tabs_video_blender, preview_path_vb])
+        fix_frames_count.change(self.video_blender_compute_fix_frames,
+                                inputs=[input_text_frame_vb, fix_frames_count],
+                                outputs=[fix_frames_last_before, fix_frames_first_after,
+                                         fix_frames_count],
+                                show_progress=False)
         fix_frames_button_vb.click(self.video_blender_fix_frames,
-            inputs=[input_project_path_vb, input_text_frame_vb],
+            inputs=[input_project_path_vb, fix_frames_last_before, fix_frames_first_after],
             outputs=[tabs_video_blender, project_path_ff, input_clean_before_ff,
                 input_clean_after_ff])
         preview_button_ff.click(self.video_blender_preview_fixed,
@@ -308,9 +340,19 @@ class VideoBlender(TabBase):
         frame += 1
         return frame, *self.video_blender_state.goto_frame(frame)
 
-    def video_blender_fix_frames(self, project_path : str, frame : float):
+    def video_blender_compute_fix_frames(self, frame : str, damage_count : str):
+        if damage_count > 0:
+            last_clean_before = frame - 1
+            if last_clean_before < 0:
+                last_clean_before += (-last_clean_before)
+            first_clean_after = last_clean_before + damage_count + 1
+            return last_clean_before, first_clean_after, damage_count
+        return 0, 0, 0
+
+    def video_blender_fix_frames(self, project_path : str, last_frame_before : float,
+                                 first_frame_after : float):
         """Fix Frames button handler"""
-        return gr.update(selected=2), project_path, frame, frame
+        return gr.update(selected=2), project_path, last_frame_before, first_frame_after
 
     def video_blender_preview_fixed(self,
                                     project_path : str,

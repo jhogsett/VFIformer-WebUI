@@ -15,10 +15,13 @@ class SimpleIcons:
     LEFTRIGHT_ARROW = "↔️"
     MAGNIFIER = "🔎"
     NUMBERS = "🔢"
+    ONE = "1️⃣"
     QUESTION = "❓"
     RIGHT_ARROW = "➡️"
     SCISSORS = "✂️"
+    THREE = "3️⃣"
     TOOLBOX = "🧰"
+    TWO = "2️⃣"
     WRENCH = "🔧"
 
     BELL = "🔔"
@@ -112,11 +115,14 @@ class SimpleIcons:
         MOVIE,
         NOTEBOOK,
         NUMBERS,
+        ONE,
         PROPERTIES,
         ROCKET,
         SCROLL,
         STILL,
         TELEVISION,
+        THREE,
+        TWO,
         TWO_HEARTS,
         WARNING,
         WATCH,
