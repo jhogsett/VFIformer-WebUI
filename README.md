@@ -17,8 +17,7 @@
 
 | Example - GIF to MP4 (frame size X2, frame rate X4) | Example - Original GIF | 
 |:--:|:--:|
-| https://user-images.githubusercontent.com/825994/224549158-7df76e49-28ec-4a3c-9b2b-4699729bd84f.mp4
- | ![http_t0 tagstat com_image03_0_21c475648484948484881505552](https://user-images.githubusercontent.com/825994/220933026-3fe6bf25-8be7-490e-a90b-85a151e6b156.gif) |
+| https://user-images.githubusercontent.com/825994/224549158-7df76e49-28ec-4a3c-9b2b-4699729bd84f.mp4 | ![http_t0 tagstat com_image03_0_21c475648484948484881505552](https://user-images.githubusercontent.com/825994/220933026-3fe6bf25-8be7-490e-a90b-85a151e6b156.gif) |
 
 
 
