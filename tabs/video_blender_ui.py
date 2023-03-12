@@ -69,20 +69,12 @@ class VideoBlender(TabBase):
 
                 ### FRAME CHOOSER
                 with gr.Tab(SimpleIcons.CONTROLS + "Frame Chooser", id=1):
-                    # with gr.Row():
-                    #     gr.Column()
-                    #         #gr.Textbox(visible=False)
-                    #     with gr.Column():
-                    #         output_img_path1_vb = gr.Image(label="Original / Path 1 Frame",
-                    #             interactive=False, type="filepath")
-                    #     gr.Column()
-                    #         #gr.Textbox(visible=False)
                     with gr.Row():
                         with gr.Column():
                             output_prev_frame_vb = gr.Image(label="Previous Frame",
                                 interactive=False, type="filepath", elem_id="sideimage")
                         with gr.Column():
-                            output_curr_frame_vb = gr.Image(label="Current Frame",
+                            output_curr_frame_vb = gr.Image(show_label=False,
                                 interactive=False, type="filepath", elem_id="mainimage")
                         with gr.Column():
                             output_next_frame_vb = gr.Image(label="Next Frame",
@@ -110,14 +102,13 @@ class VideoBlender(TabBase):
                         with gr.Column():
                             with gr.Tabs():
                                 with gr.Tab(label="Repair / Path 2 Frame"):
-                                    output_img_path2_vb = gr.Image(interactive=False,
-                                                                   type="filepath")
+                                    output_img_path2_vb = gr.Image(show_label=False,
+                                        interactive=False, type="filepath")
                                 with gr.Tab(label="Original / Path 1 Frame"):
-                                    output_img_path1_vb = gr.Image(interactive=False,
-                                                                   type="filepath")
+                                    output_img_path1_vb = gr.Image(show_label=False,
+                                        interactive=False, type="filepath")
 
                         with gr.Column():
-                            # gr.Row()
                             gr.Row()
                             use_path_1_button_vb = gr.Button("Use Path 1 Frame | Next >",
                                 variant="primary", elem_id="actionbutton")
