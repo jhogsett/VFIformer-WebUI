@@ -112,6 +112,9 @@ class UpscaleSeries():
                       fp32 : bool,
                       tiling : int,
                       tile_pad : int):
+        model = None
+        netscale = None
+        file_url = None
         """determine models according to model names"""
         model_name = model_name.split('.')[0]
         if model_name == 'RealESRGAN_x4plus':  # x4 RRDBNet model
