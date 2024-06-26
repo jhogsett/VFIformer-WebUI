@@ -14,3 +14,4 @@ torch==1.13.1
 torchvision==0.14.1
 tqdm==4.66.3
 orjson>=3.9.15 # not directly required, pinned by Snyk to avoid a vulnerability
+anyio>=4.4.0 # not directly required, pinned by Snyk to avoid a vulnerability
